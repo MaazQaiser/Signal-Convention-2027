@@ -1,6 +1,23 @@
 # Signal — Here We Grow · 2027 (first draft)
 
-Single-file site: open `index.html` in a browser. Black-first brand build per the Signal brand guide (orange #FF7900, yellow #FFDA8F, blue #0055FF, light blue #00D5FF, light gray #DBDBDB).
+Single-file site: open `legacy/index.html` in a browser. Black-first brand build per the Signal brand guide (orange #FF7900, yellow #FFDA8F, blue #0055FF, light blue #00D5FF, light gray #DBDBDB).
+
+## Production app (Next.js)
+
+The current site lives in `signal-hwg-next/`. Run locally:
+
+```bash
+cd signal-hwg-next
+npm install
+git lfs pull   # required for the 3D model
+npm run dev
+```
+
+## Vercel deployment
+
+In the Vercel project settings, set **Root Directory** to `signal-hwg-next`, then redeploy.
+
+Without that, Vercel may serve the old static draft instead of the Next.js app.
 
 ## Page flow
 Hero (pulsing beacon, HERE WE —27 GROW) → pinned horizontal story (2025 Culture · 2026 Community · 2027 Consistency) → agenda (white) → aftermovie (full-bleed, brand gradient overlay) → Signal × Filtergo bar → merch (light gray) → live countdown + register → footer (unified beacon).
