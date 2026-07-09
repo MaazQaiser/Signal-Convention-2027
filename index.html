@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal 2027 — Here We Grow · Franchise Convention</title>
+<meta name="description" content="Signal Franchise Convention 2027 — Arizona. Year three: Consistency. All rays merge to shine in unity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SIGNAL · HERE WE GROW · 2027 — brand tokens (from brand guide)
+   ============================================================ */
+:root{
+  --black:#000000;
+  --white:#FFFFFF;
+  --orange:#FF7900;   /* Pantone 2018 XGC */
+  --yellow:#FFDA8F;   /* Pantone P 10-3 U */
+  --blue:#0055FF;
+  --lightblue:#00D5FF;/* Pantone Blue 0821 U */
+  --gray:#DBDBDB;     /* Pantone P 179-2 C */
+  --ink-dim:#9A9A9A;
+  --panel:#0D0D0D;
+  --font-display:'Michroma', sans-serif;   /* wordmark-adjacent — replaced by logo asset later */
+  --font-body:'Archivo', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+  --max:1200px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,5vw,64px);}
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--orange);
+}
+.btn{
+  display:inline-block;
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:15px;
+  padding:14px 30px;
+  border-radius:2px;
+  cursor:pointer;
+  transition:transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
+  border:none;
+}
+.btn-orange{background:var(--orange);color:var(--black);}
+.btn-orange:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,121,0,.35);}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.5);}
+.btn-ghost:hover{border-color:var(--white);transform:translateY(-2px);}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease, transform .8s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,4vw,48px);
+  background:linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,0));
+  transition:background .3s ease;
+}
+.nav.scrolled{background:rgba(0,0,0,.92);backdrop-filter:blur(8px);}
+.nav-mark{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:13px;letter-spacing:.14em;}
+.nav-links{display:flex;align-items:center;gap:28px;font-size:14px;font-weight:500;color:var(--gray);}
+.nav-links a:hover{color:var(--white);}
+.nav-links .btn{padding:10px 22px;font-size:13px;}
+@media(max-width:720px){.nav-links a:not(.btn){display:none;}}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.hero-beacon{
+  position:absolute;
+  right:clamp(-260px,-18vw,-120px);
+  top:50%;
+  translate:0 -50%;
+  width:clamp(420px,52vw,780px);
+  height:auto;
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:2;padding-top:60px;}
+.hero .eyebrow{display:block;margin-bottom:26px;}
+.wordmark{
+  font-family:var(--font-display);
+  font-size:clamp(44px,9vw,110px);
+  line-height:1.04;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.wordmark .yr{color:var(--orange);font-size:.5em;vertical-align:.28em;letter-spacing:.06em;}
+.hero-sub{
+  margin:26px 0 36px;
+  max-width:44ch;
+  color:var(--gray);
+  font-size:clamp(15px,1.6vw,18px);
+}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-meta{
+  margin-top:56px;
+  display:flex;gap:34px;flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:13px;color:var(--ink-dim);
+}
+.hero-meta strong{color:var(--white);font-weight:500;display:block;font-size:15px;}
+.scroll-cue{
+  position:absolute;left:50%;bottom:26px;translate:-50% 0;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--ink-dim);
+  animation:cue 2.4s ease-in-out infinite;
+}
+@keyframes cue{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(8px);opacity:1}}
+
+/* ---------- story (pinned horizontal) ---------- */
+.story{position:relative;background:var(--black);}
+.story-head{padding:110px 0 30px;}
+.story-head h2{font-family:var(--font-display);font-size:clamp(22px,3.4vw,34px);letter-spacing:.04em;margin-top:14px;}
+.story-viewport{overflow:hidden;}
+.track{
+  display:flex;gap:clamp(20px,3vw,44px);
+  padding:40px clamp(20px,5vw,64px) 120px;
+  width:max-content;
+  position:relative;
+  align-items:stretch;
+}
+.ray-line{
+  position:absolute;top:96px;left:0;height:0;
+  border-top:2px dashed rgba(255,121,0,.55);
+  width:100%;
+  transform-origin:left center;
+  transform:scaleX(0);
+}
+.chapter{
+  position:relative;
+  width:min(78vw,480px);
+  background:var(--panel);
+  border:1px solid #1E1E1E;
+  border-radius:6px;
+  padding:30px 32px 36px;
+  flex-shrink:0;
+}
+.chapter.now{border:1px solid var(--orange);box-shadow:0 0 60px rgba(255,121,0,.12) inset;}
+.chapter-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;}
+.chapter-top .eyebrow{letter-spacing:.18em;}
+.chapter-img{
+  height:210px;border-radius:4px;overflow:hidden;
+  background:#161616;
+  display:flex;align-items:center;justify-content:center;
+  color:#4A4A4A;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
+  margin-bottom:24px;
+  border:1px dashed #2A2A2A;
+}
+.chapter h3{font-family:var(--font-display);font-size:22px;letter-spacing:.05em;margin-bottom:6px;}
+.chapter .theme-sub{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px;}
+.chapter p{color:var(--gray);font-size:15px;}
+.chapter .btn{margin-top:22px;}
+
+/* ---------- agenda ---------- */
+.agenda{background:var(--white);color:var(--black);padding:110px 0 120px;}
+.agenda .eyebrow{color:var(--orange);}
+.agenda h2{font-family:var(--font-display);font-size:clamp(22px,3.4vw,34px);letter-spacing:.04em;margin:14px 0 8px;}
+.agenda .lede{color:#555;max-width:52ch;}
+.slots{
+  margin-top:54px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+.slot{
+  background:#F2F2F2;
+  border-radius:4px;
+  padding:22px 22px 24px;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.slot:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.08);}
+.slot time{font-family:var(--font-mono);font-size:13px;color:var(--orange);letter-spacing:.08em;}
+.slot h3{font-size:17px;font-weight:600;margin:8px 0 4px;}
+.slot p{font-size:14px;color:#555;}
+.slot.noon{background:var(--black);color:var(--white);}
+.slot.noon p{color:var(--gray);}
+
+/* ---------- aftermovie ---------- */
+.movie{position:relative;background:var(--black);}
+.movie-frame{
+  position:relative;
+  aspect-ratio:16/7;
+  min-height:340px;
+  background:#0A0A0A;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  overflow:hidden;
+  cursor:pointer;
+}
+.movie-frame::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,121,0,.22), rgba(0,85,255,.18));
+  mix-blend-mode:screen;pointer-events:none;
+}
+.movie-frame .play{
+  width:74px;height:74px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s ease, border-color .3s ease;
+}
+.movie-frame:hover .play{transform:scale(1.08);border-color:var(--white);}
+.movie-frame .play svg{margin-left:4px;}
+.movie-frame h3{font-size:clamp(18px,2.6vw,26px);font-weight:600;}
+.movie-frame span{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;color:var(--gray);}
+
+/* ---------- brand bar ---------- */
+.brands{display:flex;flex-wrap:wrap;}
+.brand-half{
+  flex:1 1 300px;
+  padding:34px 20px;
+  text-align:center;
+  font-family:var(--font-display);
+  font-size:clamp(16px,2.2vw,22px);
+  letter-spacing:.22em;
+}
+.brand-signal{background:var(--orange);color:var(--black);transform:translateX(-40px);opacity:0;transition:transform .9s ease,opacity .9s ease;}
+.brand-filtergo{background:#1D6E45;color:var(--white);transform:translateX(40px);opacity:0;transition:transform .9s ease,opacity .9s ease;}
+.brands.in .brand-half{transform:none;opacity:1;}
+.brand-note{
+  text-align:center;padding:18px 20px 0;color:var(--ink-dim);font-size:14px;background:var(--black);
+}
+
+/* ---------- merch ---------- */
+.merch{background:var(--gray);color:var(--black);padding:110px 0 120px;margin-top:70px;}
+.merch h2{font-family:var(--font-display);font-size:clamp(22px,3.4vw,34px);letter-spacing:.04em;margin:14px 0 8px;}
+.merch .lede{color:#454545;max-width:52ch;}
+.shelf{
+  margin-top:54px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.item{
+  background:var(--white);border-radius:4px;padding:16px;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.item:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.14);}
+.item-img{
+  aspect-ratio:4/3;border-radius:3px;
+  background:#101010;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;
+  color:#4A4A4A;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
+}
+.item-img.lt{background:#EFEFEF;}
+.item h3{font-size:16px;font-weight:600;}
+.item p{font-size:13px;color:#666;margin-top:2px;}
+.item .price{font-family:var(--font-mono);font-size:13px;color:var(--orange);margin-top:10px;}
+.merch-note{margin-top:34px;font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;color:#454545;text-align:center;}
+
+/* ---------- countdown / register ---------- */
+.register{padding:130px 0 60px;text-align:center;}
+.register h2{font-family:var(--font-display);font-size:clamp(20px,3vw,30px);letter-spacing:.05em;margin:16px 0 34px;}
+.count{
+  display:flex;justify-content:center;gap:clamp(16px,4vw,44px);
+  margin-bottom:44px;flex-wrap:wrap;
+}
+.count div{min-width:74px;}
+.count b{
+  display:block;font-family:var(--font-mono);font-weight:500;
+  font-size:clamp(34px,6vw,58px);line-height:1;
+}
+.count span{font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;color:var(--ink-dim);text-transform:uppercase;}
+
+/* ---------- footer ---------- */
+.footer{padding:90px 0 60px;text-align:center;border-top:1px solid #171717;}
+.footer .contact{color:var(--gray);font-size:14px;}
+.footer .span-line{font-family:var(--font-mono);font-size:12px;letter-spacing:.2em;color:var(--ink-dim);margin:10px 0 48px;text-transform:uppercase;}
+.footer-beacon{width:96px;height:96px;margin:0 auto;}
+.signoff{margin-top:22px;color:var(--orange);font-size:15px;font-weight:500;}
+.legal{margin-top:44px;font-size:12px;color:#4A4A4A;}
+
+/* ---------- beacon animation ---------- */
+.pulse g{transform-origin:50% 50%;animation:pulse 3.2s ease-in-out infinite;}
+.spin{animation:spin 90s linear infinite;transform-origin:50% 50%;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.045);opacity:.88}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important;}
+  .reveal{opacity:1;transform:none;}
+  .brands .brand-half{opacity:1;transform:none;}
+}
+@media(max-width:820px){
+  .hero-beacon{opacity:.5;right:-40vw;width:120vw;top:38%;}
+  .track{width:auto;flex-direction:column;padding-bottom:70px;}
+  .chapter{width:100%;}
+  .ray-line{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav" id="nav">
+  <a class="nav-mark" href="#top">
+    <!-- PLACEHOLDER: swap for official Signal ~ mark (min 168px rule applies to lockups, small mark ok in nav) -->
+    <svg id="navBeacon" width="26" height="26" viewBox="0 0 56 56" aria-hidden="true"></svg>
+    SIGNAL
+  </a>
+  <div class="nav-links">
+    <a href="#story">The story</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#merch">Merch</a>
+    <a class="btn btn-orange" href="#register">Register</a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <svg class="hero-beacon spin" id="heroBeacon" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Signal Franchise Convention · Arizona · 2027</span>
+    <!-- PLACEHOLDER: replace the styled wordmark below with the official HERE WE ~27 GROW lockup (SVG/PNG on dark) -->
+    <h1 class="wordmark">Here<br>We <span class="yr">— 27</span><br>Grow</h1>
+    <p class="hero-sub">Year three: <strong>Consistency.</strong> All rays merge to shine in unity — every franchise, one signal, one room in Arizona.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-orange" href="#register">Add your ray — register</a>
+      <a class="btn btn-ghost" href="#story">Watch us grow</a>
+    </div>
+    <div class="hero-meta">
+      <div><strong>[Dec 10, 2027]</strong>one full day</div>
+      <div><strong>[Venue name]</strong>Arizona</div>
+      <div><strong>Year 3 of 3</strong>Culture · Community · Consistency</div>
+    </div>
+  </div>
+  <span class="scroll-cue">SCROLL ↓</span>
+</header>
+
+<!-- ===================== STORY ===================== -->
+<section class="story" id="story">
+  <div class="wrap story-head">
+    <span class="eyebrow">2025 — 2027 · The story so far</span>
+    <h2>Three years. One signal.</h2>
+  </div>
+  <div class="story-viewport" id="storyViewport">
+    <div class="track" id="track">
+      <div class="ray-line" id="rayLine"></div>
+
+      <article class="chapter">
+        <div class="chapter-top">
+          <span class="eyebrow">2025 · Arizona</span>
+          <svg class="mark" data-rays="10" data-core="orange" width="52" height="52" viewBox="0 0 56 56" aria-hidden="true"></svg>
+        </div>
+        <div class="chapter-img">[ 2025 PHOTO — drop image here ]</div>
+        <h3>Culture</h3>
+        <div class="theme-sub">Holding tight to core values</div>
+        <p>Year one pulsed from the core. One room in Arizona, the first of us in it, holding tight to the values that started everything.</p>
+      </article>
+
+      <article class="chapter">
+        <div class="chapter-top">
+          <span class="eyebrow">2026 · Florida</span>
+          <svg class="mark" data-rays="15" width="52" height="52" viewBox="0 0 56 56" aria-hidden="true"></svg>
+        </div>
+        <div class="chapter-img">[ 2026 PHOTO — drop image here ]</div>
+        <h3>Community</h3>
+        <div class="theme-sub">Interconnected with those you serve</div>
+        <p>Florida. More connections revealed, weaving together — franchisees, partners, friends. The network became something you could see.</p>
+      </article>
+
+      <article class="chapter now">
+        <div class="chapter-top">
+          <span class="eyebrow">2027 · Arizona</span>
+          <svg class="mark" data-rays="20" data-w="2" width="52" height="52" viewBox="0 0 56 56" aria-hidden="true"></svg>
+        </div>
+        <div class="chapter-img">[ HERE WE —27 GROW · full-color lockup here ]</div>
+        <h3>Consistency</h3>
+        <div class="theme-sub">Reliable, consistent service</div>
+        <p>Back to Arizona. All rays merge to shine in unity — every franchise, one signal. This chapter gets written by whoever's in the room.</p>
+        <a class="btn btn-orange" href="#register">Register for 2027</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AGENDA ===================== -->
+<section class="agenda" id="agenda">
+  <div class="wrap">
+    <span class="eyebrow reveal">The day</span>
+    <h2 class="reveal">The agenda</h2>
+    <p class="lede reveal">One day. Follow the light.</p>
+    <div class="slots">
+      <div class="slot reveal"><time>08:30</time><h3>First light</h3><p>Doors open. Badges on, coffee in hand.</p></div>
+      <div class="slot reveal"><time>09:30</time><h3>Opening keynote</h3><p>Consistency — year three begins.</p></div>
+      <div class="slot reveal"><time>10:30</time><h3>Sessions</h3><p>Growth tracks and panels until lunch.</p></div>
+      <div class="slot noon reveal"><time>12:30</time><h3>High noon</h3><p>Lunch, demos, long tables. Peak of the day.</p></div>
+      <div class="slot reveal"><time>14:00</time><h3>Workshops</h3><p>Hands-on rooms until 16:30. Leave with something built.</p></div>
+      <div class="slot reveal"><time>17:00</time><h3>Golden hour</h3><p>Closing keynote and awards.</p></div>
+      <div class="slot reveal"><time>18:30</time><h3>Afterglow</h3><p>The mixer. The day sets — the signal doesn't.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== AFTERMOVIE ===================== -->
+<section class="movie">
+  <!-- PLACEHOLDER: replace this frame with <video autoplay muted loop playsinline poster="..."> -->
+  <div class="movie-frame" role="button" tabindex="0" aria-label="Play the 2026 aftermovie">
+    <div class="play"><svg width="22" height="26" viewBox="0 0 22 26" fill="none"><path d="M0 0L22 13L0 26V0Z" fill="#FFFFFF"/></svg></div>
+    <h3>This is what a signal sounds like.</h3>
+    <span>2026 AFTERMOVIE · TAP FOR SOUND</span>
+  </div>
+</section>
+
+<!-- ===================== BRAND BAR ===================== -->
+<section aria-label="Signal and Filtergo">
+  <div class="brands" id="brands">
+    <div class="brand-half brand-signal">SIGNAL</div>
+    <div class="brand-half brand-filtergo">FILTERGO</div>
+  </div>
+  <p class="brand-note">Signal is grown by Filtergo.</p>
+</section>
+
+<!-- ===================== MERCH ===================== -->
+<section class="merch" id="merch">
+  <div class="wrap">
+    <span class="eyebrow reveal">The table</span>
+    <h2 class="reveal">Take the signal home</h2>
+    <p class="lede reveal">Each year's mark is different — core, weave, unity. Collect all three.</p>
+    <div class="shelf">
+      <div class="item reveal">
+        <div class="item-img">[ TEE PHOTO ]</div>
+        <h3>The 2027 tee</h3><p>This year's mark, front and center.</p><div class="price">[PRICE]</div>
+      </div>
+      <div class="item reveal">
+        <div class="item-img lt">[ PIN PHOTO ]</div>
+        <h3>The year pin</h3><p>Enamel, badge-ready, gone by noon.</p><div class="price">[PRICE]</div>
+      </div>
+      <div class="item reveal">
+        <div class="item-img lt">[ NOTEBOOK PHOTO ]</div>
+        <h3>The notebook</h3><p>For whatever grows out of the day.</p><div class="price">[PRICE]</div>
+      </div>
+      <div class="item reveal">
+        <div class="item-img lt">[ CREWNECK PHOTO ]</div>
+        <h3>The crewneck</h3><p>Heavyweight, embossed mark.</p><div class="price">[PRICE]</div>
+      </div>
+    </div>
+    <p class="merch-note">AVAILABLE AT THE SIGNAL TABLE ONLY · LIMITED RUN</p>
+  </div>
+</section>
+
+<!-- ===================== REGISTER / COUNTDOWN ===================== -->
+<section class="register" id="register">
+  <div class="wrap">
+    <span class="eyebrow reveal">Arizona · 2027</span>
+    <h2 class="reveal">The next signal lights in —</h2>
+    <div class="count reveal" id="count">
+      <div><b id="cd">000</b><span>days</span></div>
+      <div><b id="ch">00</b><span>hours</span></div>
+      <div><b id="cm">00</b><span>min</span></div>
+      <div><b id="cs">00</b><span>sec</span></div>
+    </div>
+    <a class="btn btn-orange reveal" href="#" >Add your ray — register</a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="wrap">
+    <p class="contact">[Venue], Arizona · [Dec 10, 2027] · hello@signal.co · @signalconvention</p>
+    <p class="span-line">Here We Grow · Franchise Convention 2025–27</p>
+    <svg class="footer-beacon pulse" data-rays="20" data-w="2" viewBox="0 0 56 56" aria-hidden="true"></svg>
+    <p class="signoff">All rays, one light. See you in Arizona.</p>
+    <p class="legal">© 2027 Signal · Grown by Filtergo</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ---------- beacon generator (wireframe stand-in until official logo assets arrive) ---------- */
+function beacon(svg, rays, opts={}){
+  const NS='http://www.w3.org/2000/svg';
+  const g=document.createElementNS(NS,'g');
+  const w=opts.w||1.6, colors=opts.colors||['#FFFFFF'];
+  for(let i=0;i<rays;i++){
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',28);l.setAttribute('y1',opts.inner??7);
+    l.setAttribute('x2',28);l.setAttribute('y2',opts.outer??17);
+    l.setAttribute('transform',`rotate(${(360/rays)*i} 28 28)`);
+    l.setAttribute('stroke',colors[i%colors.length]);
+    l.setAttribute('stroke-width',w);
+    l.setAttribute('stroke-linecap','round');
+    g.appendChild(l);
+  }
+  if(opts.core){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',28);c.setAttribute('cy',28);c.setAttribute('r',3.4);
+    c.setAttribute('fill',opts.core);
+    g.appendChild(c);
+  }
+  svg.appendChild(g);
+}
+
+/* nav + chapter + footer marks */
+beacon(document.getElementById('navBeacon'),20,{w:2});
+document.querySelectorAll('svg.mark, .footer-beacon').forEach(s=>{
+  beacon(s, +s.dataset.rays||20, {w:+s.dataset.w||1.6, core:s.dataset.core==='orange'?'#FF7900':null});
+});
+
+/* hero beacon — full-color per brand gradient family, drawn large */
+(function(){
+  const svg=document.getElementById('heroBeacon');
+  const NS='http://www.w3.org/2000/svg';
+  const colors=['#FFFFFF','#FFDA8F','#FF7900','#FFFFFF','#00D5FF','#FFFFFF','#FFDA8F','#FF7900','#FFFFFF','#0055FF'];
+  const g=document.createElementNS(NS,'g');g.classList.add('rays');
+  const R=24;
+  for(let i=0;i<R;i++){
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',200);l.setAttribute('y1',36);
+    l.setAttribute('x2',200);l.setAttribute('y2',132);
+    l.setAttribute('transform',`rotate(${(360/R)*i} 200 200)`);
+    l.setAttribute('stroke',colors[i%colors.length]);
+    l.setAttribute('stroke-width',9);
+    l.setAttribute('stroke-linecap','round');
+    g.appendChild(l);
+  }
+  svg.appendChild(g);
+  if(window.gsap && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    gsap.from(svg.querySelectorAll('line'),{opacity:0,scale:.6,transformOrigin:'200px 200px',stagger:.05,duration:1.1,ease:'power3.out'});
+  }
+})();
+
+/* ---------- pinned horizontal story ---------- */
+const mm=matchMedia('(max-width:820px)'), rm=matchMedia('(prefers-reduced-motion: reduce)');
+if(window.gsap && !mm.matches && !rm.matches){
+  gsap.registerPlugin(ScrollTrigger);
+  const track=document.getElementById('track');
+  const dist=()=>track.scrollWidth-document.documentElement.clientWidth;
+  gsap.to(track,{x:()=>-dist(),ease:'none',
+    scrollTrigger:{trigger:'#storyViewport',pin:true,scrub:1,end:()=>'+='+dist(),invalidateOnRefresh:true}
+  });
+  gsap.to('#rayLine',{scaleX:1,ease:'none',
+    scrollTrigger:{trigger:'#storyViewport',scrub:1,end:()=>'+='+dist()}
+  });
+}
+
+/* ---------- scroll reveals ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const brands=document.getElementById('brands');
+new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){brands.classList.add('in');o.disconnect();}}),{threshold:.4}).observe(brands);
+
+/* ---------- nav background ---------- */
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40),{passive:true});
+
+/* ---------- countdown (PLACEHOLDER DATE — update when confirmed) ---------- */
+const target=new Date('2027-12-10T08:30:00-07:00').getTime();
+function tick(){
+  const d=Math.max(0,target-Date.now());
+  const dd=Math.floor(d/864e5), hh=Math.floor(d%864e5/36e5), mmn=Math.floor(d%36e5/6e4), ss=Math.floor(d%6e4/1e3);
+  cd.textContent=String(dd).padStart(3,'0');
+  ch.textContent=String(hh).padStart(2,'0');
+  cm.textContent=String(mmn).padStart(2,'0');
+  cs.textContent=String(ss).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# dependencies & build
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# env & secrets
+.env
+.env.*
+credentials.json
+token.json
+
+# temp & tooling
+.tmp/
+.claude/
+.DS_Store
