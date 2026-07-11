@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Reveal from "./Reveal";
+import Reveal, { REVEAL_CASCADE } from "./Reveal";
 
 const VIDEO_ID = "3voCunvlSs4";
 const START_SECONDS = 64;
@@ -29,6 +29,7 @@ function buildEmbedUrl(origin?: string) {
 export default function Agenda() {
   const videoRef = useRef<HTMLDivElement>(null);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [videoRevealed, setVideoRevealed] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -59,6 +60,24 @@ export default function Agenda() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVideoRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       className="agenda"
@@ -69,18 +88,21 @@ export default function Agenda() {
       <div className="agenda-glow" aria-hidden="true" />
 
       <div className="agenda-inner">
-        <Reveal>
+        <Reveal delay={REVEAL_CASCADE.eyebrow}>
           <p className="agenda-eyebrow">Inside the Convention</p>
         </Reveal>
 
-        <Reveal delay={0.05}>
+        <Reveal delay={REVEAL_CASCADE.title}>
           <h2 className="agenda-heading" id="agenda-heading">
             An Experience Built Around Growth, Leadership, Connection, and
             Momentum
           </h2>
         </Reveal>
 
-        <div className="agenda-video" ref={videoRef}>
+        <div
+          className={`agenda-video${videoRevealed ? " is-revealed" : ""}`}
+          ref={videoRef}
+        >
           {videoSrc ? (
             <iframe
               src={videoSrc}

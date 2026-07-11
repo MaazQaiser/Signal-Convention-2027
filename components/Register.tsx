@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Reveal from "./Reveal";
+import Reveal, { REVEAL_CASCADE } from "./Reveal";
 
 const TARGET = new Date("2027-12-10T08:30:00-07:00").getTime();
 
@@ -60,21 +60,21 @@ export default function Register() {
       </div>
 
       <div className="register-inner">
-        <Reveal>
+        <Reveal delay={REVEAL_CASCADE.eyebrow}>
           <span className="eyebrow">The Countdown Is On</span>
         </Reveal>
-        <Reveal delay={0.05}>
+        <Reveal delay={REVEAL_CASCADE.title}>
           <h2 className="register-title">
             We&apos;ll See You at Here We Grow 2027.
           </h2>
         </Reveal>
-        <Reveal delay={0.1}>
+        <Reveal delay={REVEAL_CASCADE.body}>
           <p className="register-lede">
             Join the Signal and FilterGo communities for three days of learning,
             leadership, and lasting connections.
           </p>
         </Reveal>
-        <Reveal delay={0.15}>
+        <Reveal delay={0.24}>
           <div className="register-count" aria-live="polite">
             {COUNTDOWN_UNITS.map((unit, index) => (
               <span key={unit.key} className="register-count-unit">
@@ -87,7 +87,7 @@ export default function Register() {
             ))}
           </div>
         </Reveal>
-        <Reveal delay={0.2}>
+        <Reveal delay={REVEAL_CASCADE.cta}>
           <div className="register-actions">
             <a className="btn btn-orange" href="#">
               Reserve Your Spot

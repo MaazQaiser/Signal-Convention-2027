@@ -202,15 +202,25 @@ function JourneyIntro({
 }) {
   return (
     <aside className="journey-intro" ref={introRef}>
-      <span className="journey-label journey-intro-step">The Here We Grow Legacy</span>
-      <h2 className="journey-heading journey-intro-step">
-        Every Year Builds the Next.
+      <span className="journey-label journey-intro-line">
+        The Here We Grow Legacy
+      </span>
+      <h2 className="journey-heading">
+        <span className="journey-intro-line">Every Year</span>
+        <span className="journey-intro-line">Builds the Next.</span>
       </h2>
-      <p className="journey-lede journey-intro-step">
-        Every year introduces a new focus. Together, they tell the story of a
-        growing network united by a shared purpose. Each convention represents
-        a chapter in a much larger story.
-      </p>
+      <div className="journey-lede">
+        <span className="journey-intro-line">
+          Every year introduces a new focus.
+        </span>
+        <span className="journey-intro-line">
+          Together, they tell the story of a growing network united by a shared
+          purpose.
+        </span>
+        <span className="journey-intro-line">
+          Each convention represents a chapter in a much larger story.
+        </span>
+      </div>
     </aside>
   );
 }
@@ -235,9 +245,19 @@ function JourneyBeacon({ year }: { year: "2025" | "2026" | "2027" }) {
   );
 }
 
+/** Full-height star column — sticks to the left; content scrolls behind it */
+function JourneyBeaconPin({ year }: { year: "2025" | "2026" | "2027" }) {
+  return (
+    <div className="journey-beacon-pin">
+      <JourneyBeacon year={year} />
+    </div>
+  );
+}
+
 export default function Journey() {
   const sectionRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const cardLayerRef = useRef<HTMLDivElement>(null);
   const cardTrackRef = useRef<HTMLDivElement>(null);
@@ -250,12 +270,21 @@ export default function Journey() {
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const pin = pinRef.current;
+    const fade = fadeRef.current;
     const stage = stageRef.current;
     const cardLayer = cardLayerRef.current;
     const cardTrack = cardTrackRef.current;
     const finaleLayer = finaleLayerRef.current;
     const intro = introRef.current;
-    if (!section || !pin || !stage || !cardLayer || !cardTrack || !finaleLayer)
+    if (
+      !section ||
+      !pin ||
+      !fade ||
+      !stage ||
+      !cardLayer ||
+      !cardTrack ||
+      !finaleLayer
+    )
       return;
 
     const reduceMotion = window.matchMedia(
@@ -281,61 +310,172 @@ export default function Journey() {
         const exitTravel = () =>
           cardTrack.scrollWidth + stage.clientWidth * 0.2;
 
-        gsap.set(finaleLayer, { opacity: 0, scale: 0.98 });
+        gsap.set(finaleLayer, { opacity: 0, scale: 0.985 });
         const finaleSteps =
           finaleRef.current?.querySelectorAll(".journey-finale-step");
-        if (finaleSteps?.length) gsap.set(finaleSteps, { opacity: 0, y: 28 });
+        if (finaleSteps?.length) gsap.set(finaleSteps, { opacity: 0, y: 24 });
 
-        const introSteps = intro?.querySelectorAll(".journey-intro-step");
+        const introLines = intro?.querySelectorAll(".journey-intro-line");
+        if (introLines?.length) {
+          gsap.set(introLines, { opacity: 0, y: 28 });
+        }
+
+        const scrollItems = cardTrack.querySelectorAll(
+          ".journey-year-group, .journey-beacon-pin"
+        );
+        gsap.set(scrollItems, { opacity: 0 });
+
+        /*
+         * Full-height beacon pins stick to the left edge.
+         * White pin sits above columns so images scroll behind it.
+         */
+        const beaconPins = Array.from(
+          cardTrack.querySelectorAll<HTMLElement>(".journey-beacon-pin")
+        );
+
+        const pinNativeLeft = (el: HTMLElement) => {
+          const ownX = Number(gsap.getProperty(el, "x")) || 0;
+          return (
+            el.getBoundingClientRect().left -
+            cardTrack.getBoundingClientRect().left -
+            ownX
+          );
+        };
+
+        let pinLefts = beaconPins.map(pinNativeLeft);
+
+        const remeasureBeacons = () => {
+          pinLefts = beaconPins.map(pinNativeLeft);
+        };
+
+        const updateStickyBeacons = () => {
+          if (!beaconPins.length) return;
+          const trackX = Number(gsap.getProperty(cardTrack, "x")) || 0;
+
+          /* Last pin that has reached the left edge stays stuck there */
+          let active = -1;
+          for (let i = 0; i < beaconPins.length; i++) {
+            if (pinLefts[i] + trackX <= 0) active = i;
+          }
+
+          beaconPins.forEach((el, i) => {
+            if (i === active) {
+              gsap.set(el, {
+                x: -pinLefts[i] - trackX,
+                force3D: true,
+              });
+            } else {
+              gsap.set(el, { x: 0, force3D: true });
+            }
+          });
+        };
+
+        /* Start on white; intro already left-aligned (no center→dock jerk) */
+        gsap.set(fade, { opacity: 0 });
+        gsap.set(cardTrack, { x: 0 });
+        remeasureBeacons();
+
+        /*
+         * Scrub weights (relative). Pin distance scales with track width
+         * so horizontal scroll speed stays even — no long empty scrolling.
+         */
+        const INTRO_SCROLL_VH = 1.55;
+        const EXIT_SCROLL_VH = 1.25;
+        const SCROLL_PX_PER_VH = 0.92;
 
         const tl = gsap.timeline({
-          defaults: { ease: "power2.out" },
+          defaults: { ease: "power3.out" },
           scrollTrigger: {
             trigger: pin,
             start: "top top",
-            end: () => `+=${window.innerHeight * 6}`,
+            end: () => {
+              const intro = window.innerHeight * INTRO_SCROLL_VH;
+              const track =
+                Math.max(travel(), stage.clientWidth * 0.5) * SCROLL_PX_PER_VH;
+              const exit = window.innerHeight * EXIT_SCROLL_VH;
+              return `+=${intro + track + exit}`;
+            },
             pin: true,
-            scrub: 1,
+            scrub: 0.45,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onRefresh: () => {
+              remeasureBeacons();
+              updateStickyBeacons();
+            },
+            onUpdate: updateStickyBeacons,
           },
         });
 
-        tl.to({}, { duration: 1.5 }, 0);
+        /* 1. Arrive on white — quick handoff from hero */
+        tl.to(fade, { opacity: 1, duration: 0.55, ease: "power2.out" }, 0);
 
-        if (introSteps?.length) {
+        /* 2. Left-aligned text — line by line, paced not glacial */
+        const lineCount = introLines?.length ?? 0;
+        const lineStagger = 0.32;
+        const lineDur = 0.55;
+        if (introLines?.length) {
           tl.fromTo(
-            introSteps,
-            { y: 28, opacity: 0 },
+            introLines,
+            { y: 22, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              duration: 0.55,
-              stagger: 0.1,
+              duration: lineDur,
+              stagger: lineStagger,
               ease: "power2.out",
               immediateRender: false,
             },
-            0
+            0.3
           );
         }
 
+        /* 3. Brief hold, then cards enter as scroll begins */
+        const afterLines =
+          0.3 + Math.max(0, lineCount - 1) * lineStagger + lineDur;
+        tl.to({}, { duration: 0.28 }, afterLines);
+
+        const revealAt = afterLines + 0.28;
+        tl.to(
+          scrollItems,
+          { opacity: 1, duration: 0.55, ease: "power2.out" },
+          revealAt
+        );
+
+        /* 4. Horizontal journey — bulk of the pin distance */
+        const scrollAt = revealAt + 0.35;
+        const scrollDur = 5.2;
         tl.to(
           cardTrack,
-          { x: () => -travel(), ease: "none", duration: 5.5 },
-          1.5
+          {
+            x: () => -travel(),
+            ease: "none",
+            duration: scrollDur,
+            onUpdate: updateStickyBeacons,
+          },
+          scrollAt
         );
 
         tl.to(
           cardTrack,
-          { x: () => -exitTravel(), ease: "power2.inOut", duration: 2 },
-          7
+          {
+            x: () => -exitTravel(),
+            ease: "power2.inOut",
+            duration: 1.35,
+            onUpdate: updateStickyBeacons,
+          },
+          scrollAt + scrollDur
         );
-        tl.to(cardLayer, { opacity: 0, duration: 1.5, ease: "power2.in" }, 7.5);
+        tl.to(
+          cardLayer,
+          { opacity: 0, duration: 1, ease: "power2.inOut" },
+          scrollAt + scrollDur + 0.25
+        );
 
         tl.to(
           finaleLayer,
-          { opacity: 1, scale: 1, duration: 1.5, ease: "power3.out" },
-          9
+          { opacity: 1, scale: 1, duration: 1, ease: "power3.out" },
+          scrollAt + scrollDur + 0.85
         );
 
         if (finaleRef.current) {
@@ -343,15 +483,15 @@ export default function Journey() {
             finaleRef.current.querySelectorAll(".journey-finale-step");
           tl.fromTo(
             finaleParts,
-            { y: 24, opacity: 0 },
+            { y: 18, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              duration: 0.4,
-              stagger: 0.15,
-              ease: "power2.out",
+              duration: 0.45,
+              stagger: 0.1,
+              ease: "power3.out",
             },
-            9.4
+            scrollAt + scrollDur + 1.05
           );
         }
       }, section);
@@ -384,14 +524,15 @@ export default function Journey() {
       <Hero />
 
       <div className="journey-pin" ref={pinRef}>
-        <div className="journey-stage" ref={stageRef}>
+        <div className="journey-fade" ref={fadeRef}>
+          <div className="journey-stage" ref={stageRef}>
           <div className="journey-card-layer" ref={cardLayerRef}>
             <div className="journey-card-track" ref={cardTrackRef}>
               <JourneyIntro introRef={introRef} />
 
               {panels.map((panel, panelIndex) => (
                 <div className="journey-year-group" key={panel.year}>
-                  <JourneyBeacon
+                  <JourneyBeaconPin
                     year={panel.year as "2025" | "2026" | "2027"}
                   />
                   {COLUMN_VARIANTS.map((variant, variantIndex) => (
@@ -406,7 +547,7 @@ export default function Journey() {
                 </div>
               ))}
 
-              <JourneyBeacon year="2027" />
+              <JourneyBeaconPin year="2027" />
             </div>
           </div>
 
@@ -422,6 +563,7 @@ export default function Journey() {
               </p>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>

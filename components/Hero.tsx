@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import {
   useCallback,
   useEffect,
@@ -11,11 +10,28 @@ import {
 } from "react";
 import { useReducedMotion } from "framer-motion";
 import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
+/* Eager — LoadingGate also imports this so the model warms under the cover */
+import HeroModel3D from "@/components/HeroModel3D";
 
-const HeroModel3D = dynamic(
-  () => import("@/components/HeroModel3D").then((mod) => mod.default),
-  { ssr: false }
-);
+/** Explicit lines so each fills L→R (not a vertical wipe across the block). */
+const HANDOFF_LINES = [
+  "Here We Grow is the Signal",
+  "franchise convention where",
+  "our network gathers to",
+  "shape culture, share strategy,",
+  "and write the next chapter",
+  "together.",
+] as const;
+
+function lineFillPercent(progress: number, index: number, total: number) {
+  const t = Math.min(1, Math.max(0, progress));
+  /* Strict sequence: finish one line before the next starts */
+  const span = 1 / total;
+  const start = index * span;
+  const end = (index + 1) * span;
+  const local = Math.min(1, Math.max(0, (t - start) / (end - start)));
+  return local * 100;
+}
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
@@ -62,14 +78,21 @@ export default function Hero() {
     reduceMotion ? (scrollProgress > 0.5 ? 1 : 0) : scrollProgress
   );
 
-  const heroLayerOpacity = 1 - phases.heroConclude;
+  /* UI fades out; model stays until whiteout covers the dive */
+  const stageOpacity = Math.max(
+    0,
+    1 - Math.max(phases.heroConclude, phases.modelZoom * 0.35)
+  );
+  const bgOpacity = Math.max(0, 1 - phases.whiteOut);
+  const modelOpacity = Math.max(0, 1 - phases.whiteOut * 0.15);
 
   const heroStyle = {
     "--hero-scroll": phases.eased,
     "--hero-model-corner": phases.modelToCorner,
     "--hero-model-center": phases.modelToCenter,
+    "--hero-model-zoom": phases.modelZoom,
     "--hero-conclude": phases.heroConclude,
-    background: `rgba(8, 9, 12, ${heroLayerOpacity})`,
+    "--hero-whiteout": phases.whiteOut,
   } as CSSProperties;
 
   useEffect(() => {
@@ -78,8 +101,11 @@ export default function Hero() {
     ) as HTMLElement | null;
     if (!section) return;
     section.style.setProperty("--hero-scroll", String(phases.eased));
-    section.style.zIndex = phases.heroConclude > 0.08 ? "20" : "1";
-  }, [phases.eased, phases.heroConclude]);
+    section.style.setProperty(
+      "--hero-seam",
+      String(Math.max(phases.whiteOut, phases.heroConclude))
+    );
+  }, [phases.eased, phases.whiteOut, phases.heroConclude]);
 
   return (
     <header
@@ -90,7 +116,11 @@ export default function Hero() {
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
-      <div className="hero-bg" aria-hidden="true" style={{ opacity: heroLayerOpacity }}>
+      <div
+        className="hero-bg"
+        aria-hidden="true"
+        style={{ opacity: bgOpacity }}
+      >
         <div className="hero-scrim" />
         <div className="hero-glow" />
       </div>
@@ -98,25 +128,24 @@ export default function Hero() {
       <div
         className="hero-text-scrim"
         aria-hidden="true"
-        style={{ opacity: heroLayerOpacity }}
+        style={{ opacity: bgOpacity }}
       />
 
       <div
         className="hero-model"
         aria-hidden="true"
-        style={{ opacity: heroLayerOpacity }}
+        style={{ opacity: modelOpacity }}
       >
-        <HeroModel3D
-          pointer={pointer}
-          scrollProgress={scrollProgress}
-          reduceMotion={reduceMotion}
-        />
+        <div className="hero-model-inner">
+          <HeroModel3D
+            pointer={pointer}
+            scrollProgress={scrollProgress}
+            reduceMotion={reduceMotion}
+          />
+        </div>
       </div>
 
-      <div
-        className="hero-stage"
-        style={{ opacity: heroLayerOpacity }}
-      >
+      <div className="hero-stage" style={{ opacity: stageOpacity }}>
         <div
           className="hero-copy"
           style={{
@@ -194,16 +223,40 @@ export default function Hero() {
           style={{
             opacity: phases.handoffEnter * (1 - phases.handoffExit),
             visibility: phases.handoffVisible ? "visible" : "hidden",
-            transform: `translate(-50%, calc(-50% + ${phases.handoffY} * 1vh))`,
+            transform: `translate3d(0, calc(-50% + ${phases.handoffY} * 1vh), 0)`,
           }}
         >
           <p className="hero-handoff-statement">
-            Here We Grow is the Signal franchise convention where our network
-            gathers to shape culture, share strategy, and write the next chapter
-            together.
+            {HANDOFF_LINES.map((line, index) => (
+              <span
+                key={line}
+                className="hero-handoff-line"
+                style={
+                  {
+                    "--line-fill": `${
+                      reduceMotion
+                        ? 100
+                        : lineFillPercent(
+                            phases.handoffFill,
+                            index,
+                            HANDOFF_LINES.length
+                          )
+                    }%`,
+                  } as CSSProperties
+                }
+              >
+                {line}
+              </span>
+            ))}
           </p>
         </aside>
       </div>
+
+      <div
+        className="hero-whiteout"
+        aria-hidden="true"
+        style={{ opacity: phases.whiteOut }}
+      />
     </header>
   );
 }

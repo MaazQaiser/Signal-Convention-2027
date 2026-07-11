@@ -1,10 +1,21 @@
 export const HERO_PHASE = {
-  modelToCornerEnd: 0.38,
-  handoffEnterEnd: 0.52,
+  modelToCornerEnd: 0.28,
+  handoffEnterEnd: 0.34,
+  /** Longer window = slower line-by-line L→R fill */
+  handoffFillEnd: 0.58,
   handoffHoldEnd: 0.62,
-  handoffExitEnd: 0.72,
-  modelToCenterStart: 0.62,
-  heroConcludeStart: 0.88,
+  /** Text fully exits before model centers */
+  handoffExitEnd: 0.68,
+  /** Model settles in center, face-on */
+  modelToCenterStart: 0.68,
+  modelToCenterEnd: 0.76,
+  /** Zoom into bright core */
+  modelZoomStart: 0.76,
+  modelZoomEnd: 0.88,
+  /** Full white — must complete before Journey is reached */
+  whiteOutStart: 0.84,
+  whiteOutEnd: 0.94,
+  heroConcludeStart: 0.94,
 } as const;
 
 export function easeScrollProgress(t: number) {
@@ -28,21 +39,40 @@ export function getHeroScrollPhases(scrollProgress: number) {
   const modelToCenter = phaseProgress(
     eased,
     HERO_PHASE.modelToCenterStart,
-    1
+    HERO_PHASE.modelToCenterEnd
+  );
+  const modelZoom = phaseProgress(
+    eased,
+    HERO_PHASE.modelZoomStart,
+    HERO_PHASE.modelZoomEnd
   );
 
   const introLift = phaseProgress(eased, 0, HERO_PHASE.modelToCornerEnd);
   const metaLift = phaseProgress(eased, 0, HERO_PHASE.modelToCornerEnd * 0.85);
 
-  const handoffEnter = phaseProgress(
+  const handoffEnterRaw = phaseProgress(
     eased,
     HERO_PHASE.modelToCornerEnd,
     HERO_PHASE.handoffEnterEnd
   );
-  const handoffExit = phaseProgress(
+  const handoffFillRaw = phaseProgress(
+    eased,
+    HERO_PHASE.handoffEnterEnd,
+    HERO_PHASE.handoffFillEnd
+  );
+  const handoffExitRaw = phaseProgress(
     eased,
     HERO_PHASE.handoffHoldEnd,
     HERO_PHASE.handoffExitEnd
+  );
+
+  const handoffEnter = easeScrollProgress(handoffEnterRaw);
+  /* Linear fill — easing made every line jump ahead and feel pre-filled */
+  const handoffFill = handoffFillRaw;
+  const handoffExit = easeScrollProgress(handoffExitRaw);
+
+  const whiteOut = easeScrollProgress(
+    phaseProgress(eased, HERO_PHASE.whiteOutStart, HERO_PHASE.whiteOutEnd)
   );
   const heroConclude = phaseProgress(
     eased,
@@ -54,12 +84,15 @@ export function getHeroScrollPhases(scrollProgress: number) {
     eased,
     modelToCorner,
     modelToCenter,
+    modelZoom,
     introLift,
     metaLift,
     handoffEnter,
+    handoffFill,
     handoffExit,
+    whiteOut,
     heroConclude,
-    handoffVisible: handoffEnter > 0.02 && handoffExit < 0.98,
-    handoffY: (1 - handoffEnter) * 14 - handoffExit * 10,
+    handoffVisible: handoffEnterRaw > 0.02 && handoffExitRaw < 0.98,
+    handoffY: (1 - handoffEnter) * 4.5 - handoffExit * 3.5,
   };
 }

@@ -19,10 +19,16 @@ type ModelProps = HeroModel3DProps;
 
 const MODEL_SCALE = 7.2;
 const MODEL_SCALE_END = 3.2;
-const MODEL_SCALE_CENTER = 5.6;
+const MODEL_SCALE_CENTER = 5.8;
+/** Large enough that the warm core fills the frame on zoom */
+const MODEL_SCALE_ZOOM = 28;
 const MODEL_ANCHOR: [number, number, number] = [1.95, -1.28, 0];
 const MODEL_ANCHOR_END: [number, number, number] = [-1.82, 0.92, 0];
 const MODEL_ANCHOR_CENTER: [number, number, number] = [0, 0.02, 0];
+const CAMERA_Z_START = 5.4;
+const CAMERA_Z_ZOOM = 2.35;
+const CAMERA_FOV_START = 40;
+const CAMERA_FOV_ZOOM = 26;
 const BASE_TILT = { x: 0.12, y: -0.58 };
 const CLOCK_SPEED = 0.05;
 const POINTER_TILT = 0.22;
@@ -330,20 +336,23 @@ function lerpAnchor(
 function LogoBackgroundGlow({
   reduceMotion,
   anchor,
+  intensity = 1,
 }: {
   reduceMotion: boolean | null;
   anchor: [number, number, number];
+  intensity?: number;
 }) {
   const glowMat = useMemo(() => createGlowMaterial(1.65 * GLOW_STRENGTH), []);
 
   useFrame(({ clock }) => {
     glowMat.uniforms.uTime.value = reduceMotion ? 0 : clock.elapsedTime;
+    glowMat.uniforms.uIntensity.value = 1.65 * GLOW_STRENGTH * intensity;
   });
 
   return (
     <group position={[anchor[0], anchor[1], anchor[2] - 0.72]}>
       <Billboard follow lockX={false} lockY={false} lockZ={false}>
-        <mesh renderOrder={-20} material={glowMat}>
+        <mesh renderOrder={-20} material={glowMat} scale={0.85 + intensity * 0.4}>
           <planeGeometry args={[9.5, 9.5]} />
         </mesh>
       </Billboard>
@@ -353,6 +362,7 @@ function LogoBackgroundGlow({
 
 function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
   const groupRef = useRef<THREE.Group>(null);
+  const tiltRef = useRef<THREE.Group>(null);
   const spinRef = useRef<THREE.Group>(null);
   const clockAngle = useRef(0);
   const smoothPointer = useRef({ x: 0, y: 0 });
@@ -379,7 +389,12 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
   useFrame((state, delta) => {
     const spin = spinRef.current;
     const root = groupRef.current;
-    if (!spin || !root) return;
+    const tilt = tiltRef.current;
+    if (!spin || !root || !tilt) return;
+
+    /* Model is preloaded under the cover — stay fully visible, no intro pop */
+    root.scale.setScalar(1);
+    root.visible = true;
 
     const elapsed = state.clock.elapsedTime;
     for (const mesh of glassMeshesRef.current) {
@@ -391,11 +406,24 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
 
     const cornerT = easePhase(phases.modelToCorner);
     const centerT = easePhase(phases.modelToCenter);
+    const zoomT = easePhase(phases.modelZoom);
+    /* Turn face-on as we center / dive */
+    const faceT = easePhase(Math.max(centerT, zoomT));
+
+    tilt.rotation.x = THREE.MathUtils.lerp(BASE_TILT.x, 0, faceT);
+    tilt.rotation.y = THREE.MathUtils.lerp(BASE_TILT.y, 0, faceT);
 
     let anchor: [number, number, number];
     let targetScale: number;
 
-    if (centerT > 0) {
+    if (zoomT > 0) {
+      anchor = MODEL_ANCHOR_CENTER;
+      targetScale = THREE.MathUtils.lerp(
+        MODEL_SCALE_CENTER,
+        MODEL_SCALE_ZOOM,
+        zoomT
+      );
+    } else if (centerT > 0) {
       anchor = lerpAnchor(MODEL_ANCHOR_END, MODEL_ANCHOR_CENTER, centerT);
       targetScale = THREE.MathUtils.lerp(
         MODEL_SCALE_END,
@@ -417,6 +445,17 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
       anchor[2] - center.z
     );
 
+    /* Pull camera into the bright core while zooming */
+    const cam = state.camera;
+    if (cam instanceof THREE.PerspectiveCamera) {
+      const camT = Math.max(centerT * 0.35, zoomT);
+      cam.position.z = THREE.MathUtils.lerp(CAMERA_Z_START, CAMERA_Z_ZOOM, camT);
+      cam.position.x = THREE.MathUtils.lerp(-0.55, 0, camT);
+      cam.position.y = THREE.MathUtils.lerp(0.12, 0, camT);
+      cam.fov = THREE.MathUtils.lerp(CAMERA_FOV_START, CAMERA_FOV_ZOOM, camT);
+      cam.updateProjectionMatrix();
+    }
+
     smoothPointer.current.x = THREE.MathUtils.lerp(
       smoothPointer.current.x,
       pointer.x,
@@ -428,9 +467,10 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
       0.09
     );
 
-    const motionBlend = Math.max(cornerT, centerT);
-    const settled = cornerT >= 0.98 || centerT > 0.08;
-    const pointerWeight = settled ? 0.14 : 1 - motionBlend * 0.85;
+    const motionBlend = Math.max(cornerT, centerT, zoomT);
+    const settled = cornerT >= 0.98 && centerT < 0.02 && zoomT < 0.02;
+    const pointerWeight =
+      faceT > 0.2 ? 0 : settled ? 0.14 : 1 - motionBlend * 0.85;
     const { x, y } = smoothPointer.current;
 
     if (settled) {
@@ -443,41 +483,41 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
 
     if (reduceMotion) {
       clockAngle.current -= delta * CLOCK_SPEED;
-      spin.rotation.z = clockAngle.current;
+      spin.rotation.set(0, 0, clockAngle.current * (1 - faceT));
       return;
     }
 
     clockAngle.current -= delta * CLOCK_SPEED;
-    spin.rotation.x = THREE.MathUtils.lerp(
-      spin.rotation.x,
-      y * POINTER_TILT * pointerWeight,
-      0.1
-    );
-    spin.rotation.y = THREE.MathUtils.lerp(
-      spin.rotation.y,
-      x * POINTER_TILT * pointerWeight,
-      0.1
-    );
-    spin.rotation.z =
-      clockAngle.current +
-      modelScroll * Math.PI * 0.2 +
-      x * POINTER_SPIN * pointerWeight;
+    const targetSpinX = y * POINTER_TILT * pointerWeight;
+    const targetSpinY = x * POINTER_TILT * pointerWeight;
+    const targetSpinZ =
+      (clockAngle.current +
+        modelScroll * Math.PI * 0.2 * (1 - faceT) +
+        x * POINTER_SPIN * pointerWeight) *
+      (1 - faceT * 0.92);
+
+    spin.rotation.x = THREE.MathUtils.lerp(spin.rotation.x, targetSpinX, 0.12);
+    spin.rotation.y = THREE.MathUtils.lerp(spin.rotation.y, targetSpinY, 0.12);
+    spin.rotation.z = THREE.MathUtils.lerp(spin.rotation.z, targetSpinZ, 0.12);
   });
 
   const cornerT = easePhase(phases.modelToCorner);
   const centerT = easePhase(phases.modelToCenter);
+  const zoomT = easePhase(phases.modelZoom);
   const currentGlowAnchor =
-    centerT > 0
-      ? lerpAnchor(MODEL_ANCHOR_END, MODEL_ANCHOR_CENTER, centerT)
+    zoomT > 0 || centerT > 0
+      ? MODEL_ANCHOR_CENTER
       : lerpAnchor(MODEL_ANCHOR, MODEL_ANCHOR_END, cornerT);
+  const glowIntensity = 1 + zoomT * 2.8;
 
   return (
     <group ref={groupRef}>
-      <group rotation={[BASE_TILT.x, BASE_TILT.y, 0]}>
+      <group ref={tiltRef} rotation={[BASE_TILT.x, BASE_TILT.y, 0]}>
         <group ref={spinRef}>
           <LogoBackgroundGlow
             reduceMotion={reduceMotion}
             anchor={currentGlowAnchor}
+            intensity={glowIntensity}
           />
           <primitive object={model} />
         </group>

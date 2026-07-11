@@ -5,10 +5,11 @@ import NetworkTransition from "@/components/NetworkTransition";
 import Merch from "@/components/Merch";
 import Register from "@/components/Register";
 import Footer from "@/components/Footer";
+import LoadingGate from "@/components/LoadingGate";
 
 export default function Home() {
   return (
-    <>
+    <LoadingGate>
       <Nav />
       <Journey />
       <Agenda />
@@ -16,6 +17,6 @@ export default function Home() {
       <Merch />
       <Register />
       <Footer />
-    </>
+    </LoadingGate>
   );
 }

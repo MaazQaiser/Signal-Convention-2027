@@ -139,8 +139,8 @@ export default function Merch() {
 
           gsap.set(el, {
             opacity: 0,
-            scale: 0.82,
-            y: 48,
+            scale: 0.92,
+            y: 24,
             rotate,
           });
         });
@@ -167,9 +167,9 @@ export default function Merch() {
 
               gsap.set(el, {
                 opacity: eased,
-                scale: 0.82 + eased * 0.18,
-                y: 48 * (1 - eased),
-                rotate: item.rotate + (1 - eased) * 6,
+                scale: 0.92 + eased * 0.08,
+                y: 24 * (1 - eased),
+                rotate: item.rotate + (1 - eased) * 3,
               });
             });
           },

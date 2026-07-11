@@ -19,3 +19,10 @@ export async function loadGsap() {
 
   return { gsap, ScrollTrigger };
 }
+
+/** Refresh ScrollTrigger after layout changes (loader, Lenis, cover). */
+export async function refreshScrollTrigger() {
+  const { ScrollTrigger } = await loadGsap();
+  ScrollTrigger.refresh();
+  return ScrollTrigger;
+}

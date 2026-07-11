@@ -1,5 +1,7 @@
 "use client";
 
+import Reveal, { REVEAL_CASCADE } from "./Reveal";
+
 const conventionLinks = [
   { label: "Experience", href: "#agenda" },
   { label: "Hotel & Travel", href: "#register" },
@@ -40,8 +42,12 @@ export default function Footer() {
       </div>
 
       <div className="footer-grid wrap">
-        <div className="footer-brand">
-          <a href="#top" className="footer-logo" aria-label="Here We Grow 2027">
+        <Reveal className="footer-brand" delay={REVEAL_CASCADE.eyebrow}>
+          <a
+            href="#top"
+            className="footer-logo"
+            aria-label="Here We Grow 2027"
+          >
             <img
               src="/brand/nav-logo-27-dark.svg"
               alt="Here We Grow 2027"
@@ -52,9 +58,9 @@ export default function Footer() {
           <p className="footer-brand-tagline">
             Growing Together Through Culture, Community, and Consistency.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="footer-col">
+        <Reveal className="footer-col" delay={REVEAL_CASCADE.title}>
           <h4 className="footer-col-title">Convention</h4>
           <ul className="footer-links">
             {conventionLinks.map((link) => (
@@ -63,9 +69,9 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
 
-        <div className="footer-col">
+        <Reveal className="footer-col" delay={REVEAL_CASCADE.body}>
           <h4 className="footer-col-title">Community</h4>
           <ul className="footer-links">
             {communityLinks.map((link) => (
@@ -81,9 +87,9 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
 
-        <div className="footer-col footer-connect">
+        <Reveal className="footer-col footer-connect" delay={0.24}>
           <h4 className="footer-col-title">Stay Connected</h4>
           <p className="footer-connect-copy">
             Follow the latest convention announcements and updates.
@@ -106,10 +112,10 @@ export default function Footer() {
               Join
             </button>
           </form>
-        </div>
+        </Reveal>
       </div>
 
-      <div className="footer-closing">
+      <Reveal className="footer-closing" delay={REVEAL_CASCADE.cta}>
         <p className="footer-philosophy">here. we grow.</p>
         <ul className="footer-values">
           <li>Culture.</li>
@@ -119,7 +125,7 @@ export default function Footer() {
         <p className="footer-meta">
           December 10&ndash;12, 2027 &bull; Phoenix, Arizona
         </p>
-      </div>
+      </Reveal>
 
       <div className="footer-bar wrap">
         <p className="footer-legal">

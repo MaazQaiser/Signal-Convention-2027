@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 
-const EASE = [0.25, 0.1, 0.25, 1] as const;
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const BRANDS = [
   {
@@ -29,9 +29,9 @@ function fadeUp(delay: number, reduceMotion: boolean | null) {
   }
 
   return {
-    initial: { opacity: 0, y: 18 },
+    initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.75, ease: EASE, delay },
+    transition: { duration: 0.9, ease: EASE, delay },
   };
 }
 

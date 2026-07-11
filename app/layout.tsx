@@ -1,12 +1,38 @@
 import type { Metadata } from "next";
-import { Familjen_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const familjen = Familjen_Grotesk({
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
+const fkDisplay = localFont({
+  src: [
+    {
+      path: "./fonts/FKDisplay-Regular.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/FKDisplay-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/FKDisplay-Regular.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/FKDisplay-Regular.otf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "./fonts/FKDisplay-Regular.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   variable: "--font-body",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -20,7 +46,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={familjen.variable}>{children}</body>
+      <body className={fkDisplay.variable}>{children}</body>
     </html>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { EASE_SOFT } from "./Reveal";
 
 const links = [
   { label: "Home", href: "#top" },
@@ -20,9 +21,9 @@ export default function Nav() {
   return (
     <motion.nav
       className={`nav${scrolled ? " scrolled" : ""}`}
-      initial={{ y: -40, opacity: 0 }}
+      initial={{ y: -18, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 1.15, ease: EASE_SOFT, delay: 0.55 }}
     >
       <a className="nav-brand" href="#top" aria-label="Signal 2027 — Here We Grow">
         <img
