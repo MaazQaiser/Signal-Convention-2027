@@ -13,15 +13,14 @@ import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
 /* Eager — LoadingGate also imports this so the model warms under the cover */
 import HeroModel3D from "@/components/HeroModel3D";
 
-/** Explicit lines so each fills L→R (not a vertical wipe across the block). */
-const HANDOFF_LINES = [
-  "Here We Grow is the Signal",
-  "franchise convention where",
-  "our network gathers to",
-  "shape culture, share strategy,",
-  "and write the next chapter",
-  "together.",
+/** Title then body — each line fills L→R in sequence. */
+const HANDOFF_TITLE = "Grow Through Consistency";
+const HANDOFF_BODY = [
+  "This year, we're exploring the habits,",
+  "disciplines and daily decisions that",
+  "lead to long-term success...",
 ] as const;
+const HANDOFF_LINES = [HANDOFF_TITLE, ...HANDOFF_BODY] as const;
 
 function lineFillPercent(progress: number, index: number, total: number) {
   const t = Math.min(1, Math.max(0, progress));
@@ -154,10 +153,15 @@ export default function Hero() {
             transform: `translateY(calc(${-phases.introLift * 58} * 1vh))`,
           }}
         >
-          <h1 className="hero-title">The Next Chapter Starts Here</h1>
+          <h1 className="hero-title">Here We Grow 2027</h1>
           <p className="hero-sub">
-            One community. One vision. Limitless growth.
+            Join franchise owners, teams, Home Office and partners for three
+            days of learning from one another and discovering new ways to
+            strengthen your business.
           </p>
+          <a className="btn btn-orange hero-cta" href="#register">
+            Register
+          </a>
         </div>
 
         <div
@@ -194,7 +198,7 @@ export default function Hero() {
                 strokeLinecap="round"
               />
             </svg>
-            <span>Dec 10&ndash;12, 2027</span>
+            <span>January 17&ndash;19, 2027</span>
           </p>
           <p className="hero-meta-row hero-meta-loc">
             <svg
@@ -213,13 +217,17 @@ export default function Hero() {
               />
               <circle cx="8" cy="7" r="1.5" fill="currentColor" />
             </svg>
-            <span>Phoenix, Arizona</span>
+            <span>
+              JW Marriott Desert Ridge Resort &amp; Spa
+              <br />
+              Phoenix, Arizona
+            </span>
           </p>
         </div>
 
         <aside
           className="hero-handoff-copy"
-          aria-label="Convention story"
+          aria-label="Grow Through Consistency"
           style={{
             opacity: phases.handoffEnter * (1 - phases.handoffExit),
             visibility: phases.handoffVisible ? "visible" : "hidden",
@@ -227,10 +235,30 @@ export default function Hero() {
           }}
         >
           <p className="hero-handoff-statement">
-            {HANDOFF_LINES.map((line, index) => (
+            <span
+              className="hero-handoff-line hero-handoff-line--title"
+              style={
+                {
+                  "--line-fill": `${
+                    reduceMotion
+                      ? 100
+                      : lineFillPercent(
+                          phases.handoffFill,
+                          0,
+                          HANDOFF_LINES.length
+                        )
+                  }%`,
+                } as CSSProperties
+              }
+            >
+              {HANDOFF_TITLE}
+            </span>
+          </p>
+          <p className="hero-handoff-body">
+            {HANDOFF_BODY.map((line, index) => (
               <span
                 key={line}
-                className="hero-handoff-line"
+                className="hero-handoff-line hero-handoff-line--body"
                 style={
                   {
                     "--line-fill": `${
@@ -238,7 +266,7 @@ export default function Hero() {
                         ? 100
                         : lineFillPercent(
                             phases.handoffFill,
-                            index,
+                            index + 1,
                             HANDOFF_LINES.length
                           )
                     }%`,

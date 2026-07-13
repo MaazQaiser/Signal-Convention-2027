@@ -46,6 +46,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          href="/videos/destination.mp4"
+          as="video"
+          type="video/mp4"
+        />
+      </head>
       <body className={fkDisplay.variable}>{children}</body>
     </html>
   );

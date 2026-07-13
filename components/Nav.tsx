@@ -6,8 +6,9 @@ import { EASE_SOFT } from "./Reveal";
 
 const links = [
   { label: "Home", href: "#top" },
-  { label: "Merch", href: "#merch" },
-  { label: "Experience", href: "#agenda" },
+  { label: "Agenda", href: "#journey" },
+  { label: "Hotel & Travel", href: "#agenda" },
+  { label: "Sponsors", href: "#sponsors" },
 ];
 
 export default function Nav() {
@@ -39,7 +40,7 @@ export default function Nav() {
           </a>
         ))}
         <a className="nav-reserve" href="#register">
-          Reserve your spot
+          Register
         </a>
       </div>
     </motion.nav>

@@ -1,148 +1,93 @@
 "use client";
 
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
+import ClosingModel from "./ClosingModel";
 
-const conventionLinks = [
-  { label: "Experience", href: "#agenda" },
-  { label: "Hotel & Travel", href: "#register" },
-  { label: "Sponsors", href: "#" },
-  { label: "FAQs", href: "#" },
-];
-
-const communityLinks = [
-  { label: "Signal", href: "https://www.signal.com/" },
-  { label: "FilterGo", href: "https://www.filtergo.com/" },
-  { label: "Contact", href: "mailto:hello@signal.co" },
-  { label: "Sponsorship Opportunities", href: "#" },
+const navLinks = [
+  { label: "Home", href: "#top" },
+  { label: "Hotel & Travel", href: "#agenda" },
+  { label: "Sponsors", href: "#sponsors" },
+  { label: "FAQs", href: "#faq" },
+  { label: "Register", href: "#register" },
 ];
 
 const legalLinks = [
-  { label: "Privacy", href: "#" },
-  { label: "Terms", href: "#" },
-  { label: "Accessibility", href: "#" },
+  { label: "Privacy Policy", href: "#" },
+  { label: "Terms of Use", href: "#" },
 ];
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-bg" aria-hidden="true">
-        <div className="footer-scrim" />
-        <div className="footer-glow" />
-      </div>
+      <div className="wrap footer-meta">
+        <Reveal className="footer-meta-left" delay={REVEAL_CASCADE.eyebrow}>
+          <p className="footer-copy">Signal Franchise Convention</p>
+        </Reveal>
 
-      <div className="footer-beacon" aria-hidden="true">
-        <div className="footer-beacon-glow" />
-        <div className="footer-beacon-spin">
-          <img
-            src="/brand/brandmark-27-white.svg"
-            alt=""
-            className="footer-beacon-img"
-          />
+        <div className="footer-meta-right">
+          <Reveal className="footer-col" delay={REVEAL_CASCADE.title}>
+            <h4 className="footer-col-title">Convention</h4>
+            <a
+              className="footer-enquiry"
+              href="mailto:convention@teamsignal.com"
+            >
+              convention@teamsignal.com
+            </a>
+            <a
+              className="footer-enquiry"
+              href="https://www.teamsignal.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              teamsignal.com
+            </a>
+          </Reveal>
+
+          <Reveal className="footer-col" delay={REVEAL_CASCADE.body}>
+            <h4 className="footer-col-title">Explore</h4>
+            <ul className="footer-links">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal className="footer-col" delay={0.24}>
+            <h4 className="footer-col-title">Partner</h4>
+            <a className="footer-enquiry" href="#sponsors">
+              Become a Sponsor
+            </a>
+            <a
+              className="footer-enquiry"
+              href="mailto:convention@teamsignal.com"
+            >
+              Contact Team
+            </a>
+          </Reveal>
         </div>
       </div>
 
-      <div className="footer-grid wrap">
-        <Reveal className="footer-brand" delay={REVEAL_CASCADE.eyebrow}>
-          <a
-            href="#top"
-            className="footer-logo"
-            aria-label="Here We Grow 2027"
-          >
-            <img
-              src="/brand/nav-logo-27-dark.svg"
-              alt="Here We Grow 2027"
-              height={32}
-            />
-          </a>
-          <h3 className="footer-brand-title">Here We Grow 2027</h3>
-          <p className="footer-brand-tagline">
-            Growing Together Through Culture, Community, and Consistency.
-          </p>
-        </Reveal>
-
-        <Reveal className="footer-col" delay={REVEAL_CASCADE.title}>
-          <h4 className="footer-col-title">Convention</h4>
-          <ul className="footer-links">
-            {conventionLinks.map((link) => (
-              <li key={link.label}>
-                <a href={link.href}>{link.label}</a>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        <Reveal className="footer-col" delay={REVEAL_CASCADE.body}>
-          <h4 className="footer-col-title">Community</h4>
-          <ul className="footer-links">
-            {communityLinks.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  {...(link.href.startsWith("http")
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        <Reveal className="footer-col footer-connect" delay={0.24}>
-          <h4 className="footer-col-title">Stay Connected</h4>
-          <p className="footer-connect-copy">
-            Follow the latest convention announcements and updates.
-          </p>
-          <form
-            className="footer-email"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <label htmlFor="footer-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="footer-email"
-              type="email"
-              name="email"
-              placeholder="Email address"
-              autoComplete="email"
-            />
-            <button type="submit" className="footer-email-btn">
-              Join
-            </button>
-          </form>
-        </Reveal>
-      </div>
-
-      <Reveal className="footer-closing" delay={REVEAL_CASCADE.cta}>
-        <p className="footer-philosophy">here. we grow.</p>
-        <ul className="footer-values">
-          <li>Culture.</li>
-          <li>Community.</li>
-          <li>Consistency.</li>
-        </ul>
-        <p className="footer-meta">
-          December 10&ndash;12, 2027 &bull; Phoenix, Arizona
-        </p>
-      </Reveal>
-
-      <div className="footer-bar wrap">
-        <p className="footer-legal">
-          &copy; 2027 Framebrand. All rights reserved.
-        </p>
+      <div className="wrap footer-bar">
+        <p className="footer-legal">Signal Franchise Convention</p>
         <nav className="footer-legal-nav" aria-label="Legal">
           {legalLinks.map((link, index) => (
             <span key={link.label}>
               {index > 0 ? (
                 <span className="footer-legal-sep" aria-hidden="true">
-                  &bull;
+                  ·
                 </span>
               ) : null}
               <a href={link.href}>{link.label}</a>
             </span>
           ))}
         </nav>
+      </div>
+
+      {/* Sunrise sits flush on the section’s bottom edge — like the yellow half-disk */}
+      <div className="closing-mark-stage" aria-hidden="true">
+        <ClosingModel />
       </div>
     </footer>
   );

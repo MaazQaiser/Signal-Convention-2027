@@ -2,11 +2,8 @@
 
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import Image from "next/image";
-import {
-  motion,
-  useReducedMotion,
-} from "framer-motion";
 import Hero from "@/components/Hero";
+import LearnFromOwners from "@/components/LearnFromOwners";
 import { loadGsap } from "@/lib/load-gsap";
 
 type JourneyImage = {
@@ -15,64 +12,75 @@ type JourneyImage = {
 };
 
 type Panel = {
-  year: string;
-  location: string;
-  category: string;
-  theme: string;
+  id: string;
+  label: string;
+  heading: string;
   body: string;
-  images: JourneyImage[];
-  logo: string;
-  logoAlt: string;
+  image: JourneyImage;
 };
 
-type ColumnVariant = "featured" | "text-first" | "photo-first";
+type ColumnVariant = "featured" | "photo-first";
 
 const panels: Panel[] = [
   {
-    year: "2025",
-    location: "Arizona",
-    category: "Culture",
-    theme: "Holding Tight to Core Values",
-    body: "The inaugural Here We Grow convention established the foundation of our shared culture, bringing franchisees together around the values that continue to guide our network.",
-    images: [
-      {
-        src: "/images/convention-2026-0643.jpg",
-        alt: "Franchisees gathered at the inaugural Here We Grow convention",
-      },
-      {
-        src: "/images/convention-2026-0692.jpg",
-        alt: "Convention attendees connecting during the inaugural year",
-      },
-      {
-        src: "/images/convention-2026-0254.jpg",
-        alt: "Opening session at the first Here We Grow convention",
-      },
-    ],
-    logo: "/brand/here-we-grow-25-mark.png",
-    logoAlt: "Here We Grow 2025",
+    id: "session-format",
+    label: "New Session Format",
+    heading: "Fresh Perspectives. Practical Learning.",
+    body: "All-new keynote and breakout sessions built around practical ideas you can apply in your business.",
+    image: {
+      src: "/images/convention-2026-0254.jpg",
+      alt: "Keynote and breakout sessions at Here We Grow",
+    },
   },
   {
-    year: "2026",
-    location: "Florida",
-    category: "Community",
-    theme: "Interconnected With Those You Serve",
-    body: "As the network expanded, the convention focused on strengthening relationships, encouraging collaboration, and building a more connected franchise community.",
-    images: [
-      {
-        src: "/images/convention-2026-0777.jpg",
-        alt: "Franchisees connecting at the Here We Grow convention in Florida",
-      },
-      {
-        src: "/images/convention-2026-0732.jpg",
-        alt: "Collaborative sessions at the 2026 convention",
-      },
-      {
-        src: "/images/convention-2026-0977.jpg",
-        alt: "Community moments from the Florida convention",
-      },
-    ],
-    logo: "/brand/here-we-grow-26-mark.png",
-    logoAlt: "Here We Grow 2026",
+    id: "owner-led",
+    label: "Owner-Led Sessions",
+    heading: "Learn From Those Doing the Work.",
+    body: "Hear directly from franchise owners and their teams as they share what's working in their markets, the lessons they've learned, and the strategies driving growth.",
+    image: {
+      src: "/images/convention-2026-0777.jpg",
+      alt: "Franchise owners sharing what's working in their markets",
+    },
+  },
+  {
+    id: "networking",
+    label: "Expanded Networking",
+    heading: "More Time to Connect.",
+    body: "Build stronger relationships with franchise owners, Home Office, and partners through expanded networking opportunities across the convention.",
+    image: {
+      src: "/images/convention-2026-0692.jpg",
+      alt: "Networking across the Here We Grow convention",
+    },
+  },
+  {
+    id: "takeaways",
+    label: "Actionable Takeaways",
+    heading: "Ideas You Can Put Into Practice.",
+    body: "Leave with practical strategies and proven approaches you can implement immediately within your business.",
+    image: {
+      src: "/images/convention-2026-0732.jpg",
+      alt: "Practical strategies shared in collaborative sessions",
+    },
+  },
+  {
+    id: "vendor-expo",
+    label: "Vendor Expo",
+    heading: "Meet the Partners Behind Your Success.",
+    body: "Explore products, services, and solutions from trusted partners supporting the Signal franchise network.",
+    image: {
+      src: "/images/convention-2026-1125.jpg",
+      alt: "Partner expo supporting the Signal franchise network",
+    },
+  },
+  {
+    id: "recognition",
+    label: "Network Recognition",
+    heading: "Celebrate Success Across the Network.",
+    body: "Recognize outstanding achievements and celebrate the people helping move the Signal community forward.",
+    image: {
+      src: "/images/convention-2026-0977.jpg",
+      alt: "Celebrating achievements across the Signal community",
+    },
   },
 ];
 
@@ -81,35 +89,24 @@ const panel2027 = {
   location: "Arizona",
   category: "Consistency",
   tagline: "Consistency Defines What's Next",
-  logo: "/brand/here-we-grow-27-dark.png",
+  logo: "/brand/logo-27-dark.svg",
   logoAlt: "Here We Grow 2027",
 };
 
 const COLUMN_VARIANTS: ColumnVariant[] = [
   "featured",
-  "text-first",
+  "photo-first",
   "photo-first",
 ];
-
-function ColumnMeta({ panel }: { panel: Panel }) {
-  const items = [panel.location, panel.category, panel.year];
-  return (
-    <div className="journey-meta">
-      {items.map((item) => (
-        <span key={item}>{item}</span>
-      ))}
-    </div>
-  );
-}
 
 function ColumnCopy({ panel, id }: { panel: Panel; id: string }) {
   return (
     <div className="journey-column-copy">
+      <p className="journey-column-label">{panel.label}</p>
       <h3 className="journey-column-title" id={id}>
-        {panel.logoAlt}
+        {panel.heading}
       </h3>
       <p className="journey-column-body">{panel.body}</p>
-      <ColumnMeta panel={panel} />
     </div>
   );
 }
@@ -135,17 +132,6 @@ function ColumnPhoto({
   );
 }
 
-function JourneyColumnLogo({ panel }: { panel: Panel }) {
-  return (
-    <img
-      src={panel.logo}
-      alt=""
-      className="journey-column-logo"
-      aria-hidden="true"
-    />
-  );
-}
-
 function JourneyColumn({
   panel,
   variant,
@@ -158,39 +144,20 @@ function JourneyColumn({
   priority?: boolean;
 }) {
   const copy = <ColumnCopy panel={panel} id={id} />;
-  const photo = <ColumnPhoto image={panel.images[0]} priority={priority} />;
+  const photo = <ColumnPhoto image={panel.image} priority={priority} />;
 
-  if (variant === "featured") {
-    return (
-      <article
-        className="journey-column journey-column--featured"
-        aria-labelledby={id}
-      >
-        <div className="journey-column-media">
-          <JourneyColumnLogo panel={panel} />
-          {photo}
-        </div>
-        {copy}
-      </article>
-    );
-  }
-
+  // All columns: image on top, copy below
   return (
     <article
       className={`journey-column journey-column--${variant}`}
       aria-labelledby={id}
     >
-      {variant === "text-first" ? (
-        <>
-          {copy}
-          {photo}
-        </>
+      {variant === "featured" ? (
+        <div className="journey-column-media">{photo}</div>
       ) : (
-        <>
-          {photo}
-          {copy}
-        </>
+        photo
       )}
+      {copy}
     </article>
   );
 }
@@ -202,55 +169,21 @@ function JourneyIntro({
 }) {
   return (
     <aside className="journey-intro" ref={introRef}>
-      <span className="journey-label journey-intro-line">
-        The Here We Grow Legacy
-      </span>
+      <span className="journey-label journey-intro-line">What&apos;s New</span>
       <h2 className="journey-heading">
-        <span className="journey-intro-line">Every Year</span>
-        <span className="journey-intro-line">Builds the Next.</span>
+        <span className="journey-intro-line">What&apos;s New</span>
+        <span className="journey-intro-line">This Year</span>
       </h2>
       <div className="journey-lede">
         <span className="journey-intro-line">
-          Every year introduces a new focus.
+          Discover what&apos;s new at Here We Grow 2027—from fresh session
+          formats to expanded networking opportunities—
         </span>
         <span className="journey-intro-line">
-          Together, they tell the story of a growing network united by a shared
-          purpose.
-        </span>
-        <span className="journey-intro-line">
-          Each convention represents a chapter in a much larger story.
+          all designed to help you learn, connect, and grow.
         </span>
       </div>
     </aside>
-  );
-}
-
-function JourneyBeacon({ year }: { year: "2025" | "2026" | "2027" }) {
-  const reduceMotion = useReducedMotion();
-  const src = `/brand/beacon-${year}.svg`;
-
-  return (
-    <div
-      className={`journey-beacon journey-beacon--${year}`}
-      aria-hidden="true"
-    >
-      <motion.div
-        className="journey-beacon-spin"
-        animate={reduceMotion ? undefined : { rotate: [180, 540] }}
-        transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-      >
-        <img src={src} alt="" className="journey-beacon-img" />
-      </motion.div>
-    </div>
-  );
-}
-
-/** Full-height star column — sticks to the left; content scrolls behind it */
-function JourneyBeaconPin({ year }: { year: "2025" | "2026" | "2027" }) {
-  return (
-    <div className="journey-beacon-pin">
-      <JourneyBeacon year={year} />
-    </div>
   );
 }
 
@@ -320,60 +253,12 @@ export default function Journey() {
           gsap.set(introLines, { opacity: 0, y: 28 });
         }
 
-        const scrollItems = cardTrack.querySelectorAll(
-          ".journey-year-group, .journey-beacon-pin"
-        );
+        const scrollItems = cardTrack.querySelectorAll(".journey-column");
         gsap.set(scrollItems, { opacity: 0 });
-
-        /*
-         * Full-height beacon pins stick to the left edge.
-         * White pin sits above columns so images scroll behind it.
-         */
-        const beaconPins = Array.from(
-          cardTrack.querySelectorAll<HTMLElement>(".journey-beacon-pin")
-        );
-
-        const pinNativeLeft = (el: HTMLElement) => {
-          const ownX = Number(gsap.getProperty(el, "x")) || 0;
-          return (
-            el.getBoundingClientRect().left -
-            cardTrack.getBoundingClientRect().left -
-            ownX
-          );
-        };
-
-        let pinLefts = beaconPins.map(pinNativeLeft);
-
-        const remeasureBeacons = () => {
-          pinLefts = beaconPins.map(pinNativeLeft);
-        };
-
-        const updateStickyBeacons = () => {
-          if (!beaconPins.length) return;
-          const trackX = Number(gsap.getProperty(cardTrack, "x")) || 0;
-
-          /* Last pin that has reached the left edge stays stuck there */
-          let active = -1;
-          for (let i = 0; i < beaconPins.length; i++) {
-            if (pinLefts[i] + trackX <= 0) active = i;
-          }
-
-          beaconPins.forEach((el, i) => {
-            if (i === active) {
-              gsap.set(el, {
-                x: -pinLefts[i] - trackX,
-                force3D: true,
-              });
-            } else {
-              gsap.set(el, { x: 0, force3D: true });
-            }
-          });
-        };
 
         /* Start on white; intro already left-aligned (no center→dock jerk) */
         gsap.set(fade, { opacity: 0 });
         gsap.set(cardTrack, { x: 0 });
-        remeasureBeacons();
 
         /*
          * Scrub weights (relative). Pin distance scales with track width
@@ -399,11 +284,6 @@ export default function Journey() {
             scrub: 0.45,
             anticipatePin: 1,
             invalidateOnRefresh: true,
-            onRefresh: () => {
-              remeasureBeacons();
-              updateStickyBeacons();
-            },
-            onUpdate: updateStickyBeacons,
           },
         });
 
@@ -451,7 +331,6 @@ export default function Journey() {
             x: () => -travel(),
             ease: "none",
             duration: scrollDur,
-            onUpdate: updateStickyBeacons,
           },
           scrollAt
         );
@@ -462,7 +341,6 @@ export default function Journey() {
             x: () => -exitTravel(),
             ease: "power2.inOut",
             duration: 1.35,
-            onUpdate: updateStickyBeacons,
           },
           scrollAt + scrollDur
         );
@@ -519,9 +397,11 @@ export default function Journey() {
       className={`story-unified journey-section${staticLayout ? " journey-section--static" : ""}`}
       id="journey"
       ref={sectionRef}
-      aria-label="Convention story"
+      aria-label="What's new this year"
     >
       <Hero />
+
+      <LearnFromOwners />
 
       <div className="journey-pin" ref={pinRef}>
         <div className="journey-fade" ref={fadeRef}>
@@ -531,23 +411,14 @@ export default function Journey() {
               <JourneyIntro introRef={introRef} />
 
               {panels.map((panel, panelIndex) => (
-                <div className="journey-year-group" key={panel.year}>
-                  <JourneyBeaconPin
-                    year={panel.year as "2025" | "2026" | "2027"}
-                  />
-                  {COLUMN_VARIANTS.map((variant, variantIndex) => (
-                    <JourneyColumn
-                      key={`${panel.year}-${variant}`}
-                      panel={panel}
-                      variant={variant}
-                      id={`journey-${panel.year}-${variant}`}
-                      priority={panelIndex === 0 && variantIndex === 0}
-                    />
-                  ))}
-                </div>
+                <JourneyColumn
+                  key={panel.id}
+                  panel={panel}
+                  variant={COLUMN_VARIANTS[panelIndex % COLUMN_VARIANTS.length]}
+                  id={`journey-${panel.id}`}
+                  priority={panelIndex === 0}
+                />
               ))}
-
-              <JourneyBeaconPin year="2027" />
             </div>
           </div>
 
