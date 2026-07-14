@@ -2,142 +2,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { loadGsap } from "@/lib/load-gsap";
-
-type Sponsor = {
-  name: string;
-  src: string;
-  href?: string;
-};
-
-type TierData = {
-  id: string;
-  title: string;
-  note?: string;
-  sponsors: Sponsor[];
-};
-
-const TIERS: TierData[] = [
-  {
-    id: "diamond",
-    title: "Diamond Sponsors",
-    sponsors: [
-      {
-        name: "Federal Signal",
-        src: "/sponsors/federal-signal.png",
-        href: "https://www.federalsignal.com/",
-      },
-      {
-        name: "Revolution Wraps",
-        src: "/sponsors/revolution-wraps.svg",
-        href: "https://www.revolutionwraps.com/",
-      },
-    ],
-  },
-  {
-    id: "platinum",
-    title: "Platinum Sponsor",
-    sponsors: [
-      {
-        name: "CI Shirts",
-        src: "/sponsors/ci-shirts.png",
-        href: "https://cishirts.com/",
-      },
-    ],
-  },
-  {
-    id: "gold",
-    title: "Gold Sponsors",
-    sponsors: [
-      {
-        name: "aiAVENU",
-        src: "/sponsors/aiavenu.png",
-        href: "https://www.avenu.ai/",
-      },
-      {
-        name: "Community Boss",
-        src: "/sponsors/community-boss-white.svg",
-        href: "https://communityboss.app/",
-      },
-      {
-        name: "Design8 Studios",
-        src: "/sponsors/design8.png",
-        href: "https://design8studios.com/",
-      },
-    ],
-  },
-  {
-    id: "silver",
-    title: "Silver Sponsors",
-    sponsors: [
-      {
-        name: "Quo",
-        src: "/sponsors/quo-white.svg",
-        href: "https://www.openphone.com/",
-      },
-      {
-        name: "Immix",
-        src: "/sponsors/immix.png",
-        href: "https://www.immixprotect.com/",
-      },
-      {
-        name: "ADP",
-        src: "/sponsors/adp.svg",
-        href: "https://www.adp.com/",
-      },
-      {
-        name: "Propper Manufacturing",
-        src: "/sponsors/propper.png",
-        href: "https://www.propper.com/",
-      },
-      {
-        name: "Woodhouse",
-        src: "/sponsors/woodhouse.png",
-        href: "https://www.woodhousespas.com/",
-      },
-      {
-        name: "SimpliVerified",
-        src: "/sponsors/simpliverified.png",
-        href: "https://simpliverified.com/",
-      },
-      {
-        name: "Total Filtration Service",
-        src: "/sponsors/total-filtration.png",
-        href: "https://totalfiltrationservices.com/",
-      },
-      {
-        name: "FirstNet",
-        src: "/sponsors/firstnet.png",
-        href: "https://www.firstnet.com/",
-      },
-      {
-        name: "Midwest Security Systems",
-        src: "/sponsors/midwest-security-white.svg",
-      },
-      {
-        name: "CRC Wholesale Group",
-        src: "/sponsors/crc-wholesale.png",
-        href: "https://www.crcgroup.com/",
-      },
-    ],
-  },
-  {
-    id: "philanthropic",
-    title: "Philanthropic Partners",
-    note: "Giving Back Together",
-    sponsors: [
-      {
-        name: "Chariots 4 Hope",
-        src: "/sponsors/chariots-4-hope.png",
-        href: "https://chariots4hope.org/",
-      },
-      {
-        name: "Soldier's Wish",
-        src: "/sponsors/soldiers-wish.png",
-        href: "https://soldierswish.org/",
-      },
-    ],
-  },
-];
+import { SPONSOR_TIERS, type Sponsor, type SponsorTier } from "@/lib/sponsors";
 
 function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   const content = (
@@ -167,7 +32,7 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   );
 }
 
-function TierPanel({ tier }: { tier: TierData }) {
+function TierPanel({ tier }: { tier: SponsorTier }) {
   return (
     <article
       className={`sponsor-tier sponsor-tier--${tier.id}`}
@@ -346,14 +211,17 @@ export default function Sponsors() {
                 franchise network and help make the Here We Grow convention
                 experience possible.
               </p>
-              <a className="btn btn-orange sponsors-cta-btn" href="#register">
+              <a
+                className="btn btn-orange sponsors-cta-btn"
+                href="/sponsors#become"
+              >
                 Become a Sponsor
               </a>
             </div>
 
             <div className="sponsors-stage" ref={stageRef}>
               <div className="sponsors-track" ref={trackRef}>
-                {TIERS.map((tier) => (
+                {SPONSOR_TIERS.map((tier) => (
                   <TierPanel key={tier.id} tier={tier} />
                 ))}
               </div>

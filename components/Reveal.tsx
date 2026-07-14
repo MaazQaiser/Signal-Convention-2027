@@ -21,6 +21,9 @@ type RevealProps = {
   delay?: number;
   y?: number;
   duration?: number;
+  /** When false, fades out again as the block leaves the viewport. */
+  once?: boolean;
+  amount?: number | "some" | "all";
 };
 
 export default function Reveal({
@@ -29,6 +32,8 @@ export default function Reveal({
   delay = 0,
   y = 20,
   duration = 0.9,
+  once = true,
+  amount = 0.2,
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
@@ -37,7 +42,7 @@ export default function Reveal({
       className={className}
       initial={reduceMotion ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once, amount, margin: "0px 0px -8% 0px" }}
       transition={{ duration, ease: EASE_SOFT, delay }}
     >
       {children}

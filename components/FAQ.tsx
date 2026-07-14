@@ -15,10 +15,6 @@ const FAQS: FaqEntry[] = [
     a: "The 2027 Here We Grow Convention takes place January 17–19, 2027, at JW Marriott Desert Ridge Resort & Spa in Phoenix, Arizona.",
   },
   {
-    q: "How do I reserve my hotel room?",
-    a: "Hotel reservations can be made during the registration process. Additional nights may be requested based on hotel availability.",
-  },
-  {
     q: "What does registration include?",
     a: "Signal registration includes convention access, hotel accommodations for two attendees and select meals throughout the convention.",
   },
@@ -29,6 +25,16 @@ const FAQS: FaqEntry[] = [
   {
     q: "Can I bring a guest?",
     a: "Guests attending convention programming or meals must be registered as attendees.",
+  },
+  {
+    q: "Where can I find hotel and travel details?",
+    a: (
+      <>
+        See the{" "}
+        <a href="/travel">Travel &amp; Accommodation</a> page for hotel
+        reservations, arrival guidance, airport details, and travel FAQs.
+      </>
+    ),
   },
   {
     q: "Still have another question?",
@@ -158,8 +164,9 @@ export default function FAQ() {
             </Reveal>
             <Reveal delay={REVEAL_CASCADE.body}>
               <p className="faq-lede">
-                Find answers to common questions about registration, travel,
-                accommodations and your Here We Grow 2027 experience.
+                Find answers to common questions about registration and your
+                Here We Grow 2027 experience. For hotel and arrival details,
+                visit Travel &amp; Accommodation.
               </p>
             </Reveal>
           </div>

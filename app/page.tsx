@@ -5,6 +5,7 @@ import Sponsors from "@/components/Sponsors";
 import FAQ from "@/components/FAQ";
 import Register from "@/components/Register";
 import Footer from "@/components/Footer";
+import ClosingModel from "@/components/ClosingModel";
 import LoadingGate from "@/components/LoadingGate";
 
 export default function Home() {
@@ -16,6 +17,10 @@ export default function Home() {
       <Sponsors />
       <FAQ />
       <div className="closing">
+        <div className="closing-mark-stage" aria-hidden="true">
+          <div className="closing-mark-glow" />
+          <ClosingModel />
+        </div>
         <Register />
         <Footer />
       </div>

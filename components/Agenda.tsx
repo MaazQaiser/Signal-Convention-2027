@@ -108,7 +108,7 @@ export default function Agenda() {
             </Reveal>
 
             <Reveal delay={REVEAL_CASCADE.cta}>
-              <a className="btn btn-orange agenda-cta" href="#register">
+              <a className="btn btn-orange agenda-cta" href="/travel">
                 Explore Hotel &amp; Travel
               </a>
             </Reveal>

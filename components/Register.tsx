@@ -1,8 +1,17 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
+import {
+  getRegisterExploreLinks,
+  resolveNavHref,
+} from "@/lib/nav-links";
 
 export default function Register() {
+  const pathname = usePathname();
+  const navLinks = getRegisterExploreLinks();
+  const sponsorsHref = "/sponsors#become";
+
   return (
     <section
       className="register"
@@ -10,7 +19,7 @@ export default function Register() {
       aria-labelledby="register-heading"
     >
       <div className="wrap closing-cta">
-        <div className="closing-cta-copy">
+        <div className="closing-cta-main">
           <Reveal delay={REVEAL_CASCADE.title}>
             <h2 className="closing-cta-title" id="register-heading">
               Ready to Grow?
@@ -22,13 +31,38 @@ export default function Register() {
               today.
             </p>
           </Reveal>
+          <Reveal className="closing-cta-action" delay={REVEAL_CASCADE.cta}>
+            <a className="nav-reserve closing-cta-btn" href="#">
+              Register Today
+            </a>
+          </Reveal>
         </div>
 
-        <Reveal className="closing-cta-action" delay={REVEAL_CASCADE.cta}>
-          <a className="btn btn-orange closing-cta-btn" href="#">
-            Register Today
-          </a>
-        </Reveal>
+        <div className="footer-meta-right closing-cta-links">
+          <Reveal className="footer-col" delay={REVEAL_CASCADE.title}>
+            <h4 className="footer-col-title">Explore</h4>
+            <ul className="footer-links">
+              {navLinks.map((link) => (
+                <li key={link.label}>
+                  <a href={resolveNavHref(link, pathname)}>{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+
+          <Reveal className="footer-col" delay={REVEAL_CASCADE.body}>
+            <h4 className="footer-col-title">Partner</h4>
+            <a className="footer-enquiry" href={sponsorsHref}>
+              Become a Sponsor
+            </a>
+            <a
+              className="footer-enquiry"
+              href="mailto:convention@teamsignal.com"
+            >
+              Contact Team
+            </a>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
