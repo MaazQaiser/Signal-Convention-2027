@@ -74,7 +74,7 @@ function TierBlock({ tier, index }: { tier: SponsorTier; index: number }) {
 export default function SponsorsTiers() {
   return (
     <section
-      className="sponsors-page-tiers sponsors-surface--light"
+      className="sponsors-page-tiers sponsors-surface--dark"
       aria-labelledby="sponsors-page-tiers-heading"
     >
       <div className="wrap">

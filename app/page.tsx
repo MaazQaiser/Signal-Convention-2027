@@ -1,4 +1,5 @@
 import Nav from "@/components/Nav";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import Journey from "@/components/Journey";
 import Agenda from "@/components/Agenda";
 import Sponsors from "@/components/Sponsors";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <LoadingGate>
       <Nav />
+      <MobileBottomNav />
       <Journey />
       <Agenda />
       <Sponsors />

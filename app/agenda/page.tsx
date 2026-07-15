@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import SmoothScroll from "@/components/SmoothScroll";
 import AgendaHero from "@/components/agenda/AgendaHero";
 import AgendaOverview from "@/components/agenda/AgendaOverview";
@@ -21,6 +22,7 @@ export default function AgendaPage() {
     <>
       <SmoothScroll active />
       <Nav />
+      <MobileBottomNav />
       <main className="agenda-page">
         <AgendaHero />
         <AgendaOverview />

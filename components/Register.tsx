@@ -20,6 +20,14 @@ export default function Register() {
     >
       <div className="wrap closing-cta">
         <div className="closing-cta-main">
+          <Reveal delay={REVEAL_CASCADE.title * 0.5}>
+            <img
+              className="closing-cta-logo"
+              src="/brand/nav-logo-27-dark.svg"
+              alt="Signal 2027 — Here We Grow"
+              height={32}
+            />
+          </Reveal>
           <Reveal delay={REVEAL_CASCADE.title}>
             <h2 className="closing-cta-title" id="register-heading">
               Ready to Grow?

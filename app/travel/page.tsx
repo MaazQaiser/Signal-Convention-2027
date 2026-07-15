@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import SmoothScroll from "@/components/SmoothScroll";
 import TravelHero from "@/components/travel/TravelHero";
 import TravelGlance from "@/components/travel/TravelGlance";
@@ -23,6 +24,7 @@ export default function TravelPage() {
     <>
       <SmoothScroll active />
       <Nav />
+      <MobileBottomNav />
       <main className="travel-page">
         <TravelHero />
         <TravelGlance />

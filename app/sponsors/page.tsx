@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import SmoothScroll from "@/components/SmoothScroll";
 import SponsorsHero from "@/components/sponsors/SponsorsHero";
 import SponsorsTiers from "@/components/sponsors/SponsorsTiers";
@@ -20,6 +21,7 @@ export default function SponsorsPage() {
     <>
       <SmoothScroll active />
       <Nav />
+      <MobileBottomNav />
       <main className="sponsors-page">
         <SponsorsHero />
         <SponsorsWhy />

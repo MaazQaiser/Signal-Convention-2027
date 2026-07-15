@@ -7,7 +7,7 @@ const FADE = { once: false as const, amount: 0.25 };
 export default function SponsorsBecomeCta() {
   return (
     <section
-      className="sponsors-page-become sponsors-surface--dark"
+      className="sponsors-page-become sponsors-surface--light"
       id="become"
       aria-labelledby="sponsors-page-become-heading"
     >
