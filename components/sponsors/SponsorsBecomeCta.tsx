@@ -1,6 +1,7 @@
 "use client";
 
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 
 const FADE = { once: false as const, amount: 0.25 };
 
@@ -33,6 +34,7 @@ export default function SponsorsBecomeCta() {
             href="mailto:convention@teamsignal.com"
           >
             Contact Convention Team
+            <BtnArrow />
           </a>
         </Reveal>
       </div>

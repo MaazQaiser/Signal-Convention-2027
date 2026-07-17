@@ -8,6 +8,7 @@ const FADE = { once: false as const, amount: 0.25 };
 export default function SponsorsWhy() {
   return (
     <section
+      id="overview"
       className="sponsors-page-overview sponsors-surface--light"
       aria-labelledby="sponsors-page-overview-heading"
     >

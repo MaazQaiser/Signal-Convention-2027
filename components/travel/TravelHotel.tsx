@@ -98,6 +98,7 @@ function getAmenity(id: string) {
 export default function TravelHotel() {
   return (
     <section
+      id="hotel"
       className="travel-hotel page-surface--light"
       aria-labelledby="travel-hotel-heading"
     >

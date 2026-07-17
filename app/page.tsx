@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import SectionNav from "@/components/SectionNav";
 import Journey from "@/components/Journey";
 import Agenda from "@/components/Agenda";
 import Sponsors from "@/components/Sponsors";
@@ -14,6 +15,7 @@ export default function Home() {
     <LoadingGate>
       <Nav />
       <MobileBottomNav />
+      <SectionNav />
       <Journey />
       <Agenda />
       <Sponsors />

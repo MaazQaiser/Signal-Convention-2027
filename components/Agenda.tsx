@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
+import BtnArrow from "./BtnArrow";
 
 const TARGET = new Date("2027-01-17T08:30:00-07:00").getTime();
 
@@ -110,6 +111,7 @@ export default function Agenda() {
             <Reveal delay={REVEAL_CASCADE.cta}>
               <a className="btn btn-orange agenda-cta" href="/travel">
                 Explore Hotel &amp; Travel
+                <BtnArrow />
               </a>
             </Reveal>
           </div>

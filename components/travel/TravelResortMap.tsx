@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 import { TRAVEL_MAP_MARKERS } from "@/lib/travel-info";
 
 export default function TravelResortMap() {
@@ -11,6 +12,7 @@ export default function TravelResortMap() {
 
   return (
     <section
+      id="map"
       className="travel-map page-surface--dark"
       aria-labelledby="travel-map-heading"
     >
@@ -78,6 +80,7 @@ export default function TravelResortMap() {
             </p>
             <a className="btn btn-orange" href="/#register">
               Reserve Your Hotel
+              <BtnArrow />
             </a>
           </div>
         </Reveal>

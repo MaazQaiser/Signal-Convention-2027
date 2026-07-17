@@ -1,12 +1,14 @@
 "use client";
 
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 
 const FADE = { once: false as const, amount: 0.25 };
 
 export default function AgendaHotelCta() {
   return (
     <section
+      id="hotel"
       className="agenda-hotel-cta agenda-surface--dark"
       aria-labelledby="agenda-hotel-heading"
     >
@@ -25,6 +27,7 @@ export default function AgendaHotelCta() {
         <Reveal delay={REVEAL_CASCADE.cta} {...FADE}>
           <a className="btn btn-orange agenda-hotel-btn" href="/travel">
             Explore Hotel &amp; Travel
+            <BtnArrow />
           </a>
         </Reveal>
       </div>

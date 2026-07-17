@@ -88,6 +88,7 @@ export default function TravelArrivalGuide() {
 
   return (
     <section
+      id="arrival"
       className={`travel-arrival page-surface--dark${
         staticLayout ? " travel-arrival--static" : ""
       }`}

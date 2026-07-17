@@ -45,6 +45,7 @@ export default function SmoothScroll({ active }: SmoothScrollProps) {
         syncTouch: false,
       });
       lenisRef.current = lenis;
+      window.__lenis = lenis;
 
       lenis.on("scroll", ScrollTrigger.update);
 
@@ -77,6 +78,9 @@ export default function SmoothScroll({ active }: SmoothScrollProps) {
       disposed = true;
       removeTicker?.();
       removeResize?.();
+      if (window.__lenis === lenisRef.current) {
+        window.__lenis = undefined;
+      }
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };

@@ -49,15 +49,15 @@ function TierBlock({ tier, index }: { tier: SponsorTier; index: number }) {
         aria-labelledby={`sponsors-page-tier-title-${tier.id}`}
       >
         <div className="sponsors-page-tier-head">
-          <p className="sponsors-page-tier-label">
-            {tier.note ?? shortTitle}
-          </p>
           <h3
             className="sponsors-page-tier-title"
             id={`sponsors-page-tier-title-${tier.id}`}
           >
             {shortTitle}
           </h3>
+          {tier.note ? (
+            <p className="sponsors-page-tier-label">{tier.note}</p>
+          ) : null}
         </div>
         <div className="sponsors-page-tier-panel">
           <div className="sponsor-grid" aria-label={`${tier.title} logos`}>
@@ -74,6 +74,7 @@ function TierBlock({ tier, index }: { tier: SponsorTier; index: number }) {
 export default function SponsorsTiers() {
   return (
     <section
+      id="tiers"
       className="sponsors-page-tiers sponsors-surface--dark"
       aria-labelledby="sponsors-page-tiers-heading"
     >

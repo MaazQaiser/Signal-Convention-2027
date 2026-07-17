@@ -1,6 +1,7 @@
 "use client";
 
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 import {
   TRAVEL_RESERVATION_INCLUDES,
   TRAVEL_TRANSPORT,
@@ -35,6 +36,7 @@ const STAY_FLY_PANELS = [
 export default function TravelFlying() {
   return (
     <section
+      id="flying"
       className="travel-flying page-surface--light"
       aria-labelledby="travel-flying-heading"
     >
@@ -92,6 +94,7 @@ export default function TravelFlying() {
         </div>
         <a className="btn btn-orange" href="/#register">
           Reserve During Registration
+          <BtnArrow />
         </a>
       </Reveal>
     </section>

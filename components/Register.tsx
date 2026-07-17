@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
+import BtnArrow from "./BtnArrow";
 import {
   getRegisterExploreLinks,
   resolveNavHref,
@@ -42,6 +43,7 @@ export default function Register() {
           <Reveal className="closing-cta-action" delay={REVEAL_CASCADE.cta}>
             <a className="nav-reserve closing-cta-btn" href="#">
               Register Today
+              <BtnArrow />
             </a>
           </Reveal>
         </div>

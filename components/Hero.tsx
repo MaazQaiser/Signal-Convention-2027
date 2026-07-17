@@ -12,6 +12,7 @@ import { useReducedMotion } from "framer-motion";
 import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
 /* Eager — LoadingGate also imports this so the model warms under the cover */
 import HeroModel3D from "@/components/HeroModel3D";
+import BtnArrow from "@/components/BtnArrow";
 
 /** Title then body — each line fills L→R in sequence. */
 const HANDOFF_TITLE = "Grow Through Consistency";
@@ -161,6 +162,7 @@ export default function Hero() {
           </p>
           <a className="btn btn-orange hero-cta" href="#register">
             Register
+            <BtnArrow />
           </a>
         </div>
 

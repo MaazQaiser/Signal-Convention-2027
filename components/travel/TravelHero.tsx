@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 
 const FADE = { once: false as const, amount: 0.25 };
 
@@ -107,6 +108,13 @@ export default function TravelHero() {
                 <span>Phoenix, Arizona</span>
               </li>
             </ul>
+            <a
+              className="btn btn-orange travel-page-hero-cta"
+              href="/#register"
+            >
+              Reserve Your Hotel
+              <BtnArrow />
+            </a>
           </Reveal>
         </div>
 

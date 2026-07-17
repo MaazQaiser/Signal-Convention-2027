@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Aftermovie from "@/components/Aftermovie";
 import "./globals.css";
 
 const fkDisplay = localFont({
@@ -54,7 +55,10 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={fkDisplay.variable}>{children}</body>
+      <body className={fkDisplay.variable}>
+        {children}
+        <Aftermovie />
+      </body>
     </html>
   );
 }

@@ -131,6 +131,7 @@ function GlanceIcon({ id }: { id: string }) {
 export default function TravelGlance() {
   return (
     <section
+      id="glance"
       className="travel-glance page-surface--light"
       aria-labelledby="travel-glance-heading"
     >

@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { loadGsap } from "@/lib/load-gsap";
 import { SPONSOR_TIERS, type Sponsor, type SponsorTier } from "@/lib/sponsors";
+import BtnArrow from "@/components/BtnArrow";
 
 function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   const content = (
@@ -216,6 +217,7 @@ export default function Sponsors() {
                 href="/sponsors#become"
               >
                 Become a Sponsor
+                <BtnArrow />
               </a>
             </div>
 

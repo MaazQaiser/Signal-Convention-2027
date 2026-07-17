@@ -8,6 +8,7 @@ const FADE = { once: false as const, amount: 0.25 };
 export default function AgendaOverview() {
   return (
     <section
+      id="overview"
       className="agenda-overview agenda-surface--light"
       aria-labelledby="agenda-overview-heading"
     >
