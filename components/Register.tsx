@@ -26,7 +26,7 @@ export default function Register() {
               className="closing-cta-logo"
               src="/brand/nav-logo-27-dark.svg"
               alt="Signal 2027 — Here We Grow"
-              height={32}
+              height={40}
             />
           </Reveal>
           <Reveal delay={REVEAL_CASCADE.title}>

@@ -7,14 +7,14 @@ export type NavLink = {
 };
 
 const HOME_SECTIONS: NavLink[] = [
-  { label: "Home", href: "top" },
+  { label: "Overview", href: "top" },
   { label: "Agenda", href: "/agenda", external: true },
   { label: "Hotel & Travel", href: "/travel", external: true },
   { label: "Sponsors", href: "/sponsors", external: true },
 ];
 
 const REGISTER_EXPLORE: NavLink[] = [
-  { label: "Home", href: "top" },
+  { label: "Overview", href: "top" },
   { label: "Agenda", href: "/agenda", external: true },
   { label: "Hotel & Travel", href: "/travel", external: true },
   { label: "Sponsors", href: "/sponsors", external: true },

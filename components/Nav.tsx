@@ -20,7 +20,7 @@ export default function Nav() {
     setScrolled(latest > 40);
   });
 
-  const homeHref = resolveNavHref({ label: "Home", href: "top" }, pathname);
+  const homeHref = resolveNavHref({ label: "Overview", href: "top" }, pathname);
   const registerHref = resolveNavHref(
     { label: "Register", href: "register" },
     pathname
@@ -41,7 +41,7 @@ export default function Nav() {
         <img
           src="/brand/nav-logo-27-dark.svg"
           alt="Signal 2027 — Here We Grow"
-          height={28}
+          height={36}
         />
       </a>
       <div className="nav-links">

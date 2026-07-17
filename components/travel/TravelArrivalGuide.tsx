@@ -1,18 +1,46 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import type { ScrollTrigger as ScrollTriggerType } from "gsap/ScrollTrigger";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
 import { loadGsap } from "@/lib/load-gsap";
 import { TRAVEL_ARRIVAL_STEPS } from "@/lib/travel-info";
 
 const FADE = { once: false as const, amount: 0.22 };
 
+function ArrowIcon({ direction }: { direction: "left" | "right" }) {
+  return (
+    <svg width="28" height="28" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      {direction === "right" ? (
+        <path
+          d="M3 8h10M9 4l4 4-4 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <path
+          d="M13 8H3M7 4L3 8l4 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+    </svg>
+  );
+}
+
 export default function TravelArrivalGuide() {
   const sectionRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
+  const triggerRef = useRef<ScrollTriggerType | null>(null);
   const [staticLayout, setStaticLayout] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [staticProgress, setStaticProgress] = useState(0);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -51,7 +79,7 @@ export default function TravelArrivalGuide() {
       const ctx = gsap.context(() => {
         gsap.set(track, { x: 0 });
 
-        gsap.to(track, {
+        const tween = gsap.to(track, {
           x: () => -getTravel(),
           ease: "none",
           scrollTrigger: {
@@ -62,11 +90,17 @@ export default function TravelArrivalGuide() {
             scrub: 0.55,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onUpdate: (self) => setProgress(self.progress),
           },
         });
+
+        triggerRef.current = tween.scrollTrigger ?? null;
       }, section);
 
-      revert = () => ctx.revert();
+      revert = () => {
+        triggerRef.current = null;
+        ctx.revert();
+      };
 
       const refresh = () => ScrollTrigger.refresh();
       window.addEventListener("load", refresh);
@@ -85,6 +119,57 @@ export default function TravelArrivalGuide() {
       removeListeners?.();
     };
   }, []);
+
+  useLayoutEffect(() => {
+    if (!staticLayout) return;
+    const scroll = scrollRef.current;
+    if (!scroll) return;
+
+    const onScroll = () => {
+      const max = Math.max(1, scroll.scrollWidth - scroll.clientWidth);
+      setStaticProgress(scroll.scrollLeft / max);
+    };
+
+    onScroll();
+    scroll.addEventListener("scroll", onScroll, { passive: true });
+    return () => scroll.removeEventListener("scroll", onScroll);
+  }, [staticLayout]);
+
+  const activeProgress = staticLayout ? staticProgress : progress;
+  const canGoBack = activeProgress > 0.02;
+  const canGoForward = activeProgress < 0.98;
+
+  const moveSection = (direction: "left" | "right") => {
+    const dir = direction === "right" ? 1 : -1;
+
+    if (staticLayout) {
+      const scroll = scrollRef.current;
+      if (!scroll) return;
+      const panel = scroll.querySelector(
+        ".travel-arrival-panel"
+      ) as HTMLElement | null;
+      const amount = panel?.offsetWidth ?? Math.round(scroll.clientWidth * 0.7);
+      scroll.scrollBy({ left: dir * amount, behavior: "smooth" });
+      return;
+    }
+
+    const st = triggerRef.current;
+    if (!st) return;
+
+    const range = st.end - st.start;
+    const steps = Math.max(1, TRAVEL_ARRIVAL_STEPS.length - 1);
+    const step = range / steps;
+    const next = Math.min(
+      st.end,
+      Math.max(st.start, window.scrollY + dir * step)
+    );
+
+    if (window.__lenis) {
+      window.__lenis.scrollTo(next);
+    } else {
+      window.scrollTo({ top: next, behavior: "smooth" });
+    }
+  };
 
   return (
     <section
@@ -134,6 +219,28 @@ export default function TravelArrivalGuide() {
             })}
           </ol>
         </div>
+
+        {canGoBack ? (
+          <button
+            type="button"
+            className="travel-arrival-arrow travel-arrival-arrow--left"
+            onClick={() => moveSection("left")}
+            aria-label="Previous arrival step"
+          >
+            <ArrowIcon direction="left" />
+          </button>
+        ) : null}
+
+        {canGoForward ? (
+          <button
+            type="button"
+            className="travel-arrival-arrow travel-arrival-arrow--right"
+            onClick={() => moveSection("right")}
+            aria-label="Next arrival step"
+          >
+            <ArrowIcon direction="right" />
+          </button>
+        ) : null}
       </div>
     </section>
   );
