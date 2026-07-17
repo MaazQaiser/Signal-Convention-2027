@@ -4189,6 +4189,10 @@ img {
   justify-self: end;
   width: max-content;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
 }
 .sponsors-page-hero-meta {
   list-style: none;
@@ -4213,6 +4217,9 @@ img {
 .sponsors-page-hero-meta li svg {
   flex-shrink: 0;
   opacity: 0.65;
+}
+.sponsors-page-hero-cta {
+  white-space: nowrap;
 }
 .sponsors-page-hero-visual {
   width: 100%;
@@ -4372,7 +4379,7 @@ img {
   font-size: clamp(28px, 3.6vw, 40px);
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: var(--white);
+  color: var(--black);
 }
 .sponsors-page-become-lede {
   margin: 0 0 28px;
@@ -4396,6 +4403,7 @@ img {
   }
   .sponsors-page-hero-meta-wrap {
     justify-self: start;
+    align-items: flex-start;
   }
   .sponsors-page-hero-meta {
     align-items: flex-start;

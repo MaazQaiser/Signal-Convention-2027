@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
+import BtnArrow from "@/components/BtnArrow";
 import { SPONSOR_TIERS } from "@/lib/sponsors";
 
 const FADE = { once: false as const, amount: 0.25 };
@@ -52,6 +53,13 @@ export default function SponsorsHero() {
                 <span>{PARTNER_COUNT} Partner Brands</span>
               </li>
             </ul>
+            <a
+              className="btn btn-orange sponsors-page-hero-cta"
+              href="#become"
+            >
+              Become a Sponsor
+              <BtnArrow />
+            </a>
           </Reveal>
         </div>
 
