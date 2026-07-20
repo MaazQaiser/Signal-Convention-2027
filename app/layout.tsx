@@ -48,6 +48,10 @@ export const metadata: Metadata = {
   title: "Signal 2027 — Here We Grow · Franchise Convention",
   description:
     "Signal Franchise Convention 2027 — Arizona. Year three: Consistency. All rays merge to shine in unity.",
+  icons: {
+    icon: [{ url: "/brand/brandmark-27-light.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/brand/brandmark-27-light.png" }],
+  },
 };
 
 export default function RootLayout({
