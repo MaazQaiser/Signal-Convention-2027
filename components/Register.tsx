@@ -31,7 +31,9 @@ export default function Register() {
           </Reveal>
           <Reveal delay={REVEAL_CASCADE.title}>
             <h2 className="closing-cta-title" id="register-heading">
-              Ready to Grow?
+              Ready to
+              <br />
+              Grow?
             </h2>
           </Reveal>
           <Reveal delay={REVEAL_CASCADE.body}>

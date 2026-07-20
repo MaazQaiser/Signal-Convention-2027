@@ -28,7 +28,7 @@ export default function SponsorsHero() {
                 className="sponsors-page-hero-title"
                 id="sponsors-page-heading"
               >
-                Sponsors &amp; Partners
+                Sponsors &amp;&nbsp;Partners
               </h1>
             </Reveal>
             <Reveal delay={REVEAL_CASCADE.body} {...FADE}>

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { Michroma } from "next/font/google";
 import localFont from "next/font/local";
 import Aftermovie from "@/components/Aftermovie";
 import "./globals.css";
+
+const michroma = Michroma({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 const fkDisplay = localFont({
   src: [
@@ -55,7 +63,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={fkDisplay.variable}>
+      <body className={`${fkDisplay.variable} ${michroma.variable}`}>
         {children}
         <Aftermovie />
       </body>

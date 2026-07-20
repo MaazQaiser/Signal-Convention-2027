@@ -169,7 +169,6 @@ function JourneyIntro({
 }) {
   return (
     <aside className="journey-intro" ref={introRef}>
-      <span className="journey-label journey-intro-line">What&apos;s New</span>
       <h2 className="journey-heading">
         <span className="journey-intro-line">What&apos;s New</span>
         <span className="journey-intro-line">This Year</span>

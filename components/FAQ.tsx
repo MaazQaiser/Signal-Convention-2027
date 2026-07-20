@@ -159,7 +159,9 @@ export default function FAQ() {
             </Reveal>
             <Reveal delay={REVEAL_CASCADE.title}>
               <h2 className="faq-heading" id="faq-heading">
-                Everything You Need to Know Before You Arrive.
+                Everything You Need to Know
+                <br />
+                Before You Arrive.
               </h2>
             </Reveal>
             <Reveal delay={REVEAL_CASCADE.body}>

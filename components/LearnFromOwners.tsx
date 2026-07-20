@@ -20,8 +20,8 @@ const CARDS = {
 } as const;
 
 const TITLE_LINES = [
-  "Learn From Franchise Owners",
-  "and Their Teams",
+  "Learn From Franchise",
+  "Owners and Their Teams",
 ] as const;
 
 const CARD_HEADING_LINES = [
