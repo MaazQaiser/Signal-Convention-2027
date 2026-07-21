@@ -71,7 +71,7 @@ a {
 h1,
 h2,
 h3 {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
 }
 img {
   max-width: 100%;
@@ -522,7 +522,7 @@ img {
   will-change: transform;
 }
 .hero-title {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(48px, 5rem, 80px);
   line-height: 1.02;
@@ -653,7 +653,7 @@ img {
 }
 .hero-handoff-statement {
   margin: 0;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(36px, 4.8vw, 68px);
   line-height: 1.18;
@@ -726,7 +726,7 @@ img {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 3.6vw, 48px);
   line-height: 1.12;
@@ -956,7 +956,7 @@ img {
   background: #ffffff;
 }
 .journey-heading {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 3.4vw, 48px);
   line-height: 1.1;
@@ -1187,7 +1187,7 @@ img {
   color: #f97e2c;
 }
 .journey-column-title {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(22px, 2vw, 28px);
   line-height: 1.2;
@@ -1467,7 +1467,7 @@ img {
   margin-bottom: clamp(18px, 3vh, 28px);
 }
 .agenda-heading {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 40px);
   line-height: 1.1;
@@ -1641,7 +1641,7 @@ img {
   margin-bottom: 18px;
 }
 .sponsors-heading {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(22px, 2.6vw, 34px);
   line-height: 1.2;
@@ -1701,7 +1701,7 @@ img {
   gap: 6px;
 }
 .sponsor-tier-title {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(18px, 1.8vw, 24px);
   letter-spacing: 0.1em;
@@ -2049,7 +2049,7 @@ img {
   margin-bottom: 18px;
 }
 .faq-heading {
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(22px, 2.8vw, 36px);
   line-height: 1.25;
@@ -2534,7 +2534,7 @@ img {
 .closing-cta-title {
   margin: 0;
   max-width: none;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(36px, 5.5vw, 64px);
   line-height: 1.1;
@@ -3065,7 +3065,7 @@ img {
 }
 .agenda-page-hero-title {
   margin: 0 0 20px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(40px, 7vw, 72px);
   line-height: 1.02;
@@ -3133,7 +3133,7 @@ img {
 }
 .agenda-overview-heading {
   margin: 0 0 18px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
@@ -3211,7 +3211,7 @@ img {
 }
 .agenda-list-day-label {
   margin: 0;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-size: clamp(20px, 2.4vw, 30px);
   font-weight: 800;
   line-height: 1.15;
@@ -3421,7 +3421,7 @@ img {
 }
 .agenda-hotel-heading {
   margin: 0 0 16px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
@@ -3543,7 +3543,7 @@ img {
 
 .travel-section-heading {
   margin: 0 0 18px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
@@ -3602,7 +3602,7 @@ img {
 }
 .travel-page-hero-title {
   margin: 0 0 20px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 4vw, 52px);
   line-height: 1.1;
@@ -3736,7 +3736,7 @@ img {
 }
 .travel-hotel-heading {
   margin: 0 0 16px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
@@ -3826,7 +3826,7 @@ img {
 }
 .travel-arrival-heading {
   margin: 0;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 3.8vw, 44px);
   line-height: 1.15;
@@ -3981,7 +3981,7 @@ img {
 }
 .travel-flying-heading {
   margin: 0 0 16px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 3.8vw, 44px);
   line-height: 1.15;
@@ -4412,7 +4412,7 @@ img {
 }
 .sponsors-page-hero-title {
   margin: 0 0 20px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(28px, 4vw, 52px);
   line-height: 1.15;
@@ -4500,7 +4500,7 @@ img {
 }
 .sponsors-page-overview-heading {
   margin: 0 0 18px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;
@@ -4581,7 +4581,7 @@ img {
 }
 .sponsors-page-tier-title {
   margin: 0;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(40px, 6vw, 72px);
   line-height: 1;
@@ -4702,7 +4702,7 @@ img {
 }
 .sponsors-page-become-heading {
   margin: 0 0 16px;
-  font-family: var(--font-display), Michroma, sans-serif;
+  font-family: var(--font-display), "Simple Square", sans-serif;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 36px);
   line-height: 1.2;

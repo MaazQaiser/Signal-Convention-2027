@@ -1,14 +1,29 @@
 import type { Metadata } from "next";
-import { Michroma } from "next/font/google";
 import localFont from "next/font/local";
 import Aftermovie from "@/components/Aftermovie";
 import "./globals.css";
 
-const michroma = Michroma({
-  weight: "400",
-  subsets: ["latin"],
+const simpleSquare = localFont({
+  src: [
+    {
+      path: "./fonts/ST-SimpleSquare.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/ST-SimpleSquare.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/ST-SimpleSquare.otf",
+      weight: "800",
+      style: "normal",
+    },
+  ],
   variable: "--font-display",
   display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 const fkDisplay = localFont({
@@ -67,7 +82,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={`${fkDisplay.variable} ${michroma.variable}`}>
+      <body className={`${fkDisplay.variable} ${simpleSquare.variable}`}>
         {children}
         <Aftermovie />
       </body>
