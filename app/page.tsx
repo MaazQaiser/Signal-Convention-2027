@@ -4,6 +4,7 @@ import SectionNav from "@/components/SectionNav";
 import Journey from "@/components/Journey";
 import Agenda from "@/components/Agenda";
 import Sponsors from "@/components/Sponsors";
+import FontCompare from "@/components/FontCompare";
 import FAQ from "@/components/FAQ";
 import Register from "@/components/Register";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
       <Journey />
       <Agenda />
       <Sponsors />
+      <FontCompare />
       <FAQ />
       <div className="closing">
         <div className="closing-mark-stage" aria-hidden="true">

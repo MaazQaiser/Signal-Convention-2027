@@ -8,6 +8,7 @@ const HOME_SECTIONS: SectionNavItem[] = [
   { id: "journey", label: "Journey" },
   { id: "agenda", label: "Agenda" },
   { id: "sponsors", label: "Sponsors" },
+  { id: "fonts", label: "Fonts" },
   { id: "faq", label: "FAQs" },
   { id: "register", label: "Register" },
 ];

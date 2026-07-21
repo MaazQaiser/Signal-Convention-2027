@@ -1,0 +1,178 @@
+.font-compare {
+  background:
+    radial-gradient(
+      ellipse 50% 40% at 90% 0%,
+      rgba(0, 85, 255, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 45% 35% at 8% 100%,
+      rgba(255, 121, 0, 0.06),
+      transparent 55%
+    ),
+    var(--black);
+  color: var(--white);
+  padding: clamp(96px, 14vh, 160px) 0 clamp(100px, 15vh, 180px);
+}
+
+.font-compare--page {
+  min-height: 100vh;
+  padding-top: clamp(48px, 8vh, 96px);
+}
+
+.font-compare-header {
+  max-width: 920px;
+  margin-bottom: clamp(40px, 6vh, 64px);
+}
+
+.font-compare-eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.font-compare-page-title {
+  margin: 0 0 16px;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.font-compare-lede {
+  margin: 0 0 24px;
+  max-width: 40rem;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.font-compare-home {
+  display: inline-flex;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 2px;
+  transition: color 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft);
+}
+
+.font-compare-home:hover {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.font-compare-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: clamp(36px, 5vh, 56px);
+  max-width: 1100px;
+}
+
+.font-compare-legend-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.font-compare-legend-col strong {
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.font-compare-legend-col span:last-child {
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.font-compare-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 4px;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--black);
+  background: #7ec8ff;
+}
+
+.font-compare-badge--b {
+  background: var(--orange);
+}
+
+.font-compare-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vh, 40px);
+  max-width: 1100px;
+}
+
+.font-compare-row-label {
+  margin: 0 0 12px;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.font-compare-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.font-compare-card {
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.font-compare-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.font-compare-card-meta .font-compare-badge {
+  margin-bottom: 0;
+}
+
+.font-compare-sample {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+@media (max-width: 820px) {
+  .font-compare-legend,
+  .font-compare-pair {
+    grid-template-columns: 1fr;
+  }
+}
