@@ -11,7 +11,6 @@ import {
 export default function Register() {
   const pathname = usePathname();
   const navLinks = getRegisterExploreLinks();
-  const sponsorsHref = "/sponsors#become";
 
   return (
     <section
@@ -63,10 +62,7 @@ export default function Register() {
           </Reveal>
 
           <Reveal className="footer-col" delay={REVEAL_CASCADE.body}>
-            <h4 className="footer-col-title">Partner</h4>
-            <a className="footer-enquiry" href={sponsorsHref}>
-              Become a Sponsor
-            </a>
+            <h4 className="footer-col-title">Contact</h4>
             <a
               className="footer-enquiry"
               href="mailto:convention@teamsignal.com"

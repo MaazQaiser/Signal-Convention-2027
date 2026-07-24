@@ -1,4 +1,4 @@
-import { Michroma } from "next/font/google";
+import { Michroma, Orbitron } from "next/font/google";
 import localFont from "next/font/local";
 import Link from "next/link";
 import "./FontCompare.css";
@@ -9,9 +9,32 @@ const michroma = Michroma({
   display: "swap",
 });
 
+const orbitron = Orbitron({
+  weight: ["400", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 const simpleSquare = localFont({
   src: "../app/fonts/ST-SimpleSquare.otf",
   weight: "400",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+});
+
+const cabinetGrotesk = localFont({
+  src: [
+    {
+      path: "../app/fonts/CabinetGrotesk-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../app/fonts/CabinetGrotesk-Extrabold.otf",
+      weight: "800",
+      style: "normal",
+    },
+  ],
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
 });
@@ -51,6 +74,33 @@ const SAMPLES = [
   },
 ] as const;
 
+const OPTIONS = [
+  {
+    id: "A",
+    name: "Michroma",
+    note: "Option A",
+    badgeClass: "",
+  },
+  {
+    id: "B",
+    name: "Simple Square",
+    note: "Option B",
+    badgeClass: "font-compare-badge--b",
+  },
+  {
+    id: "C",
+    name: "Grotesque",
+    note: "Option C · Cabinet Grotesk",
+    badgeClass: "font-compare-badge--c",
+  },
+  {
+    id: "D",
+    name: "Orbitron",
+    note: "Option D",
+    badgeClass: "font-compare-badge--d",
+  },
+] as const;
+
 type FontCompareProps = {
   /** Standalone page shows back link; homepage section does not. */
   variant?: "section" | "page";
@@ -58,6 +108,12 @@ type FontCompareProps = {
 
 export default function FontCompare({ variant = "section" }: FontCompareProps) {
   const isPage = variant === "page";
+  const optionClass = {
+    A: michroma.className,
+    B: simpleSquare.className,
+    C: cabinetGrotesk.className,
+    D: orbitron.className,
+  } as const;
 
   return (
     <section
@@ -71,12 +127,13 @@ export default function FontCompare({ variant = "section" }: FontCompareProps) {
           Display font comparison
         </h2>
         <p className="font-compare-lede">
-          Same headlines, two typefaces. Michroma (A) vs Simple Square (B).
-          Pick the direction that feels right for Signal 2027.
+          Same headlines, four typefaces. Use the floating{" "}
+          <strong>Display font</strong> switcher to flip the whole site between
+          Michroma, Simple Square, Grotesque, and Orbitron in one click.
         </p>
         {isPage ? (
-          <Link className="font-compare-home" href="/#fonts">
-            ← View on live site
+          <Link className="font-compare-home" href="/">
+            ← Back to home
           </Link>
         ) : (
           <Link className="font-compare-home" href="/font-compare">
@@ -86,43 +143,41 @@ export default function FontCompare({ variant = "section" }: FontCompareProps) {
       </header>
 
       <div className="font-compare-legend wrap" aria-hidden="true">
-        <div className="font-compare-legend-col">
-          <span className="font-compare-badge">A</span>
-          <strong>Michroma</strong>
-          <span>Option A</span>
-        </div>
-        <div className="font-compare-legend-col">
-          <span className="font-compare-badge font-compare-badge--b">B</span>
-          <strong>Simple Square</strong>
-          <span>Option B · currently live</span>
-        </div>
+        {OPTIONS.map((option) => (
+          <div key={option.id} className="font-compare-legend-col">
+            <span
+              className={`font-compare-badge ${option.badgeClass}`.trim()}
+            >
+              {option.id}
+            </span>
+            <strong>{option.name}</strong>
+            <span>{option.note}</span>
+          </div>
+        ))}
       </div>
 
       <div className="font-compare-list wrap">
         {SAMPLES.map((sample) => (
           <div key={sample.label} className="font-compare-row">
             <p className="font-compare-row-label">{sample.label}</p>
-            <div className="font-compare-pair">
-              <article className="font-compare-card">
-                <p className="font-compare-card-meta">
-                  <span className="font-compare-badge">A</span>
-                  Michroma
-                </p>
-                <p className={`font-compare-sample ${michroma.className}`}>
-                  {sample.text}
-                </p>
-              </article>
-              <article className="font-compare-card">
-                <p className="font-compare-card-meta">
-                  <span className="font-compare-badge font-compare-badge--b">
-                    B
-                  </span>
-                  Simple Square
-                </p>
-                <p className={`font-compare-sample ${simpleSquare.className}`}>
-                  {sample.text}
-                </p>
-              </article>
+            <div className="font-compare-pair font-compare-pair--quad">
+              {OPTIONS.map((option) => (
+                <article key={option.id} className="font-compare-card">
+                  <p className="font-compare-card-meta">
+                    <span
+                      className={`font-compare-badge ${option.badgeClass}`.trim()}
+                    >
+                      {option.id}
+                    </span>
+                    {option.name}
+                  </p>
+                  <p
+                    className={`font-compare-sample ${optionClass[option.id]}`}
+                  >
+                    {sample.text}
+                  </p>
+                </article>
+              ))}
             </div>
           </div>
         ))}

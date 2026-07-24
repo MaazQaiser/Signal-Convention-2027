@@ -19,15 +19,8 @@ export default function TravelHero() {
           <div className="travel-page-hero-copy">
             <Reveal delay={REVEAL_CASCADE.title} {...FADE}>
               <h1 className="travel-page-hero-title" id="travel-page-heading">
-                Travel &amp; Accommodation
+                Hotel &amp; Travel
               </h1>
-            </Reveal>
-            <Reveal delay={REVEAL_CASCADE.body} {...FADE}>
-              <p className="travel-page-hero-lede">
-                Plan your stay for Here We Grow 2027 at the JW Marriott Desert
-                Ridge Resort &amp; Spa in Phoenix. Find everything you need for
-                arrival, accommodations, and travel.
-              </p>
             </Reveal>
           </div>
           <Reveal

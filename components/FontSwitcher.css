@@ -1,0 +1,88 @@
+.font-switcher {
+  position: fixed;
+  z-index: 80;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(88px, calc(16px + env(safe-area-inset-bottom)));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease-soft), transform 0.35s var(--ease-soft);
+}
+
+.font-switcher--ready {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.font-switcher-label {
+  margin: 0;
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.font-switcher-track {
+  display: flex;
+  gap: 4px;
+}
+
+.font-switcher-btn {
+  font-family: var(--font-body), "FK Display", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.25s var(--ease-soft), background 0.25s var(--ease-soft),
+    border-color 0.25s var(--ease-soft);
+}
+
+.font-switcher-btn:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.font-switcher-btn.is-active {
+  color: var(--black);
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.font-switcher-btn:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@media (max-width: 820px) {
+  .font-switcher {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(76px, calc(12px + env(safe-area-inset-bottom)));
+  }
+
+  .font-switcher-track {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .font-switcher-btn {
+    flex: 1;
+    text-align: center;
+  }
+}

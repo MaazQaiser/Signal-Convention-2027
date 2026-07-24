@@ -70,7 +70,7 @@
 
 .font-compare-legend {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: clamp(36px, 5vh, 56px);
   max-width: 1100px;
@@ -116,6 +116,14 @@
   background: var(--orange);
 }
 
+.font-compare-badge--c {
+  background: #5ecf8a;
+}
+
+.font-compare-badge--d {
+  background: #b794f6;
+}
+
 .font-compare-list {
   display: flex;
   flex-direction: column;
@@ -136,6 +144,20 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+.font-compare-pair--trio {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.font-compare-pair--quad {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1100px) {
+  .font-compare-pair--quad {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .font-compare-card {
@@ -170,9 +192,17 @@
   color: var(--white);
 }
 
+@media (max-width: 1100px) {
+  .font-compare-legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 820px) {
   .font-compare-legend,
-  .font-compare-pair {
+  .font-compare-pair,
+  .font-compare-pair--trio,
+  .font-compare-pair--quad {
     grid-template-columns: 1fr;
   }
 }

@@ -15,13 +15,12 @@ import HeroModel3D from "@/components/HeroModel3D";
 import BtnArrow from "@/components/BtnArrow";
 
 /** Title then body — each line fills L→R in sequence. */
-const HANDOFF_TITLE = "Grow Through Consistency";
+const HANDOFF_TITLE_LINES = ["Grow Through", "Consistency"] as const;
 const HANDOFF_BODY = [
-  "This year, we're exploring the habits,",
-  "disciplines and daily decisions that",
-  "lead to long-term success...",
+  "Learn from owner-led sessions, breakout discussions and real conversations with franchise owners across the network.",
+  "Leave with practical ideas, stronger connections and strategies you can put into action immediately.",
 ] as const;
-const HANDOFF_LINES = [HANDOFF_TITLE, ...HANDOFF_BODY] as const;
+const HANDOFF_LINES = [...HANDOFF_TITLE_LINES, ...HANDOFF_BODY] as const;
 
 function lineFillPercent(progress: number, index: number, total: number) {
   const t = Math.min(1, Math.max(0, progress));
@@ -154,11 +153,15 @@ export default function Hero() {
             transform: `translateY(calc(${-phases.introLift * 58} * 1vh))`,
           }}
         >
-          <h1 className="hero-title">Here We Grow 2027</h1>
+          <h1 className="hero-title">
+            Here We Grow <span className="hero-title-year">2027</span>
+          </h1>
           <p className="hero-sub">
-            Join franchise owners, teams, Home Office and partners for three
-            days of learning from one another and discovering new ways to
-            strengthen your business.
+            Join franchise owners, teams, Home Office and partners
+            <br />
+            for three days of learning from one another and discovering
+            <br />
+            new ways to strengthen your business.
           </p>
           <a className="btn btn-orange hero-cta" href="#register">
             Register
@@ -237,24 +240,27 @@ export default function Hero() {
           }}
         >
           <p className="hero-handoff-statement">
-            <span
-              className="hero-handoff-line hero-handoff-line--title"
-              style={
-                {
-                  "--line-fill": `${
-                    reduceMotion
-                      ? 100
-                      : lineFillPercent(
-                          phases.handoffFill,
-                          0,
-                          HANDOFF_LINES.length
-                        )
-                  }%`,
-                } as CSSProperties
-              }
-            >
-              {HANDOFF_TITLE}
-            </span>
+            {HANDOFF_TITLE_LINES.map((line, index) => (
+              <span
+                key={line}
+                className="hero-handoff-line hero-handoff-line--title"
+                style={
+                  {
+                    "--line-fill": `${
+                      reduceMotion
+                        ? 100
+                        : lineFillPercent(
+                            phases.handoffFill,
+                            index,
+                            HANDOFF_LINES.length
+                          )
+                    }%`,
+                  } as CSSProperties
+                }
+              >
+                {line}
+              </span>
+            ))}
           </p>
           <p className="hero-handoff-body">
             {HANDOFF_BODY.map((line, index) => (
@@ -268,7 +274,7 @@ export default function Hero() {
                         ? 100
                         : lineFillPercent(
                             phases.handoffFill,
-                            index + 1,
+                            index + HANDOFF_TITLE_LINES.length,
                             HANDOFF_LINES.length
                           )
                     }%`,
@@ -279,6 +285,18 @@ export default function Hero() {
               </span>
             ))}
           </p>
+          <a
+            className="btn btn-orange hero-handoff-cta"
+            href="/agenda"
+            style={{
+              opacity: reduceMotion
+                ? 1
+                : Math.max(0, (phases.handoffFill - 0.82) / 0.18),
+            }}
+          >
+            Explore Agenda
+            <BtnArrow />
+          </a>
         </aside>
       </div>
 

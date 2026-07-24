@@ -1,29 +1,21 @@
 import type { Metadata } from "next";
+import { Michroma, Orbitron } from "next/font/google";
 import localFont from "next/font/local";
 import Aftermovie from "@/components/Aftermovie";
 import "./globals.css";
 
-const simpleSquare = localFont({
-  src: [
-    {
-      path: "./fonts/ST-SimpleSquare.otf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./fonts/ST-SimpleSquare.otf",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "./fonts/ST-SimpleSquare.otf",
-      weight: "800",
-      style: "normal",
-    },
-  ],
-  variable: "--font-display",
+const michroma = Michroma({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-michroma",
   display: "swap",
-  fallback: ["system-ui", "sans-serif"],
+});
+
+const orbitron = Orbitron({
+  weight: ["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+  variable: "--font-orbitron",
+  display: "swap",
 });
 
 const fkDisplay = localFont({
@@ -73,7 +65,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${orbitron.variable} ${michroma.variable}`}
+      data-display-font="orbitron"
+    >
       <head>
         <link
           rel="preload"
@@ -82,7 +78,7 @@ export default function RootLayout({
           type="video/mp4"
         />
       </head>
-      <body className={`${fkDisplay.variable} ${simpleSquare.variable}`}>
+      <body className={fkDisplay.variable}>
         {children}
         <Aftermovie />
       </body>

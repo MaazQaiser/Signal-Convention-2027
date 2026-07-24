@@ -95,54 +95,58 @@ export default function Agenda() {
 
             <Reveal delay={REVEAL_CASCADE.title}>
               <h2 className="agenda-heading" id="agenda-heading">
-                Join Us in Phoenix.
+                Join Us in Phoenix
               </h2>
             </Reveal>
 
             <Reveal delay={REVEAL_CASCADE.body}>
               <p className="agenda-lede">
-                Experience Here We Grow 2027 at the JW Marriott Desert Ridge
-                Resort &amp; Spa, where inspiring surroundings, exceptional
-                amenities, and meaningful connections come together to create
-                an unforgettable convention experience.
+                Join us at the JW Marriott Desert Ridge Resort &amp; Spa in
+                Phoenix, Arizona, where the Sonoran Desert views meet
+                world-class amenities. Whether you&apos;re connecting with
+                other franchisees between sessions or unwinding after a full
+                day of learning, it&apos;s the perfect setting to recharge,
+                build relationships and prepare for another year of growth.
               </p>
             </Reveal>
 
             <Reveal delay={REVEAL_CASCADE.cta}>
-              <a className="btn btn-orange agenda-cta" href="/travel">
-                Explore Hotel &amp; Travel
+              <a className="btn btn-orange agenda-cta" href="#register">
+                Register Today
                 <BtnArrow />
               </a>
             </Reveal>
           </div>
 
-          <Reveal
-            className="agenda-countdown"
-            delay={REVEAL_CASCADE.media}
-            y={24}
-          >
-            <p className="agenda-countdown-label">Countdown to Convention</p>
-            <div className="agenda-count" aria-live="polite">
-              {COUNTDOWN_UNITS.map((unit, index) => (
-                <div key={unit.key} className="agenda-count-unit">
-                  <b>{t[unit.key]}</b>
-                  <span>{unit.label}</span>
-                  {index < COUNTDOWN_UNITS.length - 1 ? (
-                    <span className="agenda-count-sep" aria-hidden="true">
-                      :
-                    </span>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          <div className="agenda-aside">
+            <Reveal
+              className="agenda-countdown"
+              delay={REVEAL_CASCADE.media}
+              y={24}
+            >
+              <p className="agenda-countdown-label">Countdown to Convention</p>
+              <div className="agenda-count" aria-live="polite">
+                {COUNTDOWN_UNITS.map((unit, index) => (
+                  <div key={unit.key} className="agenda-count-unit">
+                    <b>{t[unit.key]}</b>
+                    <span>{unit.label}</span>
+                    {index < COUNTDOWN_UNITS.length - 1 ? (
+                      <span className="agenda-count-sep" aria-hidden="true">
+                        :
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
         </div>
 
         <div className="agenda-video">
           <video
             ref={videoRef}
             className="agenda-video-el"
-            src="/videos/destination.mp4"
+            src="/videos/cnv-27-reveal.mp4"
             poster="/images/convention-2026-2067.jpg"
             muted
             loop

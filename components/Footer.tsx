@@ -9,9 +9,6 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="wrap footer-bar">
-        <p className="footer-legal">
-          Signal Franchise Convention<sup>™</sup>
-        </p>
         <nav className="footer-legal-nav" aria-label="Legal">
           {legalLinks.map((link, index) => (
             <span key={link.label}>

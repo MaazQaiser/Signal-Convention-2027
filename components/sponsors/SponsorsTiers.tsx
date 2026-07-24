@@ -40,6 +40,7 @@ function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
 function TierBlock({ tier, index }: { tier: SponsorTier; index: number }) {
   const shortTitle = tier.title
     .replace(/ Sponsors?$/, "")
+    .replace(/ Vendors$/, "")
     .replace(" Partners", "");
 
   return (

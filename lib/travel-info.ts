@@ -4,30 +4,9 @@ export type GlanceFact = {
   value: string;
 };
 
-export type Amenity = {
-  id: string;
-  label: string;
-};
-
-export type HotelMosaicCell =
-  | { type: "text"; amenityId: string }
-  | { type: "image"; src: string; alt: string };
-
-export type ArrivalStep = {
-  title: string;
-  detail?: string;
-};
-
-export type TransportOption = {
-  label: string;
-};
-
-export type MapMarker = {
-  id: string;
-  label: string;
-  /** Percent positions on the map image */
-  x: number;
-  y: number;
+export type HotelImage = {
+  src: string;
+  alt: string;
 };
 
 export type KnowBeforeItem = {
@@ -61,75 +40,26 @@ export const TRAVEL_GLANCE: GlanceFact[] = [
     label: "Airport",
     value: "Phoenix Sky Harbor International",
   },
-  { id: "distance", label: "Distance", value: "22 Miles" },
+  { id: "distance", label: "Distance", value: "22 miles from property" },
 ];
 
-export const TRAVEL_AMENITIES: Amenity[] = [
-  { id: "pools", label: "Five Resort Pools" },
-  { id: "river", label: "Lazy River" },
-  { id: "cabanas", label: "Private Cabanas" },
-  { id: "pickleball", label: "17 Pickleball Courts" },
-  { id: "golf", label: "Championship Golf" },
-  { id: "dining", label: "Restaurants & Lounges" },
-  { id: "spa", label: "Spa" },
-  { id: "fitness", label: "Fitness Center" },
-];
-
-/** 4×3 mosaic: 8 amenity text cells + 4 image cells */
-export const TRAVEL_HOTEL_MOSAIC: HotelMosaicCell[] = [
-  { type: "text", amenityId: "pools" },
-  { type: "text", amenityId: "river" },
+export const TRAVEL_HOTEL_IMAGES: HotelImage[] = [
   {
-    type: "image",
     src: "/images/convention-2026-2067.jpg",
     alt: "Resort atmosphere at Here We Grow",
   },
-  { type: "text", amenityId: "cabanas" },
   {
-    type: "image",
     src: "/images/convention-2026-1125.jpg",
     alt: "Convention networking at the resort",
   },
-  { type: "text", amenityId: "pickleball" },
-  { type: "text", amenityId: "golf" },
   {
-    type: "image",
     src: "/images/convention-2026-0643.jpg",
     alt: "Here We Grow attendees gathering",
   },
-  { type: "text", amenityId: "dining" },
   {
-    type: "image",
     src: "/images/convention-2026-0254.jpg",
     alt: "Convention floor experience",
   },
-  { type: "text", amenityId: "spa" },
-  { type: "text", amenityId: "fitness" },
-];
-
-export const TRAVEL_ARRIVAL_STEPS: ArrivalStep[] = [
-  { title: "Book Convention", detail: "Complete your Here We Grow 2027 registration." },
-  { title: "Reserve Hotel", detail: "Hotel stay is reserved during registration." },
-  { title: "Fly into Phoenix", detail: "Arrive at Phoenix Sky Harbor International Airport." },
-  { title: "Check In", detail: "Hotel check-in begins at 4:00 PM." },
-  { title: "Registration Check-In", detail: "Pick up your credentials on site." },
-  { title: "Welcome Reception", detail: "Join fellow attendees to kick off convention." },
-];
-
-export const TRAVEL_TRANSPORT: TransportOption[] = [
-  { label: "Uber" },
-  { label: "Lyft" },
-  { label: "Taxi" },
-  { label: "Rental Car" },
-];
-
-export const TRAVEL_MAP_MARKERS: MapMarker[] = [
-  { id: "registration", label: "Registration", x: 48, y: 72 },
-  { id: "sessions", label: "General Sessions", x: 48, y: 40 },
-  { id: "breakouts", label: "Breakout Rooms", x: 72, y: 38 },
-  { id: "dining", label: "Dining", x: 76, y: 62 },
-  { id: "expo", label: "Vendor Expo", x: 22, y: 58 },
-  { id: "legacy", label: "Legacy Events", x: 22, y: 28 },
 ];
 
 export const TRAVEL_KNOW_BEFORE: KnowBeforeItem[] = [
@@ -157,7 +87,7 @@ export const TRAVEL_KNOW_BEFORE: KnowBeforeItem[] = [
     id: "dress",
     title: "Dress Code",
     body: "Business casual is recommended for most convention activities. Special evening events may require different attire.",
-    href: "/#faq",
+    href: "/faqs",
     hrefLabel: "See FAQ",
   },
   {
@@ -211,9 +141,3 @@ export const TRAVEL_FAQS: TravelFaq[] = [
     a: "Email the Convention Team at convention@teamsignal.com with travel, accommodations, or arrival questions. On-site Convention Support is also available during the event.",
   },
 ];
-
-export const TRAVEL_RESERVATION_INCLUDES = [
-  "Three-night stay",
-  "Sunday–Tuesday accommodation",
-  "One guest included",
-] as const;

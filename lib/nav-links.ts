@@ -11,6 +11,7 @@ const HOME_SECTIONS: NavLink[] = [
   { label: "Agenda", href: "/agenda", external: true },
   { label: "Hotel & Travel", href: "/travel", external: true },
   { label: "Sponsors", href: "/sponsors", external: true },
+  { label: "FAQs", href: "/faqs", external: true },
 ];
 
 const REGISTER_EXPLORE: NavLink[] = [
@@ -18,7 +19,7 @@ const REGISTER_EXPLORE: NavLink[] = [
   { label: "Agenda", href: "/agenda", external: true },
   { label: "Hotel & Travel", href: "/travel", external: true },
   { label: "Sponsors", href: "/sponsors", external: true },
-  { label: "FAQs", href: "faq" },
+  { label: "FAQs", href: "/faqs", external: true },
   { label: "Register", href: "register" },
 ];
 
@@ -30,10 +31,13 @@ export function resolveNavHref(link: NavLink, pathname: string): string {
   if (pathname === "/" || pathname === "") {
     return `#${link.href}`;
   }
-  /* In-page sections on agenda / travel */
+  /* In-page sections on dedicated pages */
   if (
-    (pathname.startsWith("/agenda") || pathname.startsWith("/travel")) &&
-    (link.href === "faq" || link.href === "register")
+    (pathname.startsWith("/agenda") ||
+      pathname.startsWith("/travel") ||
+      pathname.startsWith("/sponsors") ||
+      pathname.startsWith("/faqs")) &&
+    link.href === "register"
   ) {
     return `#${link.href}`;
   }
@@ -57,6 +61,9 @@ export function isNavLinkActive(link: NavLink, pathname: string): boolean {
   }
   if (link.href === "/sponsors") {
     return pathname === "/sponsors" || pathname.startsWith("/sponsors/");
+  }
+  if (link.href === "/faqs") {
+    return pathname === "/faqs" || pathname.startsWith("/faqs/");
   }
   if (link.href === "top") {
     return pathname === "/" || pathname === "";

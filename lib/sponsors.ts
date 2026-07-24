@@ -11,13 +11,19 @@ export type SponsorTier = {
   sponsors: Sponsor[];
 };
 
-export type SponsorWhyPillar = {
-  id: string;
-  title: string;
-  body: string;
-};
-
+/** Display order: Platinum above Diamond, then Gold → Silver → Vision → Philanthropic. */
 export const SPONSOR_TIERS: SponsorTier[] = [
+  {
+    id: "platinum",
+    title: "Platinum Sponsors",
+    sponsors: [
+      {
+        name: "CI Shirts",
+        src: "/sponsors/ci-shirts.png",
+        href: "https://cishirts.com/",
+      },
+    ],
+  },
   {
     id: "diamond",
     title: "Diamond Sponsors",
@@ -31,17 +37,6 @@ export const SPONSOR_TIERS: SponsorTier[] = [
         name: "Revolution Wraps",
         src: "/sponsors/revolution-wraps.svg",
         href: "https://www.revolutionwraps.com/",
-      },
-    ],
-  },
-  {
-    id: "platinum",
-    title: "Platinum Sponsor",
-    sponsors: [
-      {
-        name: "CI Shirts",
-        src: "/sponsors/ci-shirts.png",
-        href: "https://cishirts.com/",
       },
     ],
   },
@@ -122,6 +117,22 @@ export const SPONSOR_TIERS: SponsorTier[] = [
     ],
   },
   {
+    id: "vision",
+    title: "Vision Vendors",
+    sponsors: [
+      {
+        name: "AccuSourceHR",
+        src: "/sponsors/accusourcehr-white.png",
+        href: "https://www.accusourcehr.com/",
+      },
+      {
+        name: "Synergi",
+        src: "/sponsors/synergi-white.png",
+        href: "https://getsynergi.com/",
+      },
+    ],
+  },
+  {
     id: "philanthropic",
     title: "Philanthropic Partners",
     note: "Giving Back Together",
@@ -137,23 +148,5 @@ export const SPONSOR_TIERS: SponsorTier[] = [
         href: "https://soldierswish.org/",
       },
     ],
-  },
-];
-
-export const SPONSOR_WHY_PILLARS: SponsorWhyPillar[] = [
-  {
-    id: "reach",
-    title: "Reach Franchise Owners",
-    body: "Connect directly with Signal franchise owners and their teams gathered for three days of learning, networking, and collaboration.",
-  },
-  {
-    id: "presence",
-    title: "Brand Presence at Here We Grow",
-    body: "Showcase your brand across convention experiences—from recognition moments to on-site visibility aligned with your partnership level.",
-  },
-  {
-    id: "growth",
-    title: "Align with a Growth Culture",
-    body: "Stand alongside a network committed to operational excellence and long-term growth—partners who help us grow, together.",
   },
 ];

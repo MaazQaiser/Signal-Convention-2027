@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import Image from "next/image";
 import Hero from "@/components/Hero";
-import LearnFromOwners from "@/components/LearnFromOwners";
 import { loadGsap } from "@/lib/load-gsap";
 
 type JourneyImage = {
@@ -24,9 +23,9 @@ type ColumnVariant = "featured" | "photo-first";
 const panels: Panel[] = [
   {
     id: "session-format",
-    label: "New Session Format",
-    heading: "Fresh Perspectives. Practical Learning.",
-    body: "All-new keynote and breakout sessions built around practical ideas you can apply in your business.",
+    label: "New Session Content.",
+    heading: "Every keynote and breakout session is brand new.",
+    body: "All-new keynote and breakout sessions built around ideas you can apply in your business.",
     image: {
       src: "/images/convention-2026-0254.jpg",
       alt: "Keynote and breakout sessions at Here We Grow",
@@ -34,7 +33,7 @@ const panels: Panel[] = [
   },
   {
     id: "owner-led",
-    label: "Owner-Led Sessions",
+    label: "New Owner-Led Sessions",
     heading: "Learn From Those Doing the Work.",
     body: "Hear directly from franchise owners and their teams as they share what's working in their markets, the lessons they've learned, and the strategies driving growth.",
     image: {
@@ -83,15 +82,6 @@ const panels: Panel[] = [
     },
   },
 ];
-
-const panel2027 = {
-  year: "2027",
-  location: "Arizona",
-  category: "Consistency",
-  tagline: "Consistency Defines What's Next",
-  logo: "/brand/logo-27-dark.svg",
-  logoAlt: "Here We Grow 2027",
-};
 
 const COLUMN_VARIANTS: ColumnVariant[] = [
   "featured",
@@ -152,11 +142,7 @@ function JourneyColumn({
       className={`journey-column journey-column--${variant}`}
       aria-labelledby={id}
     >
-      {variant === "featured" ? (
-        <div className="journey-column-media">{photo}</div>
-      ) : (
-        photo
-      )}
+      {photo}
       {copy}
     </article>
   );
@@ -168,21 +154,21 @@ function JourneyIntro({
   introRef: RefObject<HTMLElement | null>;
 }) {
   return (
-    <aside className="journey-intro" ref={introRef}>
+    <header className="journey-intro" ref={introRef}>
       <h2 className="journey-heading">
         <span className="journey-intro-line">What&apos;s New</span>
         <span className="journey-intro-line">This Year</span>
       </h2>
       <div className="journey-lede">
         <span className="journey-intro-line">
-          Discover what&apos;s new at Here We Grow 2027—from fresh session
-          formats to expanded networking opportunities—
+          Discover what&apos;s new at Here We Grow 2027, from fresh session
+          formats to expanded networking opportunities,
         </span>
         <span className="journey-intro-line">
           all designed to help you learn, connect, and grow.
         </span>
       </div>
-    </aside>
+    </header>
   );
 }
 
@@ -193,8 +179,6 @@ export default function Journey() {
   const stageRef = useRef<HTMLDivElement>(null);
   const cardLayerRef = useRef<HTMLDivElement>(null);
   const cardTrackRef = useRef<HTMLDivElement>(null);
-  const finaleLayerRef = useRef<HTMLDivElement>(null);
-  const finaleRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLElement>(null);
 
   const [staticLayout, setStaticLayout] = useState(false);
@@ -206,17 +190,8 @@ export default function Journey() {
     const stage = stageRef.current;
     const cardLayer = cardLayerRef.current;
     const cardTrack = cardTrackRef.current;
-    const finaleLayer = finaleLayerRef.current;
     const intro = introRef.current;
-    if (
-      !section ||
-      !pin ||
-      !fade ||
-      !stage ||
-      !cardLayer ||
-      !cardTrack ||
-      !finaleLayer
-    )
+    if (!section || !pin || !fade || !stage || !cardLayer || !cardTrack)
       return;
 
     const reduceMotion = window.matchMedia(
@@ -237,66 +212,54 @@ export default function Journey() {
       if (disposed) return;
 
       const ctx = gsap.context(() => {
-        const travel = () =>
+        const getTravel = () =>
           Math.max(0, cardTrack.scrollWidth - stage.clientWidth);
-        const exitTravel = () =>
-          cardTrack.scrollWidth + stage.clientWidth * 0.2;
-
-        gsap.set(finaleLayer, { opacity: 0, scale: 0.985 });
-        const finaleSteps =
-          finaleRef.current?.querySelectorAll(".journey-finale-step");
-        if (finaleSteps?.length) gsap.set(finaleSteps, { opacity: 0, y: 24 });
 
         const introLines = intro?.querySelectorAll(".journey-intro-line");
         if (introLines?.length) {
           gsap.set(introLines, { opacity: 0, y: 28 });
         }
 
-        const scrollItems = cardTrack.querySelectorAll(".journey-column");
-        gsap.set(scrollItems, { opacity: 0 });
-
-        /* Start on white; intro already left-aligned (no center→dock jerk) */
-        gsap.set(fade, { opacity: 0 });
+        const scrollItems = Array.from(
+          cardTrack.querySelectorAll<HTMLElement>(".journey-column")
+        );
+        gsap.set(scrollItems, { opacity: 0, y: 32 });
+        gsap.set(cardLayer, { opacity: 0 });
+        gsap.set(fade, { opacity: 0, y: "8vh" });
         gsap.set(cardTrack, { x: 0 });
 
-        /*
-         * Scrub weights (relative). Pin distance scales with track width
-         * so horizontal scroll speed stays even — no long empty scrolling.
-         */
-        const INTRO_SCROLL_VH = 1.55;
-        const EXIT_SCROLL_VH = 1.25;
-        const SCROLL_PX_PER_VH = 0.92;
-
         const tl = gsap.timeline({
-          defaults: { ease: "power3.out" },
+          defaults: { ease: "power2.out" },
           scrollTrigger: {
             trigger: pin,
             start: "top top",
             end: () => {
-              const intro = window.innerHeight * INTRO_SCROLL_VH;
-              const track =
-                Math.max(travel(), stage.clientWidth * 0.5) * SCROLL_PX_PER_VH;
-              const exit = window.innerHeight * EXIT_SCROLL_VH;
-              return `+=${intro + track + exit}`;
+              const travel = getTravel();
+              const enterPx = window.innerHeight * 0.35;
+              const liftPx = window.innerHeight * 0.3;
+              const cardsPx = window.innerHeight * 0.75;
+              const trackPx = Math.max(travel, window.innerHeight) * 1.05;
+              return `+=${enterPx + liftPx + cardsPx + trackPx}`;
             },
             pin: true,
-            scrub: 0.45,
+            pinSpacing: true,
+            scrub: 0.7,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        /* 1. Arrive on white — quick handoff from hero */
-        tl.to(fade, { opacity: 1, duration: 0.55, ease: "power2.out" }, 0);
+        /* 1. Section fades in — slight lift from below */
+        tl.to(fade, { opacity: 1, duration: 0.35, ease: "power2.out" }, 0);
 
-        /* 2. Left-aligned text — line by line, paced not glacial */
+        /* 2. Intro copy reveals */
         const lineCount = introLines?.length ?? 0;
-        const lineStagger = 0.32;
-        const lineDur = 0.55;
+        const lineStagger = 0.16;
+        const lineDur = 0.35;
         if (introLines?.length) {
           tl.fromTo(
             introLines,
-            { y: 22, opacity: 0 },
+            { y: 16, opacity: 0 },
             {
               y: 0,
               opacity: 1,
@@ -305,72 +268,106 @@ export default function Journey() {
               ease: "power2.out",
               immediateRender: false,
             },
-            0.3
+            0.08
           );
         }
 
-        /* 3. Brief hold, then cards enter as scroll begins */
-        const afterLines =
-          0.3 + Math.max(0, lineCount - 1) * lineStagger + lineDur;
-        tl.to({}, { duration: 0.28 }, afterLines);
+        const afterIntro =
+          0.08 + Math.max(0, lineCount - 1) * lineStagger + lineDur + 0.08;
 
-        const revealAt = afterLines + 0.28;
+        /* 3. Settle to top */
         tl.to(
-          scrollItems,
-          { opacity: 1, duration: 0.55, ease: "power2.out" },
-          revealAt
+          fade,
+          { y: 0, duration: 0.45, ease: "power3.out" },
+          afterIntro
         );
 
-        /* 4. Horizontal journey — bulk of the pin distance */
-        const scrollAt = revealAt + 0.35;
-        const scrollDur = 5.2;
+        const afterLift = afterIntro + 0.45 + 0.06;
+
+        /* 4. Card stage appears */
+        tl.to(
+          cardLayer,
+          { opacity: 1, duration: 0.3, ease: "power2.out" },
+          afterLift
+        );
+
+        /* 5. Reveal first 3 cards — intro exits up out of view */
+        const REVEAL_COUNT = 3;
+        const cardDur = 0.45;
+        const cardStagger = 0.12;
+        const revealStart = afterLift + 0.18;
+        const revealCards = scrollItems.slice(0, REVEAL_COUNT);
+        const restCards = scrollItems.slice(REVEAL_COUNT);
+
+        /* Cards 4+ stay hidden until the first three finish */
+        if (restCards.length) {
+          gsap.set(restCards, { opacity: 0, y: 0 });
+        }
+
+        if (intro) {
+          const introExitDur = 0.7;
+          gsap.set(intro, { height: intro.offsetHeight });
+          tl.to(
+            intro,
+            {
+              y: () => -(intro.offsetHeight + 48),
+              opacity: 0,
+              duration: introExitDur,
+              ease: "power2.inOut",
+            },
+            revealStart
+          );
+          tl.to(
+            intro,
+            {
+              height: 0,
+              paddingTop: 0,
+              paddingBottom: 0,
+              marginTop: 0,
+              marginBottom: 0,
+              duration: introExitDur,
+              ease: "power2.inOut",
+            },
+            revealStart
+          );
+        }
+
+        if (revealCards.length) {
+          tl.to(
+            revealCards,
+            {
+              opacity: 1,
+              y: 0,
+              duration: cardDur,
+              stagger: cardStagger,
+              ease: "power2.out",
+            },
+            revealStart + 0.12
+          );
+        }
+
+        const afterReveal =
+          revealStart +
+          Math.max(0, revealCards.length - 1) * cardStagger +
+          cardDur +
+          0.25;
+
+        if (restCards.length) {
+          tl.set(restCards, { opacity: 1, y: 0 }, afterReveal);
+        }
+
+        /* 6. Horizontal scroll through the full track */
+        const scrollAt = afterReveal + 0.1;
+        const scrollDur = 5.5;
         tl.to(
           cardTrack,
           {
-            x: () => -travel(),
+            x: () => -getTravel(),
             ease: "none",
             duration: scrollDur,
           },
           scrollAt
         );
-
-        tl.to(
-          cardTrack,
-          {
-            x: () => -exitTravel(),
-            ease: "power2.inOut",
-            duration: 1.35,
-          },
-          scrollAt + scrollDur
-        );
-        tl.to(
-          cardLayer,
-          { opacity: 0, duration: 1, ease: "power2.inOut" },
-          scrollAt + scrollDur + 0.25
-        );
-
-        tl.to(
-          finaleLayer,
-          { opacity: 1, scale: 1, duration: 1, ease: "power3.out" },
-          scrollAt + scrollDur + 0.85
-        );
-
-        if (finaleRef.current) {
-          const finaleParts =
-            finaleRef.current.querySelectorAll(".journey-finale-step");
-          tl.fromTo(
-            finaleParts,
-            { y: 18, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.45,
-              stagger: 0.1,
-              ease: "power3.out",
-            },
-            scrollAt + scrollDur + 1.05
-          );
-        }
       }, section);
 
       revert = () => ctx.revert();
@@ -382,6 +379,11 @@ export default function Journey() {
         window.removeEventListener("load", refresh);
         window.removeEventListener("resize", refresh);
       };
+
+      /* Layout settles after images/fonts — refresh pin distance */
+      requestAnimationFrame(() => {
+        requestAnimationFrame(refresh);
+      });
     });
 
     return () => {
@@ -400,40 +402,30 @@ export default function Journey() {
     >
       <Hero />
 
-      <LearnFromOwners />
+      {/* Scroll buffer so hero zoom/whiteout can finish before Journey pins */}
+      <div className="hero-journey-seam" aria-hidden="true" />
 
       <div className="journey-pin" ref={pinRef}>
         <div className="journey-fade" ref={fadeRef}>
+          <JourneyIntro introRef={introRef} />
+
           <div className="journey-stage" ref={stageRef}>
-          <div className="journey-card-layer" ref={cardLayerRef}>
-            <div className="journey-card-track" ref={cardTrackRef}>
-              <JourneyIntro introRef={introRef} />
-
-              {panels.map((panel, panelIndex) => (
-                <JourneyColumn
-                  key={panel.id}
-                  panel={panel}
-                  variant={COLUMN_VARIANTS[panelIndex % COLUMN_VARIANTS.length]}
-                  id={`journey-${panel.id}`}
-                  priority={panelIndex === 0}
-                />
-              ))}
+            <div className="journey-card-layer" ref={cardLayerRef}>
+              <div className="journey-card-track" ref={cardTrackRef}>
+                {panels.map((panel, panelIndex) => (
+                  <JourneyColumn
+                    key={panel.id}
+                    panel={panel}
+                    variant={
+                      COLUMN_VARIANTS[panelIndex % COLUMN_VARIANTS.length]
+                    }
+                    id={`journey-${panel.id}`}
+                    priority={panelIndex === 0}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-
-          <div className="journey-finale-layer" ref={finaleLayerRef}>
-            <div className="journey-finale-panel" ref={finaleRef}>
-              <img
-                src={panel2027.logo}
-                alt={panel2027.logoAlt}
-                className="journey-finale-logo journey-finale-step"
-              />
-              <p className="journey-finale-tagline journey-finale-step">
-                {panel2027.tagline}
-              </p>
-            </div>
-          </div>
-        </div>
         </div>
       </div>
     </section>

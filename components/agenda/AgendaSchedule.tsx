@@ -12,15 +12,9 @@ import {
 
 const FADE = { once: false as const, amount: 0.15 };
 
-function EventRow({
-  item,
-  dateLabel,
-}: {
-  item: AgendaItem;
-  dateLabel: string;
-}) {
-  const isFilterGo =
-    item.tags.includes("FilterGo") ||
+function EventRow({ item }: { item: AgendaItem }) {
+  const isFiltergo =
+    item.tags.includes("Filtergo") ||
     item.title.toLowerCase().includes("filtergo");
 
   return (
@@ -28,7 +22,7 @@ function EventRow({
       className={[
         "agenda-list-row",
         item.highlight ? "agenda-list-row--highlight" : "",
-        isFilterGo ? "agenda-list-row--filtergo" : "",
+        isFiltergo ? "agenda-list-row--filtergo" : "",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -46,28 +40,23 @@ function EventRow({
       <div className="agenda-list-when">
         <span className="agenda-list-clock">{item.timePrimary}</span>
         <span className="agenda-list-clock-sub">{item.timeSecondary}</span>
-        <span className="agenda-list-dayline">{dateLabel}</span>
       </div>
 
       <div className="agenda-list-main">
         <h3 className="agenda-list-title">{item.title}</h3>
+        {item.description ? (
+          <p className="agenda-list-desc">{item.description}</p>
+        ) : null}
         <ul className="agenda-list-tags">
           {item.tags.map((tag) => (
             <li
               key={tag}
-              className={tag === "FilterGo" ? "agenda-list-tag--filtergo" : undefined}
+              className={tag === "Filtergo" ? "agenda-list-tag--filtergo" : undefined}
             >
               {tag}
             </li>
           ))}
         </ul>
-      </div>
-
-      <div className="agenda-list-aside">
-        <p className="agenda-list-desc">{item.description}</p>
-        {item.location ? (
-          <p className="agenda-list-venue">{item.location}</p>
-        ) : null}
       </div>
     </li>
   );
@@ -107,7 +96,6 @@ function DayBlock({
             <EventRow
               key={`${sectionId}-${item.title}-${item.timePrimary}`}
               item={item}
-              dateLabel={block.dateLabel}
             />
           ))}
         </ol>

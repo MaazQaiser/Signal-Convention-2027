@@ -13,9 +13,9 @@ export const HERO_PHASE = {
   modelZoomStart: 0.76,
   modelZoomEnd: 0.88,
   /** Full white — must complete before Journey is reached */
-  whiteOutStart: 0.84,
-  whiteOutEnd: 0.94,
-  heroConcludeStart: 0.94,
+  whiteOutStart: 0.88,
+  whiteOutEnd: 0.96,
+  heroConcludeStart: 0.96,
 } as const;
 
 export function easeScrollProgress(t: number) {

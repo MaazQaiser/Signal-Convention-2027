@@ -214,9 +214,9 @@ export default function Sponsors() {
               </p>
               <a
                 className="btn btn-orange sponsors-cta-btn"
-                href="/sponsors#become"
+                href="/sponsors"
               >
-                Become a Sponsor
+                View All Sponsors
                 <BtnArrow />
               </a>
             </div>

@@ -1,101 +1,58 @@
 "use client";
 
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
-import {
-  TRAVEL_AMENITIES,
-  TRAVEL_HOTEL_MOSAIC,
-} from "@/lib/travel-info";
+import { TRAVEL_HOTEL_IMAGES } from "@/lib/travel-info";
 
 const FADE = { once: false as const, amount: 0.2 };
 
-function AmenityIcon({ id }: { id: string }) {
-  const common = {
-    width: 18,
-    height: 18,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.5,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true as const,
-  };
-
-  switch (id) {
-    case "pools":
-      return (
-        <svg {...common}>
-          <path d="M4 18c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0" />
-          <path d="M4 14c1.5-1 3-1 4.5 0s3 1 4.5 0 3-1 4.5 0 3 1 4.5 0" />
-          <path d="M8 6.5c0-1.5 1.2-2.5 2.5-2.5S13 5 13 6.5 11.5 10 10.5 12" />
-        </svg>
-      );
-    case "river":
-      return (
-        <svg {...common}>
-          <path d="M3 8c2 2 4 2 6 0s4-2 6 0 4 2 6 0" />
-          <path d="M3 13c2 2 4 2 6 0s4-2 6 0 4 2 6 0" />
-          <path d="M3 18c2 2 4 2 6 0s4-2 6 0 4 2 6 0" />
-        </svg>
-      );
-    case "cabanas":
-      return (
-        <svg {...common}>
-          <path d="M4 20V10l8-6 8 6v10" />
-          <path d="M9 20v-6h6v6" />
-        </svg>
-      );
-    case "pickleball":
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="8" />
-          <path d="M8 10.5h.01M12 9h.01M15.5 11h.01M10 14h.01M14 15.5h.01" />
-        </svg>
-      );
-    case "golf":
-      return (
-        <svg {...common}>
-          <path d="M8 21V4l10 4-10 4" />
-          <path d="M6 21h8" />
-        </svg>
-      );
-    case "dining":
-      return (
-        <svg {...common}>
-          <path d="M8 3v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V3" />
-          <path d="M10 12v9" />
-          <path d="M16 3v18" />
-          <path d="M16 8h3a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3" />
-        </svg>
-      );
-    case "spa":
-      return (
-        <svg {...common}>
-          <path d="M12 3c-2.5 3-4 5.5-4 8a4 4 0 0 0 8 0c0-2.5-1.5-5-4-8Z" />
-          <path d="M8 20h8" />
-        </svg>
-      );
-    case "fitness":
-      return (
-        <svg {...common}>
-          <path d="M6 9v6M18 9v6M9 7v10M15 7v10M6 12h12" />
-        </svg>
-      );
-    default:
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="7" />
-        </svg>
-      );
-  }
-}
-
-function getAmenity(id: string) {
-  return TRAVEL_AMENITIES.find((a) => a.id === id);
+function ArrowIcon({ direction }: { direction: "left" | "right" }) {
+  return (
+    <svg width="28" height="28" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      {direction === "right" ? (
+        <path
+          d="M3 8h10M9 4l4 4-4 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <path
+          d="M13 8H3M7 4L3 8l4 4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+    </svg>
+  );
 }
 
 export default function TravelHotel() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const total = TRAVEL_HOTEL_IMAGES.length;
+
+  const goTo = (next: number) => {
+    const clamped = Math.max(0, Math.min(total - 1, next));
+    const track = trackRef.current;
+    if (!track) return;
+    const slide = track.children[clamped] as HTMLElement | undefined;
+    if (!slide) return;
+    track.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+    setIndex(clamped);
+  };
+
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (!track || track.clientWidth === 0) return;
+    const next = Math.round(track.scrollLeft / track.clientWidth);
+    setIndex(Math.max(0, Math.min(total - 1, next)));
+  };
+
   return (
     <section
       id="hotel"
@@ -109,44 +66,85 @@ export default function TravelHotel() {
             Resort Amenities
           </h2>
           <p className="travel-hotel-lede">
-            Between sessions, enjoy world-class amenities while connecting with
-            fellow franchise owners and teams.
+            Nestled in the serene Sonoran Desert, this destination offers
+            breathtaking views and a luxurious resort experience. Guests can
+            enjoy exceptional amenities, including 17 pickleball courts, five
+            pools, a lazy river, private cabana cottages, and two championship
+            golf courses featuring PGA instruction and custom club fittings.
           </p>
         </Reveal>
 
         <Reveal delay={REVEAL_CASCADE.media} {...FADE}>
-          <ul className="travel-hotel-mosaic" aria-label="Resort amenities">
-            {TRAVEL_HOTEL_MOSAIC.map((cell, index) => {
-              if (cell.type === "image") {
-                return (
-                  <li key={`img-${index}`} className="travel-hotel-cell travel-hotel-cell--image">
-                    <Image
-                      src={cell.src}
-                      alt={cell.alt}
-                      fill
-                      sizes="(max-width: 900px) 50vw, 25vw"
-                      className="travel-hotel-cell-img"
-                    />
-                  </li>
-                );
-              }
-
-              const amenity = getAmenity(cell.amenityId);
-              if (!amenity) return null;
-
-              return (
-                <li
-                  key={amenity.id}
-                  className="travel-hotel-cell travel-hotel-cell--text"
+          <div
+            className="travel-hotel-carousel"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Resort amenity photos"
+          >
+            <div
+              className="travel-hotel-carousel-track"
+              ref={trackRef}
+              onScroll={onScroll}
+              tabIndex={0}
+            >
+              {TRAVEL_HOTEL_IMAGES.map((image, i) => (
+                <div
+                  key={image.src}
+                  className="travel-hotel-carousel-slide"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} of ${total}`}
                 >
-                  <span className="travel-hotel-cell-icon">
-                    <AmenityIcon id={amenity.id} />
-                  </span>
-                  <span className="travel-hotel-cell-label">{amenity.label}</span>
-                </li>
-              );
-            })}
-          </ul>
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 72rem"
+                    className="travel-hotel-carousel-img"
+                    priority={i === 0}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {index > 0 ? (
+              <button
+                type="button"
+                className="travel-hotel-carousel-arrow travel-hotel-carousel-arrow--left"
+                onClick={() => goTo(index - 1)}
+                aria-label="Previous amenity photo"
+              >
+                <ArrowIcon direction="left" />
+              </button>
+            ) : null}
+
+            {index < total - 1 ? (
+              <button
+                type="button"
+                className="travel-hotel-carousel-arrow travel-hotel-carousel-arrow--right"
+                onClick={() => goTo(index + 1)}
+                aria-label="Next amenity photo"
+              >
+                <ArrowIcon direction="right" />
+              </button>
+            ) : null}
+
+            <div className="travel-hotel-carousel-dots" role="tablist" aria-label="Slides">
+              {TRAVEL_HOTEL_IMAGES.map((image, i) => (
+                <button
+                  key={image.src}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === index}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`travel-hotel-carousel-dot${
+                    i === index ? " is-active" : ""
+                  }`}
+                  onClick={() => goTo(i)}
+                />
+              ))}
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

@@ -79,7 +79,7 @@ export default function NetworkTransition() {
             animate={active ? body.animate : body.initial}
           >
             What began with Signal continues to grow. In 2027, we&apos;re proud
-            to welcome the FilterGo community to Here We Grow.
+            to welcome the Filtergo community to Here We Grow.
           </motion.p>
         </div>
 
@@ -111,7 +111,7 @@ export default function NetworkTransition() {
           >
             <Image
               src={BRANDS[1].logo}
-              alt="FilterGo"
+              alt="Filtergo"
               width={BRANDS[1].logoWidth}
               height={BRANDS[1].logoHeight}
               className="network-transition-card-logo"

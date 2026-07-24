@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
-import BtnArrow from "@/components/BtnArrow";
 import { SPONSOR_TIERS } from "@/lib/sponsors";
 
 const FADE = { once: false as const, amount: 0.25 };
@@ -34,7 +33,7 @@ export default function SponsorsHero() {
             <Reveal delay={REVEAL_CASCADE.body} {...FADE}>
               <p className="sponsors-page-hero-lede">
                 Meet the organizations that power Here We Grow 2027 and help
-                our franchise network grow—then learn how to join them.
+                our franchise network grow.
               </p>
             </Reveal>
           </div>
@@ -53,13 +52,6 @@ export default function SponsorsHero() {
                 <span>{PARTNER_COUNT} Partner Brands</span>
               </li>
             </ul>
-            <a
-              className="btn btn-orange sponsors-page-hero-cta"
-              href="#become"
-            >
-              Become a Sponsor
-              <BtnArrow />
-            </a>
           </Reveal>
         </div>
 
