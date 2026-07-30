@@ -110,7 +110,7 @@ export default function AgendaHero() {
         >
           <div className="agenda-page-hero-media">
             <Image
-              src="/images/convention-2026-2106-hero.jpg"
+              src="/images/agenda-hero.jpg"
               alt="Here We Grow convention floor"
               fill
               sizes="100vw"
