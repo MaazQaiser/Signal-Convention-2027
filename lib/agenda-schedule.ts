@@ -7,7 +7,6 @@ export type AgendaItem = {
   /** Secondary line under clock, e.g. "a.m." or "a.m. – 3:30 p.m." */
   timeSecondary: string;
   tags: string[];
-  description?: string;
   image: { src: string; alt: string };
   highlight?: boolean;
 };
@@ -20,6 +19,8 @@ export type AgendaDay = {
   periodLabel: string;
   yearLabel: string;
   items: AgendaItem[];
+  /** Optional note shown below the day's events */
+  disclaimer?: string;
 };
 
 export type PreConventionBlock = {
@@ -87,8 +88,6 @@ export const AGENDA_DAYS: AgendaDay[] = [
         timeSecondary: "p.m. – 8:00 p.m.",
         title: "Welcome Reception",
         tags: ["Networking", "Reception"],
-        description:
-          "Open Here We Grow 2027 with networking, food, and fun.",
         image: {
           src: "/images/convention-2026-0254.jpg",
           alt: "Welcome Reception",
@@ -109,8 +108,6 @@ export const AGENDA_DAYS: AgendaDay[] = [
         timeSecondary: "a.m. – 8:30 a.m.",
         title: "Key Employee Breakfast",
         tags: ["Breakfast"],
-        description:
-          "Start the day with a special breakfast specific to key employees.",
         image: {
           src: "/images/convention-2026-0732.jpg",
           alt: "Key Employee Breakfast",
@@ -142,11 +139,11 @@ export const AGENDA_DAYS: AgendaDay[] = [
         time: "9:30 a.m. – 11:30 a.m.",
         timePrimary: "9:30",
         timeSecondary: "a.m. – 11:30 a.m.",
-        title: "Filtergo Breakout Session",
-        tags: ["Filtergo", "Breakout"],
+        title: "Filtergo General Session",
+        tags: ["Filtergo", "General Session"],
         image: {
           src: "/images/convention-2026-1151.jpg",
-          alt: "Filtergo breakout session",
+          alt: "Filtergo general session",
         },
       },
       {
@@ -183,9 +180,9 @@ export const AGENDA_DAYS: AgendaDay[] = [
         },
       },
       {
-        time: "1:00 p.m. – 4:00 p.m.",
+        time: "1:00 p.m. – 4:30 p.m.",
         timePrimary: "1:00",
-        timeSecondary: "p.m. – 4:00 p.m.",
+        timeSecondary: "p.m. – 4:30 p.m.",
         title: "Breakout Sessions (All)",
         tags: ["Breakout", "All"],
         image: {
@@ -210,7 +207,6 @@ export const AGENDA_DAYS: AgendaDay[] = [
         timeSecondary: "p.m. – 7:00 p.m.",
         title: "Filtergo Dinner",
         tags: ["Filtergo", "Dinner"],
-        description: "Filtergo dinner for Filtergo franchisees.",
         image: {
           src: "/images/convention-2026-2067.jpg",
           alt: "Filtergo Dinner",
@@ -222,26 +218,13 @@ export const AGENDA_DAYS: AgendaDay[] = [
         timeSecondary: "p.m. – 10:00 p.m.",
         title: "Signal Core Awards & Dinner",
         tags: ["Signal", "Awards", "Dinner"],
-        description:
-          "Signal Core Awards and dinner celebrating those that exemplify Signal’s core values.",
         image: {
           src: "/images/convention-2026-0777.jpg",
           alt: "Signal Core Awards and Dinner",
         },
       },
-      {
-        time: "Evening",
-        timePrimary: "End",
-        timeSecondary: "Monday",
-        title: "Filtergo Conference Ends",
-        tags: ["Filtergo"],
-        image: {
-          src: "/images/convention-2026-1151.jpg",
-          alt: "Filtergo Conference ends",
-        },
-        highlight: true,
-      },
     ],
+    disclaimer: "Filtergo Conference ends Monday evening.",
   },
   {
     id: "tue",

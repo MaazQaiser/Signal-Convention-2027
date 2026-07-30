@@ -14,11 +14,12 @@ import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
 import HeroModel3D from "@/components/HeroModel3D";
 import BtnArrow from "@/components/BtnArrow";
 
-/** Title then body — each line fills L→R in sequence. */
+/** Title fills L→R; body paragraphs fade in after. */
 const HANDOFF_TITLE_LINES = ["Grow Through", "Consistency"] as const;
 const HANDOFF_BODY = [
-  "Learn from owner-led sessions, breakout discussions and real conversations with franchise owners across the network.",
-  "Leave with practical ideas, stronger connections and strategies you can put into action immediately.",
+  "This year, we're exploring the habits, disciplines and daily decisions that lead to long-term success. Through owner-led conversations, breakout sessions and networking opportunities, you'll hear what's working across the franchise network and leave with ideas you can put into practice right away.",
+  "Rather than hearing only from the stage, you'll learn directly from franchise owners and their teams as they share what's driving results in their markets, the lessons they've learned and the approaches helping them grow.",
+  "Every keynote, breakout session and conversation is designed to help you return home with fresh ideas and stronger connections for the year ahead.",
 ] as const;
 const HANDOFF_LINES = [...HANDOFF_TITLE_LINES, ...HANDOFF_BODY] as const;
 
@@ -262,29 +263,25 @@ export default function Hero() {
               </span>
             ))}
           </p>
-          <p className="hero-handoff-body">
+          <div className="hero-handoff-body">
             {HANDOFF_BODY.map((line, index) => (
-              <span
+              <p
                 key={line}
                 className="hero-handoff-line hero-handoff-line--body"
-                style={
-                  {
-                    "--line-fill": `${
-                      reduceMotion
-                        ? 100
-                        : lineFillPercent(
-                            phases.handoffFill,
-                            index + HANDOFF_TITLE_LINES.length,
-                            HANDOFF_LINES.length
-                          )
-                    }%`,
-                  } as CSSProperties
-                }
+                style={{
+                  opacity: reduceMotion
+                    ? 1
+                    : lineFillPercent(
+                        phases.handoffFill,
+                        index + HANDOFF_TITLE_LINES.length,
+                        HANDOFF_LINES.length
+                      ) / 100,
+                }}
               >
                 {line}
-              </span>
+              </p>
             ))}
-          </p>
+          </div>
           <a
             className="btn btn-orange hero-handoff-cta"
             href="/agenda"

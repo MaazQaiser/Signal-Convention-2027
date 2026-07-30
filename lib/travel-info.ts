@@ -45,20 +45,24 @@ export const TRAVEL_GLANCE: GlanceFact[] = [
 
 export const TRAVEL_HOTEL_IMAGES: HotelImage[] = [
   {
-    src: "/images/convention-2026-2067.jpg",
-    alt: "Resort atmosphere at Here We Grow",
+    src: "/images/resort-desert-ridge.jpg",
+    alt: "Aerial view of JW Marriott Desert Ridge Resort & Spa at sunset",
   },
   {
-    src: "/images/convention-2026-1125.jpg",
-    alt: "Convention networking at the resort",
+    src: "/images/resort-pools.jpg",
+    alt: "Pool complex, lazy river, and courtyard at JW Marriott Desert Ridge",
   },
   {
-    src: "/images/convention-2026-0643.jpg",
-    alt: "Here We Grow attendees gathering",
+    src: "/images/resort-lagoon.jpg",
+    alt: "Resort lagoon and pool deck lined with lounge chairs and palms",
   },
   {
-    src: "/images/convention-2026-0254.jpg",
-    alt: "Convention floor experience",
+    src: "/images/resort-spa-wing.jpg",
+    alt: "Guest wing and poolside amenities at JW Marriott Desert Ridge",
+  },
+  {
+    src: "/images/resort-golf.jpg",
+    alt: "Resort grounds overlooking the Sonoran Desert and golf course",
   },
 ];
 

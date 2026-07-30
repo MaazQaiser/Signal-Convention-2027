@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
 import {
   AGENDA_DAYS,
@@ -27,16 +26,6 @@ function EventRow({ item }: { item: AgendaItem }) {
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="agenda-list-thumb">
-        <Image
-          src={item.image.src}
-          alt={item.image.alt}
-          width={88}
-          height={88}
-          className="agenda-list-thumb-img"
-        />
-      </div>
-
       <div className="agenda-list-when">
         <span className="agenda-list-clock">{item.timePrimary}</span>
         <span className="agenda-list-clock-sub">{item.timeSecondary}</span>
@@ -44,9 +33,6 @@ function EventRow({ item }: { item: AgendaItem }) {
 
       <div className="agenda-list-main">
         <h3 className="agenda-list-title">{item.title}</h3>
-        {item.description ? (
-          <p className="agenda-list-desc">{item.description}</p>
-        ) : null}
         <ul className="agenda-list-tags">
           {item.tags.map((tag) => (
             <li
@@ -73,6 +59,7 @@ function DayBlock({
       : "agenda-precon-heading";
   const sectionId =
     "id" in block && block.id ? `day-${block.id}` : "day-precon";
+  const disclaimer = "disclaimer" in block ? block.disclaimer : undefined;
 
   return (
     <section
@@ -99,6 +86,9 @@ function DayBlock({
             />
           ))}
         </ol>
+        {disclaimer ? (
+          <p className="agenda-list-disclaimer">{disclaimer}</p>
+        ) : null}
       </Reveal>
     </section>
   );

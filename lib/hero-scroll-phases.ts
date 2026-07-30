@@ -1,19 +1,19 @@
 export const HERO_PHASE = {
   modelToCornerEnd: 0.28,
   handoffEnterEnd: 0.34,
-  /** Longer window = slower line-by-line L→R fill */
-  handoffFillEnd: 0.58,
-  handoffHoldEnd: 0.62,
+  /** Longer window = slower title fill + body paragraph fades */
+  handoffFillEnd: 0.64,
+  handoffHoldEnd: 0.7,
   /** Text fully exits before model centers */
-  handoffExitEnd: 0.68,
+  handoffExitEnd: 0.76,
   /** Model settles in center, face-on */
-  modelToCenterStart: 0.68,
-  modelToCenterEnd: 0.76,
+  modelToCenterStart: 0.76,
+  modelToCenterEnd: 0.82,
   /** Zoom into bright core */
-  modelZoomStart: 0.76,
-  modelZoomEnd: 0.88,
+  modelZoomStart: 0.82,
+  modelZoomEnd: 0.9,
   /** Full white — must complete before Journey is reached */
-  whiteOutStart: 0.88,
+  whiteOutStart: 0.9,
   whiteOutEnd: 0.96,
   heroConcludeStart: 0.96,
 } as const;

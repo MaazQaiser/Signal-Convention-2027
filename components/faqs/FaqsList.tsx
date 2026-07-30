@@ -97,7 +97,7 @@ function FaqItem({
             }
           >
             <div className="faq-panel-inner">
-              <p className="faq-answer">{item.a}</p>
+              <div className="faq-answer">{item.a}</div>
             </div>
           </motion.div>
         ) : null}

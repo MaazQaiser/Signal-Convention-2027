@@ -19,7 +19,9 @@ export default function TravelHero() {
           <div className="travel-page-hero-copy">
             <Reveal delay={REVEAL_CASCADE.title} {...FADE}>
               <h1 className="travel-page-hero-title" id="travel-page-heading">
-                Hotel &amp; Travel
+                Hotel &amp;
+                <br />
+                Travel
               </h1>
             </Reveal>
           </div>
@@ -118,7 +120,7 @@ export default function TravelHero() {
         >
           <div className="travel-page-hero-media">
             <Image
-              src="/images/convention-2026-2067.jpg"
+              src="/images/resort-desert-ridge.jpg"
               alt="JW Marriott Desert Ridge Resort & Spa"
               fill
               sizes="100vw"

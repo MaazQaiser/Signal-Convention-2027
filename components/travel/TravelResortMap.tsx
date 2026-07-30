@@ -1,7 +1,6 @@
 "use client";
 
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
-import BtnArrow from "@/components/BtnArrow";
 
 export default function TravelResortMap() {
   return (
@@ -32,18 +31,6 @@ export default function TravelResortMap() {
                 alt="JW Marriott Phoenix Desert Ridge resort map with numbered locations and legend"
               />
             </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={REVEAL_CASCADE.cta}>
-          <div className="travel-map-cta">
-            <p className="travel-map-cta-lede">
-              Ready to lock in your stay at JW Marriott Desert Ridge?
-            </p>
-            <a className="btn btn-orange" href="/#register">
-              Reserve Your Hotel
-              <BtnArrow />
-            </a>
           </div>
         </Reveal>
       </div>

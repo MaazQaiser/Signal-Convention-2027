@@ -21,13 +21,6 @@ export default function AgendaHero() {
                 Convention Agenda
               </h1>
             </Reveal>
-            <Reveal delay={REVEAL_CASCADE.body} {...FADE}>
-              <p className="agenda-page-hero-lede">
-                Explore the complete schedule for Here We Grow 2027 and plan
-                your convention experience from January 17–19 in Phoenix,
-                Arizona.
-              </p>
-            </Reveal>
           </div>
           <Reveal
             className="agenda-page-hero-meta-wrap"
@@ -117,7 +110,7 @@ export default function AgendaHero() {
         >
           <div className="agenda-page-hero-media">
             <Image
-              src="/images/convention-2026-2106.jpg"
+              src="/images/convention-2026-2106-hero.jpg"
               alt="Here We Grow convention floor"
               fill
               sizes="100vw"

@@ -23,11 +23,11 @@ type ColumnVariant = "featured" | "photo-first";
 const panels: Panel[] = [
   {
     id: "session-format",
-    label: "New Session Content.",
+    label: "New Session Content",
     heading: "Every keynote and breakout session is brand new.",
     body: "All-new keynote and breakout sessions built around ideas you can apply in your business.",
     image: {
-      src: "/images/convention-2026-0254.jpg",
+      src: "/images/journey-session-content.jpg",
       alt: "Keynote and breakout sessions at Here We Grow",
     },
   },
@@ -37,7 +37,7 @@ const panels: Panel[] = [
     heading: "Learn From Those Doing the Work.",
     body: "Hear directly from franchise owners and their teams as they share what's working in their markets, the lessons they've learned, and the strategies driving growth.",
     image: {
-      src: "/images/convention-2026-0777.jpg",
+      src: "/images/journey-owner-led.jpg",
       alt: "Franchise owners sharing what's working in their markets",
     },
   },
@@ -47,18 +47,8 @@ const panels: Panel[] = [
     heading: "More Time to Connect.",
     body: "Build stronger relationships with franchise owners, Home Office, and partners through expanded networking opportunities across the convention.",
     image: {
-      src: "/images/convention-2026-0692.jpg",
+      src: "/images/journey-networking.jpg",
       alt: "Networking across the Here We Grow convention",
-    },
-  },
-  {
-    id: "takeaways",
-    label: "Actionable Takeaways",
-    heading: "Ideas You Can Put Into Practice.",
-    body: "Leave with practical strategies and proven approaches you can implement immediately within your business.",
-    image: {
-      src: "/images/convention-2026-0732.jpg",
-      alt: "Practical strategies shared in collaborative sessions",
     },
   },
   {
@@ -67,7 +57,7 @@ const panels: Panel[] = [
     heading: "Meet the Partners Behind Your Success.",
     body: "Explore products, services, and solutions from trusted partners supporting the Signal franchise network.",
     image: {
-      src: "/images/convention-2026-1125.jpg",
+      src: "/images/journey-vendor-expo.jpg",
       alt: "Partner expo supporting the Signal franchise network",
     },
   },
@@ -77,14 +67,14 @@ const panels: Panel[] = [
     heading: "Celebrate Success Across the Network.",
     body: "Recognize outstanding achievements and celebrate the people helping move the Signal community forward.",
     image: {
-      src: "/images/convention-2026-0977.jpg",
+      src: "/images/journey-recognition.jpg",
       alt: "Celebrating achievements across the Signal community",
     },
   },
 ];
 
 const COLUMN_VARIANTS: ColumnVariant[] = [
-  "featured",
+  "photo-first",
   "photo-first",
   "photo-first",
 ];
@@ -225,7 +215,7 @@ export default function Journey() {
         );
         gsap.set(scrollItems, { opacity: 0, y: 32 });
         gsap.set(cardLayer, { opacity: 0 });
-        gsap.set(fade, { opacity: 0, y: "8vh" });
+        gsap.set(fade, { opacity: 0, y: "4vh" });
         gsap.set(cardTrack, { x: 0 });
 
         const tl = gsap.timeline({
@@ -235,31 +225,31 @@ export default function Journey() {
             start: "top top",
             end: () => {
               const travel = getTravel();
-              const enterPx = window.innerHeight * 0.35;
-              const liftPx = window.innerHeight * 0.3;
-              const cardsPx = window.innerHeight * 0.75;
+              const enterPx = window.innerHeight * 0.18;
+              const liftPx = window.innerHeight * 0.12;
+              const cardsPx = window.innerHeight * 0.4;
               const trackPx = Math.max(travel, window.innerHeight) * 1.05;
               return `+=${enterPx + liftPx + cardsPx + trackPx}`;
             },
             pin: true,
             pinSpacing: true,
-            scrub: 0.7,
+            scrub: 0.55,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
         /* 1. Section fades in — slight lift from below */
-        tl.to(fade, { opacity: 1, duration: 0.35, ease: "power2.out" }, 0);
+        tl.to(fade, { opacity: 1, duration: 0.22, ease: "power2.out" }, 0);
 
         /* 2. Intro copy reveals */
         const lineCount = introLines?.length ?? 0;
-        const lineStagger = 0.16;
-        const lineDur = 0.35;
+        const lineStagger = 0.1;
+        const lineDur = 0.24;
         if (introLines?.length) {
           tl.fromTo(
             introLines,
-            { y: 16, opacity: 0 },
+            { y: 12, opacity: 0 },
             {
               y: 0,
               opacity: 1,
@@ -268,34 +258,34 @@ export default function Journey() {
               ease: "power2.out",
               immediateRender: false,
             },
-            0.08
+            0.04
           );
         }
 
         const afterIntro =
-          0.08 + Math.max(0, lineCount - 1) * lineStagger + lineDur + 0.08;
+          0.04 + Math.max(0, lineCount - 1) * lineStagger + lineDur + 0.04;
 
         /* 3. Settle to top */
         tl.to(
           fade,
-          { y: 0, duration: 0.45, ease: "power3.out" },
+          { y: 0, duration: 0.28, ease: "power3.out" },
           afterIntro
         );
 
-        const afterLift = afterIntro + 0.45 + 0.06;
+        const afterLift = afterIntro + 0.28 + 0.04;
 
         /* 4. Card stage appears */
         tl.to(
           cardLayer,
-          { opacity: 1, duration: 0.3, ease: "power2.out" },
+          { opacity: 1, duration: 0.22, ease: "power2.out" },
           afterLift
         );
 
         /* 5. Reveal first 3 cards — intro exits up out of view */
         const REVEAL_COUNT = 3;
-        const cardDur = 0.45;
-        const cardStagger = 0.12;
-        const revealStart = afterLift + 0.18;
+        const cardDur = 0.32;
+        const cardStagger = 0.08;
+        const revealStart = afterLift + 0.08;
         const revealCards = scrollItems.slice(0, REVEAL_COUNT);
         const restCards = scrollItems.slice(REVEAL_COUNT);
 
@@ -305,7 +295,7 @@ export default function Journey() {
         }
 
         if (intro) {
-          const introExitDur = 0.7;
+          const introExitDur = 0.5;
           gsap.set(intro, { height: intro.offsetHeight });
           tl.to(
             intro,
@@ -342,7 +332,7 @@ export default function Journey() {
               stagger: cardStagger,
               ease: "power2.out",
             },
-            revealStart + 0.12
+            revealStart + 0.08
           );
         }
 
@@ -350,14 +340,14 @@ export default function Journey() {
           revealStart +
           Math.max(0, revealCards.length - 1) * cardStagger +
           cardDur +
-          0.25;
+          0.15;
 
         if (restCards.length) {
           tl.set(restCards, { opacity: 1, y: 0 }, afterReveal);
         }
 
         /* 6. Horizontal scroll through the full track */
-        const scrollAt = afterReveal + 0.1;
+        const scrollAt = afterReveal + 0.06;
         const scrollDur = 5.5;
         tl.to(
           cardTrack,

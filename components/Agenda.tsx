@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
 import BtnArrow from "./BtnArrow";
 
-const TARGET = new Date("2027-01-17T08:30:00-07:00").getTime();
+/** Convention opens Jan 17, 2027 — Phoenix does not observe DST (MST, UTC−7). */
+const PHOENIX_TZ = "America/Phoenix";
+const CONVENTION_YEAR = 2027;
+const CONVENTION_MONTH = 1; // January
+const CONVENTION_DAY = 17;
+const CONVENTION_HOUR = 8;
+const CONVENTION_MINUTE = 30;
 
 const COUNTDOWN_UNITS = [
   { key: "days", label: "Days" },
@@ -13,13 +19,83 @@ const COUNTDOWN_UNITS = [
   { key: "secs", label: "Seconds" },
 ] as const;
 
-function remaining() {
-  const d = Math.max(0, TARGET - Date.now());
+/** Phoenix wall-clock → UTC ms (MST year-round). */
+function phoenixToUtcMs(
+  year: number,
+  month: number,
+  day: number,
+  hour = 0,
+  minute = 0,
+  second = 0
+) {
+  return Date.UTC(year, month - 1, day, hour + 7, minute, second);
+}
+
+const TARGET_MS = phoenixToUtcMs(
+  CONVENTION_YEAR,
+  CONVENTION_MONTH,
+  CONVENTION_DAY,
+  CONVENTION_HOUR,
+  CONVENTION_MINUTE
+);
+
+function phoenixParts(ms: number) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: PHOENIX_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(new Date(ms));
+
+  const read = (type: Intl.DateTimeFormatPartTypes) => {
+    const value = parts.find((part) => part.type === type)?.value ?? "0";
+    return Number(value);
+  };
+
   return {
-    days: String(Math.floor(d / 864e5)),
-    hours: String(Math.floor((d % 864e5) / 36e5)).padStart(2, "0"),
-    mins: String(Math.floor((d % 36e5) / 6e4)).padStart(2, "0"),
-    secs: String(Math.floor((d % 6e4) / 1e3)).padStart(2, "0"),
+    year: read("year"),
+    month: read("month"),
+    day: read("day"),
+    hour: read("hour"),
+    minute: read("minute"),
+    second: read("second"),
+  };
+}
+
+function remaining() {
+  const now = Date.now();
+  const diff = Math.max(0, TARGET_MS - now);
+
+  if (diff <= 0) {
+    return { days: "0", hours: "00", mins: "00", secs: "00" };
+  }
+
+  const nowP = phoenixParts(now);
+  const todayStartMs = phoenixToUtcMs(nowP.year, nowP.month, nowP.day);
+  const targetDayStartMs = phoenixToUtcMs(
+    CONVENTION_YEAR,
+    CONVENTION_MONTH,
+    CONVENTION_DAY
+  );
+
+  const calendarDays = Math.max(
+    0,
+    Math.round((targetDayStartMs - todayStartMs) / 864e5)
+  );
+
+  const hours = String(Math.floor((diff % 864e5) / 36e5)).padStart(2, "0");
+  const mins = String(Math.floor((diff % 36e5) / 6e4)).padStart(2, "0");
+  const secs = String(Math.floor((diff % 6e4) / 1e3)).padStart(2, "0");
+
+  return {
+    days: String(calendarDays),
+    hours,
+    mins,
+    secs,
   };
 }
 
@@ -78,15 +154,11 @@ export default function Agenda() {
   }, []);
 
   return (
-    <section
-      className="agenda"
-      id="agenda"
-      aria-labelledby="agenda-heading"
-    >
+    <section className="agenda" id="agenda" aria-labelledby="agenda-heading">
       <div className="agenda-bg" aria-hidden="true" />
       <div className="agenda-glow" aria-hidden="true" />
 
-      <div className="agenda-inner">
+      <div className="wrap">
         <div className="agenda-top">
           <div className="agenda-copy">
             <Reveal delay={REVEAL_CASCADE.eyebrow}>
@@ -147,7 +219,7 @@ export default function Agenda() {
             ref={videoRef}
             className="agenda-video-el"
             src="/videos/cnv-27-reveal.mp4"
-            poster="/images/convention-2026-2067.jpg"
+            poster="/images/resort-desert-ridge.jpg"
             muted
             loop
             playsInline

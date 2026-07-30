@@ -107,7 +107,7 @@ export default function TravelHotel() {
               ))}
             </div>
 
-            {index > 0 ? (
+            {total > 1 && index > 0 ? (
               <button
                 type="button"
                 className="travel-hotel-carousel-arrow travel-hotel-carousel-arrow--left"
@@ -118,7 +118,7 @@ export default function TravelHotel() {
               </button>
             ) : null}
 
-            {index < total - 1 ? (
+            {total > 1 && index < total - 1 ? (
               <button
                 type="button"
                 className="travel-hotel-carousel-arrow travel-hotel-carousel-arrow--right"
@@ -129,21 +129,23 @@ export default function TravelHotel() {
               </button>
             ) : null}
 
-            <div className="travel-hotel-carousel-dots" role="tablist" aria-label="Slides">
-              {TRAVEL_HOTEL_IMAGES.map((image, i) => (
-                <button
-                  key={image.src}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === index}
-                  aria-label={`Go to slide ${i + 1}`}
-                  className={`travel-hotel-carousel-dot${
-                    i === index ? " is-active" : ""
-                  }`}
-                  onClick={() => goTo(i)}
-                />
-              ))}
-            </div>
+            {total > 1 ? (
+              <div className="travel-hotel-carousel-dots" role="tablist" aria-label="Slides">
+                {TRAVEL_HOTEL_IMAGES.map((image, i) => (
+                  <button
+                    key={image.src}
+                    type="button"
+                    role="tab"
+                    aria-selected={i === index}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className={`travel-hotel-carousel-dot${
+                      i === index ? " is-active" : ""
+                    }`}
+                    onClick={() => goTo(i)}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
         </Reveal>
       </div>
