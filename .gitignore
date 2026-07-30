@@ -15,3 +15,5 @@ token.json
 .tmp/
 .claude/
 .DS_Store
+.vercel
+.env*

@@ -1561,10 +1561,9 @@ img {
   background: #000000;
   color: #ffffff;
   overflow: hidden;
-  min-height: clamp(640px, 100svh, 960px);
   margin-top: 0;
-  padding: clamp(72px, 10vh, 96px) clamp(24px, 4vw, 64px)
-    clamp(72px, 10vh, 120px);
+  /* Horizontal inset comes from .wrap — avoid double padding */
+  padding: clamp(64px, 8vh, 88px) 0 clamp(64px, 8vh, 96px);
 }
 .agenda-bg {
   position: absolute;
@@ -1598,6 +1597,10 @@ img {
 .agenda .wrap {
   position: relative;
   z-index: 1;
+  /* Match fixed nav horizontal inset */
+  max-width: none;
+  padding-left: clamp(24px, 7vw, 102px);
+  padding-right: clamp(24px, 7vw, 102px);
 }
 .agenda-inner {
   position: relative;
@@ -1610,7 +1613,7 @@ img {
   grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
   gap: clamp(40px, 6vw, 80px);
   align-items: center;
-  margin-bottom: clamp(40px, 6vh, 64px);
+  margin-bottom: clamp(28px, 4vh, 48px);
 }
 .agenda-copy {
   min-width: 0;
@@ -1737,7 +1740,6 @@ img {
   width: 100%;
   max-width: 1340px;
   aspect-ratio: 1340 / 894;
-  min-height: clamp(240px, 56vw, 894px);
   background: #0a0a0a;
   overflow: hidden;
   opacity: 1;
@@ -1760,9 +1762,8 @@ img {
 
 @media (max-width: 900px) {
   .agenda {
-    min-height: auto;
-    padding-top: 64px;
-    padding-bottom: clamp(64px, 10vh, 96px);
+    padding-top: 56px;
+    padding-bottom: clamp(56px, 8vh, 80px);
   }
   .agenda-top {
     grid-template-columns: 1fr;
