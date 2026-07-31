@@ -1,0 +1,333 @@
+"use client";
+
+import {
+  memo,
+  Suspense,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type RefObject,
+} from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Billboard, Environment, useGLTF } from "@react-three/drei";
+import * as THREE from "three";
+
+import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
+import {
+  BRANDMARK_MODEL_PATH,
+  setupBrandmarkColors,
+  tickBrandmarkTime,
+} from "@/lib/brandmark-model";
+import {
+  createGlowMaterial,
+  GLOW_STRENGTH,
+} from "@/lib/brandmark-glow";
+import { useInViewport } from "@/lib/use-in-viewport";
+
+type HeroModel3DProps = {
+  /** Read per-frame in useFrame so scrolling never re-renders this subtree. */
+  pointerRef: RefObject<{ x: number; y: number }>;
+  scrollRef: RefObject<number>;
+  reduceMotion: boolean | null;
+};
+
+type ModelProps = HeroModel3DProps;
+
+/** Idle hero — do not change this pose */
+const MODEL_SCALE = 9.9;
+const MODEL_ANCHOR: [number, number, number] = [1.65, -1.6, 0];
+const BASE_TILT = { x: 0.1, y: -0.42, z: 0 };
+
+/** After hero — down + right, and smaller for handoff copy */
+const MODEL_ANCHOR_HANDOFF: [number, number, number] = [2.2, -2.0, 0];
+
+/** Handoff size, then zoom */
+const MODEL_SCALE_SMALL = 4.8;
+const MODEL_SCALE_ZOOM = 32;
+
+const CAMERA_Z_START = 5.4;
+const CAMERA_Z_ZOOM = 1.85;
+const CAMERA_FOV_START = 40;
+const CAMERA_FOV_ZOOM = 22;
+const CAMERA_X_START = -0.12;
+const POINTER_TILT = 0.18;
+/** Slow clockwise spin — ~90s per turn */
+const CLOCK_SPIN_Z = (-Math.PI * 2) / 90;
+
+function easePhase(t: number) {
+  const x = Math.min(1, Math.max(0, t));
+  return x * x * (3 - 2 * x);
+}
+
+function lerpAnchor(
+  start: [number, number, number],
+  end: [number, number, number],
+  t: number
+): [number, number, number] {
+  return [
+    THREE.MathUtils.lerp(start[0], end[0], t),
+    THREE.MathUtils.lerp(start[1], end[1], t),
+    THREE.MathUtils.lerp(start[2], end[2], t),
+  ];
+}
+
+function LogoBackgroundGlow({
+  reduceMotion,
+  scrollRef,
+}: {
+  reduceMotion: boolean | null;
+  scrollRef: RefObject<number>;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const glowMat = useMemo(() => createGlowMaterial(1.65 * GLOW_STRENGTH), []);
+
+  useFrame(({ clock }) => {
+    const zoom = getHeroScrollPhases(
+      Math.min(1, scrollRef.current ?? 0)
+    ).modelZoom;
+    const intensity = 1 + easePhase(zoom) * 2.8;
+    glowMat.uniforms.uTime.value = reduceMotion ? 0 : clock.elapsedTime;
+    glowMat.uniforms.uIntensity.value = 1.65 * GLOW_STRENGTH * intensity;
+    const group = groupRef.current;
+    if (group) group.position.set(0, 0, -0.72);
+    /* Was a render-time prop; now driven here so scroll costs no re-render. */
+    meshRef.current?.scale.setScalar(0.85 + intensity * 0.4);
+  });
+
+  return (
+    <group ref={groupRef}>
+      <Billboard follow lockX={false} lockY={false} lockZ={false}>
+        <mesh ref={meshRef} renderOrder={-20} material={glowMat}>
+          <planeGeometry args={[9.5, 9.5]} />
+        </mesh>
+      </Billboard>
+    </group>
+  );
+}
+
+function HeroModel({ pointerRef, scrollRef, reduceMotion }: ModelProps) {
+  const groupRef = useRef<THREE.Group>(null);
+  const tiltRef = useRef<THREE.Group>(null);
+  const spinRef = useRef<THREE.Group>(null);
+  const smoothPointer = useRef({ x: 0, y: 0 });
+  const frozenSpinZ = useRef(0);
+  const glassMeshesRef = useRef<THREE.Mesh[]>([]);
+  const baseMaxDim = useRef(1);
+  const localCenter = useRef(new THREE.Vector3());
+  const { scene } = useGLTF(BRANDMARK_MODEL_PATH);
+  const model = useMemo(() => scene.clone(true), [scene]);
+  useLayoutEffect(() => {
+    glassMeshesRef.current = setupBrandmarkColors(model);
+  }, [model]);
+
+  useLayoutEffect(() => {
+    model.scale.setScalar(1);
+    model.position.set(0, 0, 0);
+    model.rotation.set(0, 0, 0);
+    const box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3());
+    baseMaxDim.current = Math.max(size.x, size.y, size.z) || 1;
+    box.getCenter(localCenter.current);
+  }, [model]);
+
+  useFrame((state) => {
+    const spin = spinRef.current;
+    const root = groupRef.current;
+    const tilt = tiltRef.current;
+    if (!spin || !root || !tilt) return;
+
+    root.scale.setScalar(1);
+    root.visible = true;
+
+    const elapsed = state.clock.elapsedTime;
+    tickBrandmarkTime(glassMeshesRef.current, elapsed);
+
+    /* Read scroll straight from the ref — no React render involved. */
+    const phases = getHeroScrollPhases(Math.min(1, scrollRef.current ?? 0));
+
+    /*
+     * Sequence (strict order):
+     * 1) Hero idle — fixed right pose (untouched)
+     * 2) After hero — move down-right and shrink for handoff
+     * 3) Then — zoom in
+     */
+    const moveT = easePhase(phases.modelToCorner);
+    const zoomT = easePhase(phases.modelZoom);
+
+    tilt.rotation.x = BASE_TILT.x;
+    tilt.rotation.y = BASE_TILT.y;
+    tilt.rotation.z = 0;
+
+    const anchor = lerpAnchor(MODEL_ANCHOR, MODEL_ANCHOR_HANDOFF, moveT);
+
+    /* Shrink while moving into handoff; zoom from that smaller size */
+    let targetScale = THREE.MathUtils.lerp(MODEL_SCALE, MODEL_SCALE_SMALL, moveT);
+    if (zoomT > 0) {
+      targetScale = THREE.MathUtils.lerp(MODEL_SCALE_SMALL, MODEL_SCALE_ZOOM, zoomT);
+    }
+
+    root.position.set(anchor[0], anchor[1], anchor[2]);
+
+    const scale = targetScale / baseMaxDim.current;
+    model.scale.setScalar(scale);
+    model.position.set(
+      -localCenter.current.x * scale,
+      -localCenter.current.y * scale,
+      -localCenter.current.z * scale
+    );
+
+    const cam = state.camera;
+    if (cam instanceof THREE.PerspectiveCamera) {
+      cam.position.z = THREE.MathUtils.lerp(CAMERA_Z_START, CAMERA_Z_ZOOM, zoomT);
+      cam.position.x = THREE.MathUtils.lerp(
+        CAMERA_X_START,
+        anchor[0] * 0.1,
+        zoomT
+      );
+      cam.position.y = THREE.MathUtils.lerp(0.12, anchor[1] * 0.08, zoomT);
+      cam.fov = THREE.MathUtils.lerp(CAMERA_FOV_START, CAMERA_FOV_ZOOM, zoomT);
+      cam.updateProjectionMatrix();
+    }
+
+    smoothPointer.current.x = THREE.MathUtils.lerp(
+      smoothPointer.current.x,
+      pointerRef.current?.x ?? 0,
+      0.09
+    );
+    smoothPointer.current.y = THREE.MathUtils.lerp(
+      smoothPointer.current.y,
+      pointerRef.current?.y ?? 0,
+      0.09
+    );
+
+    const pointerWeight =
+      zoomT > 0.05 ? 0 : moveT > 0.9 ? 0.2 : 1 - moveT * 0.5;
+    const { x, y } = smoothPointer.current;
+
+    if (reduceMotion) {
+      spin.rotation.set(0, 0, 0);
+      return;
+    }
+
+    spin.rotation.x = THREE.MathUtils.lerp(
+      spin.rotation.x,
+      y * POINTER_TILT * pointerWeight,
+      0.12
+    );
+    spin.rotation.y = THREE.MathUtils.lerp(
+      spin.rotation.y,
+      x * POINTER_TILT * pointerWeight,
+      0.12
+    );
+
+    /* Spin through hero + move + shrink; freeze once zoom starts */
+    if (zoomT < 0.02) {
+      frozenSpinZ.current = elapsed * CLOCK_SPIN_Z;
+      spin.rotation.z = frozenSpinZ.current;
+    } else {
+      spin.rotation.z = frozenSpinZ.current;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <group ref={spinRef}>
+        <group ref={tiltRef} rotation={[BASE_TILT.x, BASE_TILT.y, 0]}>
+          <LogoBackgroundGlow
+            reduceMotion={reduceMotion}
+            scrollRef={scrollRef}
+          />
+          <primitive object={model} />
+        </group>
+      </group>
+    </group>
+  );
+}
+
+function Scene(props: ModelProps) {
+  return (
+    <>
+      <Environment preset="city" environmentIntensity={0.32} />
+      <ambientLight intensity={0.32} color="#f4f7ff" />
+      <directionalLight
+        position={[4, 6, 5]}
+        intensity={0.85}
+        color="#ffffff"
+      />
+      <directionalLight
+        position={[-3, 2, 4]}
+        intensity={0.32}
+        color="#66a8ff"
+      />
+      <spotLight
+        position={[3.2, 2.4, 4]}
+        angle={0.42}
+        penumbra={0.85}
+        intensity={2.1}
+        color="#ffd0a0"
+      />
+      <spotLight
+        position={[2.8, -1.6, 3.5]}
+        angle={0.5}
+        penumbra={1}
+        intensity={1.15}
+        color="#3388ff"
+      />
+      <spotLight
+        position={[1.8, 3.2, 2.2]}
+        angle={0.35}
+        penumbra={0.7}
+        intensity={1.4}
+        color="#ffffff"
+      />
+      <HeroModel {...props} />
+    </>
+  );
+}
+
+useGLTF.preload(BRANDMARK_MODEL_PATH);
+
+function HeroModel3D({
+  pointerRef,
+  scrollRef,
+  reduceMotion,
+}: HeroModel3DProps) {
+  /* Stop drawing 2.4M triangles once the hero has scrolled away. */
+  const { ref, inView } = useInViewport<HTMLDivElement>();
+
+  return (
+    <div ref={ref} className="hero-model-viewport">
+      <Canvas
+        className="hero-model-canvas"
+        frameloop={inView ? "always" : "never"}
+        camera={{ position: [-0.12, 0.12, 5.4], fov: 40 }}
+        dpr={[1, 1.75]}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+          premultipliedAlpha: false,
+          logarithmicDepthBuffer: true,
+        }}
+        onCreated={({ gl, scene }) => {
+          gl.setClearColor(0x000000, 0);
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.28;
+          scene.background = null;
+        }}
+      >
+        <Suspense fallback={null}>
+          <Scene
+            pointerRef={pointerRef}
+            scrollRef={scrollRef}
+            reduceMotion={reduceMotion}
+          />
+        </Suspense>
+      </Canvas>
+    </div>
+  );
+}
+
+/* Props are refs + a boolean, so this never re-renders while scrolling. */
+export default memo(HeroModel3D);

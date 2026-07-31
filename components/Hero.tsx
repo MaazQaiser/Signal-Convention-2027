@@ -1,0 +1,325 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { useReducedMotion } from "framer-motion";
+import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
+/* Eager — LoadingGate also imports this so the model warms under the cover */
+import HeroModel3D from "@/components/HeroModel3D";
+import BtnArrow from "@/components/BtnArrow";
+
+/** Title fills L→R; body paragraphs fade in after. */
+const HANDOFF_TITLE_LINES = ["Grow Through", "Consistency"] as const;
+const HANDOFF_BODY = [
+  "This year, we're exploring the habits, disciplines and daily decisions that lead to long-term success. Through owner-led conversations, breakout sessions and networking opportunities, you'll hear what's working across the franchise network and leave with ideas you can put into practice right away.",
+  "Every keynote, breakout session and conversation is designed to help you return home with fresh ideas and stronger connections for the year ahead.",
+] as const;
+const HANDOFF_LINES_COUNT = HANDOFF_TITLE_LINES.length + HANDOFF_BODY.length;
+
+function lineFillPercent(progress: number, index: number, total: number) {
+  const t = Math.min(1, Math.max(0, progress));
+  /* Strict sequence: finish one line before the next starts */
+  const span = 1 / total;
+  const start = index * span;
+  const end = (index + 1) * span;
+  const local = Math.min(1, Math.max(0, (t - start) / (end - start)));
+  return local * 100;
+}
+
+export default function Hero() {
+  const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  /*
+   * The 3D canvas reads scroll and pointer through refs rather than props.
+   * Lenis emits a scroll event every frame, so feeding those values in as
+   * React state re-rendered the whole <Canvas> subtree (Environment, six
+   * lights, the 2.4M-triangle primitive) 60x a second purely to hand
+   * useFrame a number it could have read itself. Refs are stable, so the
+   * memoised HeroModel3D below never re-renders while scrolling.
+   */
+  const scrollRef = useRef(0);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number | null>(null);
+
+  const updateScrollProgress = useCallback(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    const rect = hero.getBoundingClientRect();
+    const scrollable = Math.max(hero.offsetHeight - window.innerHeight, 1);
+    const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
+
+    scrollRef.current = progress;
+
+    /* Coalesce to one React update per frame, and only for the DOM copy. */
+    if (rafRef.current !== null) return;
+    rafRef.current = window.requestAnimationFrame(() => {
+      rafRef.current = null;
+      setScrollProgress((prev) =>
+        Math.abs(prev - scrollRef.current) < 0.0005 ? prev : scrollRef.current
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+    return () => {
+      window.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [updateScrollProgress]);
+
+  const handlePointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      if (reduceMotion) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      pointerRef.current.x =
+        ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointerRef.current.y =
+        ((event.clientY - rect.top) / rect.height) * 2 - 1;
+    },
+    [reduceMotion]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    pointerRef.current.x = 0;
+    pointerRef.current.y = 0;
+  }, []);
+
+  const phases = getHeroScrollPhases(
+    reduceMotion ? (scrollProgress > 0.5 ? 1 : 0) : scrollProgress
+  );
+
+  /* UI fades out; model stays until whiteout covers the dive */
+  const stageOpacity = Math.max(
+    0,
+    1 - Math.max(phases.heroConclude, phases.modelZoom * 0.35)
+  );
+  const bgOpacity = Math.max(0, 1 - phases.whiteOut);
+  const modelOpacity = Math.max(0, 1 - phases.whiteOut * 0.15);
+
+  const heroStyle = {
+    "--hero-scroll": phases.eased,
+    "--hero-model-corner": phases.modelToCorner,
+    "--hero-model-center": phases.modelToCenter,
+    "--hero-model-zoom": phases.modelZoom,
+    "--hero-conclude": phases.heroConclude,
+    "--hero-whiteout": phases.whiteOut,
+  } as CSSProperties;
+
+  useEffect(() => {
+    const section = heroRef.current?.closest(
+      ".journey-section"
+    ) as HTMLElement | null;
+    if (!section) return;
+    section.style.setProperty("--hero-scroll", String(phases.eased));
+  }, [phases.eased]);
+
+  return (
+    <header
+      className="hero"
+      id="top"
+      ref={heroRef}
+      style={heroStyle}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
+      <div
+        className="hero-bg"
+        aria-hidden="true"
+        style={{ opacity: bgOpacity }}
+      >
+        <div className="hero-scrim" />
+        <div className="hero-glow" />
+      </div>
+
+      <div
+        className="hero-text-scrim"
+        aria-hidden="true"
+        style={{ opacity: bgOpacity }}
+      />
+
+      <div
+        className="hero-model"
+        aria-hidden="true"
+        style={{ opacity: modelOpacity }}
+      >
+        <div className="hero-model-inner">
+          <HeroModel3D
+            pointerRef={pointerRef}
+            scrollRef={scrollRef}
+            reduceMotion={reduceMotion}
+          />
+        </div>
+      </div>
+
+      <div className="hero-stage" style={{ opacity: stageOpacity }}>
+        <div
+          className="hero-copy"
+          style={{
+            opacity: Math.max(0, 1 - phases.introLift * 1.35),
+            visibility: phases.introLift < 0.92 ? "visible" : "hidden",
+            transform: `translateY(calc(${-phases.introLift * 58} * 1vh))`,
+          }}
+        >
+          <h1 className="hero-title">
+            Here We Grow <span className="hero-title-year">2027</span>
+          </h1>
+          <p className="hero-sub">
+            Join franchise owners, teams, Home Office and partners{" "}
+            <br />
+            for three days of learning from one another and discovering{" "}
+            <br />
+            new ways to strengthen your business.
+          </p>
+          <a className="btn btn-orange hero-cta" href="#register">
+            Register
+            <BtnArrow />
+          </a>
+        </div>
+
+        <div
+          className="hero-meta hero-meta--intro"
+          style={{
+            opacity: Math.max(0, 1 - phases.metaLift * 1.4),
+            visibility: phases.metaLift < 0.9 ? "visible" : "hidden",
+            transform: `translateY(calc(${-phases.metaLift * 92} * 1vh))`,
+          }}
+        >
+          <p className="hero-meta-row hero-meta-date">
+            <svg
+              className="hero-meta-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="2"
+                y="3"
+                width="12"
+                height="11"
+                rx="1.5"
+                stroke="currentColor"
+                strokeWidth="1.25"
+              />
+              <path d="M2 6.5h12" stroke="currentColor" strokeWidth="1.25" />
+              <path
+                d="M5 1.5v3M11 1.5v3"
+                stroke="currentColor"
+                strokeWidth="1.25"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>January 17&ndash;19, 2027</span>
+          </p>
+          <p className="hero-meta-row hero-meta-loc">
+            <svg
+              className="hero-meta-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 14s4.5-3.2 4.5-7A4.5 4.5 0 1 0 3.5 7C3.5 10.8 8 14 8 14Z"
+                stroke="currentColor"
+                strokeWidth="1.25"
+                strokeLinejoin="round"
+              />
+              <circle cx="8" cy="7" r="1.5" fill="currentColor" />
+            </svg>
+            <span>
+              JW Marriott Desert Ridge Resort &amp; Spa
+              <br />
+              Phoenix, Arizona
+            </span>
+          </p>
+        </div>
+
+        <aside
+          className="hero-handoff-copy"
+          aria-label="Grow Through Consistency"
+          style={{
+            opacity: phases.handoffEnter * (1 - phases.handoffExit),
+            visibility: phases.handoffVisible ? "visible" : "hidden",
+            transform: `translate3d(0, calc(-50% + ${phases.handoffY} * 1vh), 0)`,
+          }}
+        >
+          <p className="hero-handoff-statement">
+            {HANDOFF_TITLE_LINES.map((line, index) => (
+              <span
+                key={line}
+                className="hero-handoff-line hero-handoff-line--title"
+                style={
+                  {
+                    "--line-fill": `${
+                      reduceMotion
+                        ? 100
+                        : lineFillPercent(
+                            phases.handoffFill,
+                            index,
+                            HANDOFF_LINES_COUNT
+                          )
+                    }%`,
+                  } as CSSProperties
+                }
+              >
+                {line}
+              </span>
+            ))}
+          </p>
+          <div className="hero-handoff-body">
+            {HANDOFF_BODY.map((line, index) => (
+              <p
+                key={line}
+                className="hero-handoff-line hero-handoff-line--body"
+                style={{
+                  opacity: reduceMotion
+                    ? 1
+                    : lineFillPercent(
+                        phases.handoffFill,
+                        index + HANDOFF_TITLE_LINES.length,
+                        HANDOFF_LINES_COUNT
+                      ) / 100,
+                }}
+              >
+                {line}
+              </p>
+            ))}
+          </div>
+          <a
+            className="btn btn-orange hero-handoff-cta"
+            href="/agenda"
+            style={{
+              opacity: reduceMotion
+                ? 1
+                : Math.max(0, (phases.handoffFill - 0.82) / 0.18),
+            }}
+          >
+            Explore Agenda
+            <BtnArrow />
+          </a>
+        </aside>
+      </div>
+
+      <div
+        className="hero-whiteout"
+        aria-hidden="true"
+        style={{ opacity: phases.whiteOut }}
+      />
+    </header>
+  );
+}
