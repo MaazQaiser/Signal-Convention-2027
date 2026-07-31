@@ -24,7 +24,6 @@ function worldPoints(doc) {
         const nrm = prim.getAttribute("NORMAL")?.getArray();
         const idx = prim.getIndices()?.getArray();
         const n = pos.length / 3;
-        const order = idx ?? { length: n, [Symbol.iterator]: function* () { for (let i = 0; i < n; i++) yield i; } };
         const seq = idx ? Array.from(idx) : Array.from({ length: n }, (_, i) => i);
         for (const i of seq) {
           const x = pos[i * 3], y = pos[i * 3 + 1], z = pos[i * 3 + 2];
