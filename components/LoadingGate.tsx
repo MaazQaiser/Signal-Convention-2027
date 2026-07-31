@@ -3,9 +3,10 @@
 import { useGLTF, useProgress } from "@react-three/drei";
 import { useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { BRANDMARK_MODEL_PATH } from "@/lib/brandmark-model";
 import SmoothScroll from "./SmoothScroll";
 
-const MODEL_PATH = "/models/modal.gltf";
+const MODEL_PATH = BRANDMARK_MODEL_PATH;
 const HOLD_AT_COMPLETE_MS = 480;
 const REVEAL_DURATION_MS = 1450;
 const FALLBACK_REVEAL_MS = 45000;

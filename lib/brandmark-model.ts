@@ -1,5 +1,8 @@
 import * as THREE from "three";
 
+/** Full-resolution brandmark used by hero + closing canvases */
+export const BRANDMARK_MODEL_PATH = "/models/modal.gltf";
+
 const ORANGE = new THREE.Color("#ff7900");
 const BLUE = new THREE.Color("#0055ff");
 const WARM_CORE = new THREE.Color("#fff0cc");
@@ -130,24 +133,25 @@ void main() {
   vec3 L = normalize(uLightDir);
 
   float ndotl = max(dot(N, L), 0.0);
-  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 2.8);
+  float fresnel = pow(1.0 - max(dot(N, V), 0.0), 2.4);
   vec3 R = reflect(-L, N);
-  float spec = pow(max(dot(R, V), 0.0), 48.0);
-  float clearcoat = pow(max(dot(reflect(-V, N), V), 0.0), 12.0);
+  float spec = pow(max(dot(R, V), 0.0), 96.0);
+  float specWide = pow(max(dot(R, V), 0.0), 24.0);
+  float clearcoat = pow(max(dot(reflect(-V, N), V), 0.0), 18.0);
 
   vec3 tint = mix(uOrange, uBlue, t);
-  vec3 body = base * (0.42 + ndotl * 0.28);
-  vec3 rim = tint * fresnel * 0.95;
-  vec3 highlight = vec3(1.0, 0.98, 0.94) * spec * 0.85;
-  vec3 coat = vec3(0.92, 0.96, 1.0) * clearcoat * 0.35;
-  vec3 innerGlow = uCore * (1.0 - t) * 0.18;
+  vec3 body = base * (0.38 + ndotl * 0.32);
+  vec3 rim = tint * fresnel * 1.15;
+  vec3 highlight = vec3(1.0, 0.99, 0.96) * (spec * 1.35 + specWide * 0.35);
+  vec3 coat = vec3(0.95, 0.97, 1.0) * clearcoat * 0.55;
+  vec3 innerGlow = uCore * (1.0 - t) * 0.22;
 
   vec3 color = body + rim + highlight + coat + innerGlow;
-  color += uBlue * fresnel * t * 0.24;
+  color += uBlue * fresnel * t * 0.28;
   float pulse = 0.5 + 0.5 * sin(uTime * 1.6 + t * 8.0);
-  float alpha = 0.58 + fresnel * 0.28 + spec * 0.12 + pulse * 0.04;
+  float alpha = 0.62 + fresnel * 0.3 + spec * 0.14 + pulse * 0.04;
 
-  gl_FragColor = vec4(color, clamp(alpha, 0.52, 0.94));
+  gl_FragColor = vec4(color, clamp(alpha, 0.55, 0.96));
 }
 `;
 

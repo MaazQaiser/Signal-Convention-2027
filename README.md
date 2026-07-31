@@ -22,10 +22,10 @@ npm start
 ## Project structure
 
 - `app/`, `components/`, `lib/` — Next.js application
-- `public/` — images, brand assets, and 3D model
+- `public/` — images, brand assets, videos, and 3D model (`models/modal.gltf`)
 - `Images/`, `Logos/`, `SVG logos/` — source brand assets
 - `legacy/` — original single-file HTML draft
 
 ## Vercel
 
-The Next.js app lives at the repository root, so Vercel deploys it automatically. `vercel.json` runs `git lfs pull` during install so the 3D model is available in production.
+The Next.js app lives at the repository root, so Vercel deploys it automatically. `postinstall` (`scripts/ensure-model.mjs`) fetches `modal.gltf` from Git LFS when needed.

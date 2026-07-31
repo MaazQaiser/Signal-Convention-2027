@@ -27,7 +27,7 @@ export default function TravelResortMap() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="travel-map-image"
-                src="/images/resort-map.png"
+                src="/images/resort-map.webp"
                 alt="JW Marriott Phoenix Desert Ridge resort map with numbered locations and legend"
               />
             </div>

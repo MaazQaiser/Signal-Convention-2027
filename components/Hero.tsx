@@ -157,9 +157,9 @@ export default function Hero() {
             Here We Grow <span className="hero-title-year">2027</span>
           </h1>
           <p className="hero-sub">
-            Join franchise owners, teams, Home Office and partners
+            Join franchise owners, teams, Home Office and partners{" "}
             <br />
-            for three days of learning from one another and discovering
+            for three days of learning from one another and discovering{" "}
             <br />
             new ways to strengthen your business.
           </p>

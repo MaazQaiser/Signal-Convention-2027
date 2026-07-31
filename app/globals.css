@@ -1011,7 +1011,7 @@ img {
   z-index: 1;
 }
 .journey-pin {
-  min-height: 100svh;
+  min-height: auto;
   /* No early overlap — hero must go full white first, then Journey fades in */
   margin-top: 0;
   background: #ffffff;
@@ -1024,43 +1024,38 @@ img {
 .journey-pin::before {
   display: none;
 }
-.journey-section:not(.journey-section--static) .journey-pin {
-  height: 100svh;
-  max-height: 100svh;
-  /* overflow must NOT be on the pinned node — breaks ScrollTrigger pinSpacing */
+.journey-section--grid .journey-pin {
+  height: auto;
+  max-height: none;
   overflow: visible;
 }
 .journey-fade {
   flex: 1 1 auto;
   min-height: 0;
-  height: 100%;
+  height: auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
-.journey-section:not(.journey-section--static) .journey-fade {
-  opacity: 0;
-  will-change: opacity, transform;
+.journey-section--grid .journey-fade {
+  opacity: 1;
 }
 
-/* section header above the carousel — clear fixed nav */
+/* section header above the cards — clear fixed nav */
 .journey-intro {
   flex: 0 0 auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 1.6vh, 20px);
-  padding: clamp(88px, 12vh, 112px) clamp(32px, 5vw, 64px) clamp(12px, 2vh, 20px);
+  padding: clamp(88px, 12vh, 112px) clamp(32px, 5vw, 64px) clamp(20px, 3vh, 32px);
   box-sizing: border-box;
   background: #ffffff;
   position: relative;
   z-index: 3;
-  overflow: hidden;
-}
-.journey-section:not(.journey-section--static) .journey-intro {
-  will-change: transform, opacity, height, padding;
+  overflow: visible;
 }
 .journey-heading {
   margin: 0;
@@ -1096,54 +1091,49 @@ img {
 .journey-lede .journey-intro-line {
   white-space: nowrap;
 }
-/* Hidden until Journey pin timeline reveals line-by-line */
-.journey-section:not(.journey-section--static) .journey-intro-line {
-  opacity: 0;
-  transform: translateY(28px);
-  will-change: transform, opacity;
-}
-/* scroll stage — must fill pin; children are absolute */
+/* Grid stage — three cards in one viewport */
 .journey-stage {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   z-index: 2;
   min-width: 0;
   min-height: 0;
-  height: 100%;
+  height: auto;
   background: transparent;
 }
 .journey-card-layer {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  inset: auto;
   z-index: 2;
-  display: flex;
-  align-items: flex-start;
-  padding-top: clamp(88px, 11vh, 120px);
-  padding-bottom: clamp(32px, 5vh, 56px);
+  display: block;
+  padding: 0;
   box-sizing: border-box;
-  will-change: transform, opacity;
 }
 .journey-card-track {
+  --journey-gap: 24px;
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: auto;
-  max-height: 100%;
-  min-width: max-content;
-  gap: var(--track-space);
-  padding-left: clamp(32px, 5vw, 64px);
-  /* Trailing space so 3 cards still scroll on wide screens */
-  padding-right: max(40vw, calc(100vw - 560px));
-  box-sizing: content-box;
-  will-change: transform;
+  gap: var(--journey-gap);
+  padding: 64px clamp(32px, 5vw, 64px);
+  box-sizing: border-box;
+}
+.journey-card-item {
+  min-width: 0;
+  width: 100%;
 }
 .journey-year-group {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: var(--track-space);
+  gap: var(--journey-gap);
   position: relative;
 }
 
@@ -1223,16 +1213,16 @@ img {
   object-fit: contain;
 }
 
-/* scroll columns — identical width, photo, and copy footprint */
+/* scroll columns — three equal cards that fit the viewport */
 .journey-column {
-  flex: 0 0 500px;
-  width: 500px;
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 40px;
+  gap: 32px;
   height: auto;
-  align-self: flex-start;
+  align-self: stretch;
   padding: 0;
   box-sizing: border-box;
   position: relative;
@@ -1240,7 +1230,7 @@ img {
 }
 .journey-column--featured,
 .journey-column--photo-first {
-  gap: 40px;
+  gap: 32px;
 }
 .journey-column-media {
   display: flex;
@@ -1280,14 +1270,14 @@ img {
   letter-spacing: -0.03em;
 }
 
-/* single hero photo per column — shared 3:2 frame */
+/* photo frame — fills card width, shorter crop for 3-up */
 .journey-column-photo {
   position: relative;
   overflow: hidden;
   background: #e8e6e1;
   width: 100%;
-  max-width: 500px;
-  aspect-ratio: 3 / 2;
+  max-width: none;
+  aspect-ratio: 4 / 3;
   flex-shrink: 0;
 }
 .journey-column-img {
@@ -1295,15 +1285,15 @@ img {
   object-position: center;
 }
 
-/* copy block — fixed footprint so cards stay aligned */
+/* copy block */
 .journey-column-copy {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: clamp(12px, 1.5vh, 18px);
   width: 100%;
-  max-width: 500px;
+  max-width: none;
   flex: 0 0 auto;
-  min-height: 15.5rem;
+  min-height: 0;
 }
 .journey-column-label {
   margin: 0;
@@ -1319,21 +1309,22 @@ img {
   margin: 0;
   font-family: var(--font-display), Orbitron, sans-serif;
   font-weight: 800;
-  font-size: clamp(22px, 2vw, 28px);
+  font-size: clamp(18px, 1.55vw, 24px);
   line-height: 1.2;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: #000000;
+  /* Lock to 3 lines so all three cards share the same title height */
   min-height: calc(1.2em * 3);
 }
 .journey-column-body {
   margin: 0;
   font-family: var(--font-body), "FK Display", sans-serif;
   font-weight: 400;
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 30px;
+  font-size: clamp(14px, 1.15vw, 17px);
+  line-height: 1.5;
   color: #717170;
-  min-height: calc(30px * 5);
+  min-height: 0;
 }
 .journey-meta {
   display: flex;
@@ -1526,13 +1517,17 @@ img {
     white-space: normal;
   }
   .journey-card-track {
-    padding-right: 0;
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 8vh, 64px);
+    padding: 64px clamp(24px, 5vw, 48px);
   }
   .journey-column {
-    flex: 0 0 min(85vw, 500px);
-    width: min(85vw, 500px);
-    gap: 40px;
+    width: 100%;
+    gap: 32px;
     padding: 0;
+  }
+  .journey-column-photo {
+    aspect-ratio: 3 / 2;
   }
   .journey-beacon-img {
     width: 72px;
@@ -3060,11 +3055,45 @@ img {
     top: 52%;
     width: 100vw;
   }
+  /* Stack copy + meta in flow so they can't overlap on short viewports */
+  .hero-stage {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: clamp(92px, 14vh, 128px) 0
+      calc(96px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+  }
+  .hero-copy {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-inline: var(--pad);
+    max-width: none;
+    width: auto;
+  }
+  .hero-title {
+    font-size: clamp(36px, 10.5vw, 48px);
+  }
   .hero-sub {
-    max-width: 26ch;
+    max-width: 100%;
+    width: 100%;
+    font-size: 15px;
+    margin-top: 14px;
   }
   .hero-sub br {
     display: none;
+  }
+  .hero-cta {
+    margin-top: 18px;
+  }
+  .hero-meta {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin-top: 22px;
+    margin-inline: var(--pad);
+    font-size: 15px;
   }
   .hero-handoff-statement {
     font-size: clamp(40px, 5rem, 80px);

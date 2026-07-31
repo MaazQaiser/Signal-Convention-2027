@@ -7,6 +7,7 @@ import * as THREE from "three";
 
 import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
 import {
+  BRANDMARK_MODEL_PATH,
   setupBrandmarkColors,
   tickBrandmarkTime,
 } from "@/lib/brandmark-model";
@@ -102,7 +103,7 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
   const glassMeshesRef = useRef<THREE.Mesh[]>([]);
   const baseMaxDim = useRef(1);
   const localCenter = useRef(new THREE.Vector3());
-  const { scene } = useGLTF("/models/modal.gltf");
+  const { scene } = useGLTF(BRANDMARK_MODEL_PATH);
   const model = useMemo(() => scene.clone(true), [scene]);
   const modelScroll = Math.min(1, scrollProgress);
   const phases = getHeroScrollPhases(modelScroll);
@@ -237,38 +238,45 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
 function Scene(props: ModelProps) {
   return (
     <>
-      <Environment preset="city" environmentIntensity={0.22} />
-      <ambientLight intensity={0.28} color="#f4f7ff" />
+      <Environment preset="city" environmentIntensity={0.32} />
+      <ambientLight intensity={0.32} color="#f4f7ff" />
       <directionalLight
         position={[4, 6, 5]}
-        intensity={0.65}
+        intensity={0.85}
         color="#ffffff"
       />
       <directionalLight
         position={[-3, 2, 4]}
-        intensity={0.25}
+        intensity={0.32}
         color="#66a8ff"
       />
       <spotLight
         position={[3.2, 2.4, 4]}
         angle={0.42}
-        penumbra={0.9}
-        intensity={1.6}
+        penumbra={0.85}
+        intensity={2.1}
         color="#ffd0a0"
       />
       <spotLight
         position={[2.8, -1.6, 3.5]}
         angle={0.5}
         penumbra={1}
-        intensity={0.9}
+        intensity={1.15}
         color="#3388ff"
+      />
+      <spotLight
+        position={[1.8, 3.2, 2.2]}
+        angle={0.35}
+        penumbra={0.7}
+        intensity={1.4}
+        color="#ffffff"
       />
       <HeroModel {...props} />
     </>
   );
 }
 
-useGLTF.preload("/models/modal.gltf");
+useGLTF.preload(BRANDMARK_MODEL_PATH);
 
 export default function HeroModel3D({
   pointer,
@@ -290,7 +298,7 @@ export default function HeroModel3D({
       onCreated={({ gl, scene }) => {
         gl.setClearColor(0x000000, 0);
         gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.18;
+        gl.toneMappingExposure = 1.28;
         scene.background = null;
       }}
     >

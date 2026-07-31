@@ -13,6 +13,7 @@ import { Billboard, Environment, useGLTF } from "@react-three/drei";
 import { useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 import {
+  BRANDMARK_MODEL_PATH,
   fitBrandmarkModel,
   setupBrandmarkColors,
   tickBrandmarkTime,
@@ -22,7 +23,6 @@ import {
   GLOW_STRENGTH,
 } from "@/lib/brandmark-glow";
 
-const MODEL_PATH = "/models/modal.gltf";
 /** Cancel the ~45° Y rotation baked into the GLTF hierarchy */
 const FRONT_YAW = -Math.PI / 4;
 /** Glow sits behind the mark — not inside the pointer-tilt group */
@@ -70,7 +70,7 @@ function ClosingMark({
   const rootRef = useRef<THREE.Group>(null);
   const meshesRef = useRef<THREE.Mesh[]>([]);
   const smoothPointer = useRef({ x: 0, y: 0 });
-  const { scene } = useGLTF(MODEL_PATH);
+  const { scene } = useGLTF(BRANDMARK_MODEL_PATH);
   const model = useMemo(() => scene.clone(true), [scene]);
 
   useLayoutEffect(() => {
@@ -269,4 +269,4 @@ export default function ClosingModel() {
   );
 }
 
-useGLTF.preload(MODEL_PATH);
+useGLTF.preload(BRANDMARK_MODEL_PATH);
