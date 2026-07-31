@@ -736,13 +736,12 @@ img {
   font-size: 20px;
   line-height: 1.55;
   letter-spacing: 0.01em;
-  width: max-content;
-  max-width: min(92vw, 56rem);
+  width: min(100%, 42rem);
+  max-width: 42rem;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
   text-shadow: 0 1px 18px rgba(0, 0, 0, 0.5);
-}
-.hero-handoff-body-line {
-  display: block;
-  white-space: nowrap;
 }
 .hero-handoff-cta {
   margin-top: clamp(22px, 3.5vh, 36px);
@@ -779,6 +778,8 @@ img {
 .hero-handoff-line--body {
   margin: 0;
   white-space: normal;
+  text-align: justify;
+  text-align-last: left;
   color: rgba(255, 255, 255, 0.8);
   background-image: none;
   -webkit-text-fill-color: unset;
@@ -3074,11 +3075,8 @@ img {
     max-width: min(90vw, 640px);
   }
   .hero-handoff-body {
-    width: min(100%, 56rem);
+    width: min(100%, 42rem);
     max-width: 100%;
-  }
-  .hero-handoff-body-line {
-    white-space: normal;
   }
 }
 @media (max-width: 820px) {

@@ -16,17 +16,11 @@ import BtnArrow from "@/components/BtnArrow";
 
 /** Title fills L→R; body paragraphs fade in after. */
 const HANDOFF_TITLE_LINES = ["Grow Through", "Consistency"] as const;
-const HANDOFF_BODY_P1 = [
-  "This year, we're exploring the habits, disciplines and daily decisions",
-  "that lead to long-term success. Through owner-led conversations,",
-  "breakout sessions and networking opportunities, you'll hear what's working",
-  "across the franchise network and leave with ideas you can put into practice right away.",
+const HANDOFF_BODY = [
+  "This year, we're exploring the habits, disciplines and daily decisions that lead to long-term success. Through owner-led conversations, breakout sessions and networking opportunities, you'll hear what's working across the franchise network and leave with ideas you can put into practice right away.",
+  "Every keynote, breakout session and conversation is designed to help you return home with fresh ideas and stronger connections for the year ahead.",
 ] as const;
-const HANDOFF_BODY_P2 =
-  "Every keynote, breakout session and conversation is designed to help you return home with fresh ideas and stronger connections for the year ahead.";
-/** Fade units: title lines + two body blocks */
-const HANDOFF_BODY_BLOCKS = 2;
-const HANDOFF_LINES_COUNT = HANDOFF_TITLE_LINES.length + HANDOFF_BODY_BLOCKS;
+const HANDOFF_LINES_COUNT = HANDOFF_TITLE_LINES.length + HANDOFF_BODY.length;
 
 function lineFillPercent(progress: number, index: number, total: number) {
   const t = Math.min(1, Math.max(0, progress));
@@ -269,38 +263,23 @@ export default function Hero() {
             ))}
           </p>
           <div className="hero-handoff-body">
-            <p
-              className="hero-handoff-line hero-handoff-line--body"
-              style={{
-                opacity: reduceMotion
-                  ? 1
-                  : lineFillPercent(
-                      phases.handoffFill,
-                      HANDOFF_TITLE_LINES.length,
-                      HANDOFF_LINES_COUNT
-                    ) / 100,
-              }}
-            >
-              {HANDOFF_BODY_P1.map((line) => (
-                <span key={line} className="hero-handoff-body-line">
-                  {line}
-                </span>
-              ))}
-            </p>
-            <p
-              className="hero-handoff-line hero-handoff-line--body"
-              style={{
-                opacity: reduceMotion
-                  ? 1
-                  : lineFillPercent(
-                      phases.handoffFill,
-                      HANDOFF_TITLE_LINES.length + 1,
-                      HANDOFF_LINES_COUNT
-                    ) / 100,
-              }}
-            >
-              {HANDOFF_BODY_P2}
-            </p>
+            {HANDOFF_BODY.map((line, index) => (
+              <p
+                key={line}
+                className="hero-handoff-line hero-handoff-line--body"
+                style={{
+                  opacity: reduceMotion
+                    ? 1
+                    : lineFillPercent(
+                        phases.handoffFill,
+                        index + HANDOFF_TITLE_LINES.length,
+                        HANDOFF_LINES_COUNT
+                      ) / 100,
+                }}
+              >
+                {line}
+              </p>
+            ))}
           </div>
           <a
             className="btn btn-orange hero-handoff-cta"
