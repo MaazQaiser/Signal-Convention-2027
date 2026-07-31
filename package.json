@@ -26,8 +26,6 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.185.0",
-    "jimp": "^1.6.1",
-    "potrace": "^2.1.8",
     "typescript": "^5.0.0"
   }
 }
