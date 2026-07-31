@@ -45,24 +45,24 @@ export const TRAVEL_GLANCE: GlanceFact[] = [
 
 export const TRAVEL_HOTEL_IMAGES: HotelImage[] = [
   {
-    src: "/images/resort-desert-ridge.jpg",
-    alt: "Aerial view of JW Marriott Desert Ridge Resort & Spa at sunset",
+    src: "/images/resort-01.jpeg",
+    alt: "Resort terrace and lounge seating at dusk with lit guest rooms and palms",
   },
   {
-    src: "/images/resort-pools.jpg",
-    alt: "Pool complex, lazy river, and courtyard at JW Marriott Desert Ridge",
+    src: "/images/resort-02.avif",
+    alt: "Evening patio bar and lounge with string lights and water features",
   },
   {
-    src: "/images/resort-lagoon.jpg",
-    alt: "Resort lagoon and pool deck lined with lounge chairs and palms",
+    src: "/images/resort-03.webp",
+    alt: "Desert Ridge golf fairway with bunkers, cactus, and mountain views",
   },
   {
-    src: "/images/resort-spa-wing.jpg",
-    alt: "Guest wing and poolside amenities at JW Marriott Desert Ridge",
+    src: "/images/resort-04.jpeg",
+    alt: "Poolside cabanas and lounge seating at JW Marriott Desert Ridge",
   },
   {
-    src: "/images/resort-golf.jpg",
-    alt: "Resort grounds overlooking the Sonoran Desert and golf course",
+    src: "/images/resort-05.webp",
+    alt: "Aerial view of the resort lagoon, island pool, and desert mountain backdrop",
   },
 ];
 

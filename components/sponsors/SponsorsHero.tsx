@@ -30,12 +30,6 @@ export default function SponsorsHero() {
                 Sponsors &amp;&nbsp;Partners
               </h1>
             </Reveal>
-            <Reveal delay={REVEAL_CASCADE.body} {...FADE}>
-              <p className="sponsors-page-hero-lede">
-                Meet the organizations that power Here We Grow 2027 and help
-                our franchise network grow.
-              </p>
-            </Reveal>
           </div>
           <Reveal
             className="sponsors-page-hero-meta-wrap"

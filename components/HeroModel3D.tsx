@@ -28,11 +28,11 @@ const MODEL_SCALE = 9.9;
 const MODEL_ANCHOR: [number, number, number] = [1.65, -1.6, 0];
 const BASE_TILT = { x: 0.1, y: -0.42, z: 0 };
 
-/** After hero — left top corner */
-const MODEL_ANCHOR_LEFT_TOP: [number, number, number] = [-1.55, 0.95, 0];
+/** After hero — down + right, and smaller for handoff copy */
+const MODEL_ANCHOR_HANDOFF: [number, number, number] = [2.2, -2.0, 0];
 
-/** Then smaller, then zoom */
-const MODEL_SCALE_SMALL = 4.2;
+/** Handoff size, then zoom */
+const MODEL_SCALE_SMALL = 4.8;
 const MODEL_SCALE_ZOOM = 32;
 
 const CAMERA_Z_START = 5.4;
@@ -136,25 +136,22 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
     /*
      * Sequence (strict order):
      * 1) Hero idle — fixed right pose (untouched)
-     * 2) After hero — move to left top corner
-     * 3) Then — get smaller
-     * 4) Then — zoom in
+     * 2) After hero — move down-right and shrink for handoff
+     * 3) Then — zoom in
      */
     const moveT = easePhase(phases.modelToCorner);
-    const shrinkT = easePhase(phases.modelToCenter);
     const zoomT = easePhase(phases.modelZoom);
 
     tilt.rotation.x = BASE_TILT.x;
     tilt.rotation.y = BASE_TILT.y;
     tilt.rotation.z = 0;
 
-    const anchor = lerpAnchor(MODEL_ANCHOR, MODEL_ANCHOR_LEFT_TOP, moveT);
+    const anchor = lerpAnchor(MODEL_ANCHOR, MODEL_ANCHOR_HANDOFF, moveT);
 
-    let targetScale = MODEL_SCALE;
+    /* Shrink while moving into handoff; zoom from that smaller size */
+    let targetScale = THREE.MathUtils.lerp(MODEL_SCALE, MODEL_SCALE_SMALL, moveT);
     if (zoomT > 0) {
       targetScale = THREE.MathUtils.lerp(MODEL_SCALE_SMALL, MODEL_SCALE_ZOOM, zoomT);
-    } else if (shrinkT > 0) {
-      targetScale = THREE.MathUtils.lerp(MODEL_SCALE, MODEL_SCALE_SMALL, shrinkT);
     }
 
     root.position.set(anchor[0], anchor[1], anchor[2]);
