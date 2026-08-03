@@ -916,8 +916,15 @@ img {
 }
 .journey-pin {
   min-height: auto;
-  /* No early overlap — hero must go full white first, then Journey fades in */
-  margin-top: 0;
+  /*
+   * Overlap the hero's white tail. Once the white-out is opaque the hero has
+   * nothing left to show, but it still occupies ~6svh of scroll before its box
+   * ends — pure blank. Journey paints above the hero (z-index 5 vs 1) and both
+   * are #fff here, so sliding up into that dead band is invisible and cuts the
+   * blank stretch by the same amount. Kept just under the tail so the white
+   * band never appears while the model is still fading out.
+   */
+  margin-top: -5svh;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -954,8 +961,8 @@ img {
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 1.6vh, 20px);
-  /* Top pad was 12vh, which added ~107px of blank white to the hero handover. */
-  padding: clamp(48px, 6vh, 72px) clamp(32px, 5vw, 64px) clamp(20px, 3vh, 32px);
+  /* Top pad was 12vh; every px of it is blank white during the hero handover. */
+  padding: clamp(24px, 3vh, 44px) clamp(32px, 5vw, 64px) clamp(20px, 3vh, 32px);
   box-sizing: border-box;
   background: #ffffff;
   position: relative;
