@@ -7,6 +7,21 @@ import { BRANDMARK_MODEL_PATH } from "@/lib/brandmark-model";
 import SmoothScroll from "./SmoothScroll";
 
 const MODEL_PATH = BRANDMARK_MODEL_PATH;
+/*
+ * Decoded byte size of modal-opt.glb, used only to render the progress bar.
+ *
+ * The bar used to be driven by drei's useProgress, which is item-count based
+ * (itemsLoaded / itemsTotal). With a handful of registered items the small
+ * ones resolved instantly and the bar jumped to a fraction — 33% — then sat
+ * there for the entire multi-megabyte model download, which read as a hang.
+ *
+ * Byte progress can't come from the ProgressEvent: Vercel serves the .glb
+ * brotli-encoded with no Content-Length, so `event.total` is 0. Comparing
+ * `event.loaded` against the known decoded size is what's left. If the asset
+ * is replaced and this constant drifts, the bar is merely less accurate —
+ * completion is still driven by the load callback, never by this number.
+ */
+const MODEL_DECODED_BYTES = 76_199_472;
 const HOLD_AT_COMPLETE_MS = 480;
 const REVEAL_DURATION_MS = 1450;
 const FALLBACK_REVEAL_MS = 45000;
@@ -58,28 +73,49 @@ export default function LoadingGate({ children }: LoadingGateProps) {
         /* Model ships meshopt-compressed; drei's useGLTF wires this up itself. */
         loader.setMeshoptDecoder(MeshoptDecoder);
         await new Promise<void>((resolve, reject) => {
-          loader.load(MODEL_PATH, () => resolve(), undefined, reject);
+          loader.load(
+            MODEL_PATH,
+            () => resolve(),
+            (event) => {
+              /* `event.total` is 0 behind brotli, so measure against the
+                 known decoded size. Hold below 100 so only the load
+                 callback can declare completion. */
+              const fraction = event.loaded / MODEL_DECODED_BYTES;
+              const pct = Math.min(99, Math.max(0, fraction * 100));
+              targetProgress.current = Math.max(targetProgress.current, pct);
+            },
+            reject
+          );
         });
         /* Also prime drei's cache used by HeroModel3D */
         useGLTF.preload(MODEL_PATH);
         setModelReady(true);
         targetProgress.current = 100;
-      } catch {
+      } catch (error) {
+        /*
+         * Previously this swallowed the error AND left targetProgress where it
+         * stalled, so a failed model load left the cover sitting at a partial
+         * percentage until FALLBACK_REVEAL_MS (45s) elapsed. Release the gate
+         * immediately instead — the hero is perfectly usable without the
+         * brandmark — and surface the reason rather than hiding it.
+         */
+        console.error("[LoadingGate] brandmark preload failed", error);
         useGLTF.preload(MODEL_PATH);
         setModelReady(true);
+        targetProgress.current = 100;
       }
     };
 
     void warm();
   }, [reduceMotion]);
 
-  useEffect(() => {
-    if (phase === "done") return;
-    targetProgress.current = Math.min(
-      100,
-      Math.max(targetProgress.current, progress)
-    );
-  }, [progress, phase]);
+  /*
+   * `progress` from useProgress deliberately no longer feeds the bar. It is
+   * itemsLoaded/itemsTotal, so it can only ever report coarse fractions —
+   * that is what pinned the display at 33% while the model streamed. The bar
+   * is driven by real bytes in warm()'s onProgress instead; useProgress is
+   * still consumed below, but only for its `active` flag.
+   */
 
   useEffect(() => {
     if (reduceMotion || phase === "done") return;

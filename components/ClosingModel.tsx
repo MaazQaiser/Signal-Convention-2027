@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Billboard, Environment, useGLTF } from "@react-three/drei";
+import { Billboard, useGLTF } from "@react-three/drei";
 import { useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 import {
@@ -174,7 +174,7 @@ function ClosingScene({
   return (
     <>
       <CameraRig />
-      <Environment preset="city" environmentIntensity={0.22} />
+      {/* Removed with the hero's — see HeroModel3D for why the HDRI was inert. */}
       <ambientLight intensity={0.34} color="#f4f7ff" />
       <directionalLight position={[0, 2.5, 6]} intensity={0.85} color="#ffffff" />
       <directionalLight

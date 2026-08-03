@@ -9,7 +9,7 @@ import {
   type RefObject,
 } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Billboard, Environment, useGLTF } from "@react-three/drei";
+import { Billboard, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
@@ -248,7 +248,18 @@ function HeroModel({ pointerRef, scrollRef, reduceMotion }: ModelProps) {
 function Scene(props: ModelProps) {
   return (
     <>
-      <Environment preset="city" environmentIntensity={0.32} />
+      {/*
+        No <Environment> here on purpose. `preset="city"` pulled a 1.5MB HDRI
+        from raw.githack.com — a third-party CDN — on every page load, and
+        registered on THREE.DefaultLoadingManager, so drei's useProgress
+        counted it and the loader stepped in coarse 1/N jumps.
+
+        It contributed nothing: scene.environment is only sampled by
+        Standard/Physical materials, and every material in this canvas is a
+        custom ShaderMaterial (createBrandmarkMaterial, createGlowMaterial)
+        with no envMap. setupBrandmarkColors also replaces every material the
+        GLB shipped with, so its transmission/volume materials never survive.
+      */}
       <ambientLight intensity={0.32} color="#f4f7ff" />
       <directionalLight
         position={[4, 6, 5]}
