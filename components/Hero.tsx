@@ -36,6 +36,7 @@ export default function Hero() {
   const reduceMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [narrowViewport, setNarrowViewport] = useState(false);
 
   /*
    * The 3D canvas reads scroll and pointer through refs rather than props.
@@ -79,9 +80,19 @@ export default function Hero() {
     };
   }, [updateScrollProgress]);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 900px)");
+    const sync = () => setNarrowViewport(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   const handlePointerMove = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
       if (reduceMotion) return;
+      /* Touch / stylus: let the page scroll — don't drive 3D tilt */
+      if (event.pointerType === "touch" || event.pointerType === "pen") return;
       const rect = event.currentTarget.getBoundingClientRect();
       pointerRef.current.x =
         ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -255,7 +266,9 @@ export default function Hero() {
           style={{
             opacity: phases.handoffEnter * (1 - phases.handoffExit),
             visibility: phases.handoffVisible ? "visible" : "hidden",
-            transform: `translate3d(0, calc(-50% + ${phases.handoffY} * 1vh), 0)`,
+            transform: narrowViewport
+              ? `translate3d(0, ${phases.handoffY}vh, 0)`
+              : `translate3d(0, calc(-50% + ${phases.handoffY} * 1vh), 0)`,
           }}
         >
           <p className="hero-handoff-statement">

@@ -2,16 +2,16 @@ export const HERO_PHASE = {
   modelToCornerEnd: 0.28,
   handoffEnterEnd: 0.34,
   /** Longer window = slower title fill + body paragraph fades */
-  handoffFillEnd: 0.64,
-  handoffHoldEnd: 0.7,
+  handoffFillEnd: 0.68,
+  handoffHoldEnd: 0.74,
   /** Text fully exits before model centers */
-  handoffExitEnd: 0.76,
+  handoffExitEnd: 0.8,
   /** Model settles in center, face-on */
-  modelToCenterStart: 0.76,
-  modelToCenterEnd: 0.82,
+  modelToCenterStart: 0.8,
+  modelToCenterEnd: 0.85,
   /** Zoom into bright core */
-  modelZoomStart: 0.82,
-  modelZoomEnd: 0.9,
+  modelZoomStart: 0.85,
+  modelZoomEnd: 0.92,
   /**
    * Full white — must complete before Journey is reached.
    *
@@ -21,7 +21,7 @@ export const HERO_PHASE = {
    * tail to ~40px. The whiteout layer's bottom edge coincides with the hero's,
    * so coverage stays exact and Journey still never peeks.
    */
-  whiteOutStart: 0.9,
+  whiteOutStart: 0.92,
   whiteOutEnd: 0.99,
   heroConcludeStart: 0.99,
 } as const;

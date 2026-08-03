@@ -110,7 +110,7 @@ export default function Nav() {
               : "/brand/nav-logo-27-dark.svg"
           }
           alt="Signal 2027 — Here We Grow"
-          height={36}
+          height={48}
         />
       </a>
       <div className="nav-links">

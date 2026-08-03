@@ -247,6 +247,7 @@ export default function ClosingModel() {
       <div ref={viewRef} className="closing-model-viewport">
       <Canvas
         className="closing-model-canvas"
+        style={{ pointerEvents: "none", touchAction: "pan-y" }}
         /* Idle until scrolled near — this sits at the page bottom and was
            rendering the full brandmark the whole time you read the hero. */
         frameloop={inView ? "always" : "never"}
@@ -265,6 +266,8 @@ export default function ClosingModel() {
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.18;
           scene.background = null;
+          gl.domElement.style.pointerEvents = "none";
+          gl.domElement.style.touchAction = "pan-y";
         }}
       >
         <Suspense fallback={null}>

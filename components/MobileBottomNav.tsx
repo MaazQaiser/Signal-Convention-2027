@@ -47,6 +47,18 @@ const TABS = [
       </svg>
     ),
   },
+  {
+    label: "FAQs",
+    href: "/faqs",
+    external: true,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4.5" />
+        <path d="M12 17h.01" />
+      </svg>
+    ),
+  },
 ];
 
 export default function MobileBottomNav() {
@@ -88,10 +100,12 @@ export default function MobileBottomNav() {
               key={tab.label}
               className={`mob-nav-tab${active ? " is-active" : ""}`}
               href={href}
+              aria-label={tab.label}
               aria-current={active ? "page" : undefined}
             >
-              <span className="mob-nav-icon">{tab.icon}</span>
-              <span className="mob-nav-label">{tab.label}</span>
+              <span className="mob-nav-icon" aria-hidden="true">
+                {tab.icon}
+              </span>
             </a>
           );
         })}

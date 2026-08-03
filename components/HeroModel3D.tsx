@@ -311,6 +311,7 @@ function HeroModel3D({
     <div ref={ref} className="hero-model-viewport">
       <Canvas
         className="hero-model-canvas"
+        style={{ pointerEvents: "none", touchAction: "pan-y" }}
         frameloop={inView ? "always" : "never"}
         camera={{ position: [-0.12, 0.12, 5.4], fov: 40 }}
         dpr={[1, 1.75]}
@@ -326,6 +327,8 @@ function HeroModel3D({
           gl.toneMapping = THREE.ACESFilmicToneMapping;
           gl.toneMappingExposure = 1.28;
           scene.background = null;
+          gl.domElement.style.pointerEvents = "none";
+          gl.domElement.style.touchAction = "pan-y";
         }}
       >
         <Suspense fallback={null}>
