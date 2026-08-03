@@ -18,3 +18,10 @@ token.json
 .vercel
 .env*
 .next-check/
+
+# source masters — keep these out of git; they live in asset storage.
+# Only the web-optimized derivatives under public/ belong here.
+Images/
+public/models/*.gltf
+*.psd
+*.ai

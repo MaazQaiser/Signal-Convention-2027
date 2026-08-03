@@ -7,8 +7,7 @@
     "build": "next build",
     "build:check": "NEXT_DIST_DIR=.next-check next build",
     "start": "next start",
-    "lint": "next lint",
-    "postinstall": "node scripts/ensure-model.mjs"
+    "lint": "next lint"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
