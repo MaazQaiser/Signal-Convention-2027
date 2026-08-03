@@ -3187,6 +3187,10 @@ body.brandmark-ready .hero-model-inner {
   color: rgba(255, 255, 255, 0.72);
   max-width: 36rem;
 }
+/* Date only — the sibling <li>s hold the venue and city, which stay sentence case. */
+.agenda-page-hero-date {
+  text-transform: uppercase;
+}
 .agenda-page-hero-meta {
   list-style: none;
   margin: 0;
@@ -3258,6 +3262,7 @@ body.brandmark-ready .hero-model-inner {
   font-size: clamp(36px, 5.5vw, 64px);
   line-height: 0.95;
   letter-spacing: -0.04em;
+  text-transform: uppercase;
   color: rgba(17, 17, 17, 0.22);
   text-align: right;
 }
@@ -3300,6 +3305,9 @@ body.brandmark-ready .hero-model-inner {
   font-size: clamp(20px, 2.4vw, 30px);
   line-height: 1.15;
   letter-spacing: 0.04em;
+  /* Matches .agenda-list-day-label, its sibling on the same row — that was
+     already uppercase, so "Jan 17" sat next to "SUNDAY" in mixed case. */
+  text-transform: uppercase;
   color: #000000;
 }
 .agenda-list-day-year {

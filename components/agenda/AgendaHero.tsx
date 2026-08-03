@@ -54,7 +54,9 @@ export default function AgendaHero() {
                     strokeLinecap="round"
                   />
                 </svg>
-                <span>January 17–19, 2027</span>
+                <span className="agenda-page-hero-date">
+                  January 17–19, 2027
+                </span>
               </li>
               <li>
                 <svg
