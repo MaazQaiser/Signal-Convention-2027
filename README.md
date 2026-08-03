@@ -22,7 +22,7 @@ npm start
 ## Project structure
 
 - `app/`, `components/`, `lib/` — Next.js application
-- `public/` — images, brand assets, videos, and 3D model (`models/modal-opt.glb`)
+- `public/` — images, brand assets, videos, and 3D model (`models/brandmark-244k.glb`)
 - `Logos/`, `SVG logos/` — source brand assets
 - `legacy/` — original single-file HTML draft
 

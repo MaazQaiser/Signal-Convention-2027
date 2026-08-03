@@ -1,12 +1,14 @@
 /**
  * Shrink the brandmark model without altering it.
  *
- *   node scripts/optimize-model.mjs <source>.gltf public/models/modal-opt.glb
+ *   node scripts/optimize-model.mjs <source>.gltf public/models/<name>.glb
  *
- * The 298 MB source glTF is deliberately NOT in this repo — only the optimized
- * modal-opt.glb the site actually loads is committed. Fetch the master from
- * asset storage before running this, and install the toolchain it needs:
- *   npm i -D @gltf-transform/core @gltf-transform/extensions meshoptimizer
+ * The 298 MB source glTF is deliberately NOT in this repo — only the model the
+ * site actually loads is committed. Fetch the master from asset storage before
+ * running this. The toolchain is already a devDependency.
+ *
+ * This step preserves geometry exactly. To reduce triangle count, see
+ * scripts/decimate-model.mjs instead.
  *
  * Deliberately does NOT decimate, weld, requantize, or rebuild normals — every
  * one of those changes how the model looks. It only:

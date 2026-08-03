@@ -8,7 +8,8 @@ import SmoothScroll from "./SmoothScroll";
 
 const MODEL_PATH = BRANDMARK_MODEL_PATH;
 /*
- * Decoded byte size of modal-opt.glb, used only to render the progress bar.
+ * Decoded byte size of the brandmark glb, used only to render the progress bar.
+ * Update alongside BRANDMARK_MODEL_PATH when the asset is regenerated.
  *
  * The bar used to be driven by drei's useProgress, which is item-count based
  * (itemsLoaded / itemsTotal). With a handful of registered items the small
@@ -21,7 +22,15 @@ const MODEL_PATH = BRANDMARK_MODEL_PATH;
  * is replaced and this constant drifts, the bar is merely less accurate —
  * completion is still driven by the load callback, never by this number.
  */
-const MODEL_DECODED_BYTES = 76_199_472;
+const MODEL_DECODED_BYTES = 9_039_324;
+/*
+ * How long the cover will wait for the brandmark once the page shell itself is
+ * ready. Under this, the reveal happens with the mark already in place — the
+ * polished case, and the common one now the model is 8.6MB. Over it, the cover
+ * leaves anyway and the mark fades in when it lands, so a slow connection gets
+ * a usable page in ~1.5s instead of staring at an opaque cover.
+ */
+const SHELL_GRACE_MS = 1500;
 const HOLD_AT_COMPLETE_MS = 480;
 const REVEAL_DURATION_MS = 1450;
 const FALLBACK_REVEAL_MS = 45000;
@@ -41,8 +50,12 @@ export default function LoadingGate({ children }: LoadingGateProps) {
   );
   const [shownProgress, setShownProgress] = useState(0);
   const [modelReady, setModelReady] = useState(!!reduceMotion);
+  const [shellReady, setShellReady] = useState(!!reduceMotion);
+  const [forceReveal, setForceReveal] = useState(false);
   const { progress, active } = useProgress();
   const preloadStarted = useRef(false);
+  const forceRevealRef = useRef(forceReveal);
+  forceRevealRef.current = forceReveal;
   const targetProgress = useRef(0);
   const displayProgress = useRef(0);
   const phaseRef = useRef(phase);
@@ -58,8 +71,13 @@ export default function LoadingGate({ children }: LoadingGateProps) {
     if (reduceMotion || preloadStarted.current) return;
     preloadStarted.current = true;
 
-    /* Warm chunk + GLTF so hero Canvas is ready under the cover */
-    void import("@/components/HeroModel3D");
+    /* Warm chunk + GLTF so hero Canvas is ready under the cover. Once the
+       chunk lands the page shell can render, which is what starts the grace
+       clock below — the model is no longer a hard prerequisite for paint. */
+    void import("@/components/HeroModel3D").then(
+      () => setShellReady(true),
+      () => setShellReady(true)
+    );
 
     const warm = async () => {
       try {
@@ -110,6 +128,28 @@ export default function LoadingGate({ children }: LoadingGateProps) {
   }, [reduceMotion]);
 
   /*
+   * Once the shell can paint, give the brandmark SHELL_GRACE_MS to show up and
+   * then reveal regardless. This is what takes the model off the critical path:
+   * first paint is bounded by the shell, not by however long the asset takes.
+   */
+  useEffect(() => {
+    if (reduceMotion || !shellReady || modelReady || phase !== "loading") return;
+    const t = window.setTimeout(() => {
+      /* Nothing further is being waited on, so let the bar complete rather
+         than leaving it stranded mid-count as the cover pulls away. */
+      targetProgress.current = 100;
+      setForceReveal(true);
+    }, SHELL_GRACE_MS);
+    return () => window.clearTimeout(t);
+  }, [reduceMotion, shellReady, modelReady, phase]);
+
+  /* Fades the brandmark in if it arrives after the cover has already gone. */
+  useEffect(() => {
+    document.body.classList.toggle("brandmark-ready", modelReady);
+    return () => document.body.classList.remove("brandmark-ready");
+  }, [modelReady]);
+
+  /*
    * `progress` from useProgress deliberately no longer feeds the bar. It is
    * itemsLoaded/itemsTotal, so it can only ever report coarse fractions —
    * that is what pinned the display at 33% while the model streamed. The bar
@@ -136,11 +176,16 @@ export default function LoadingGate({ children }: LoadingGateProps) {
 
       setShownProgress(displayProgress.current);
 
+      /*
+       * Two ways out: the brandmark genuinely arrived, or the grace period
+       * expired and we are revealing without it. The `!active` guard only
+       * applies to the first — when forcing, drei's loading manager is still
+       * mid-flight by definition, so requiring it idle would deadlock.
+       */
       const loadComplete =
-        modelReadyRef.current &&
-        !activeRef.current &&
-        (rawProgressRef.current >= 100 || modelReadyRef.current) &&
-        displayProgress.current >= 99.6;
+        displayProgress.current >= 99.6 &&
+        (forceRevealRef.current ||
+          (modelReadyRef.current && !activeRef.current));
 
       if (
         phaseRef.current === "loading" &&

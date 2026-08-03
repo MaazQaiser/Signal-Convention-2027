@@ -1,7 +1,21 @@
 import * as THREE from "three";
 
-/** Full-resolution brandmark used by hero + closing canvases */
-export const BRANDMARK_MODEL_PATH = "/models/modal-opt.glb";
+/**
+ * Brandmark used by hero + closing canvases.
+ *
+ * 244,354 triangles / 8.6MB, decimated from the 2,443,672-triangle original
+ * via scripts/decimate-model.mjs. The filename encodes the triangle count on
+ * purpose: /models/* carries a 30-day Cache-Control (see next.config.mjs), so
+ * replacing an asset in place would strand returning visitors on the old copy.
+ * Rename when you regenerate.
+ *
+ * Fidelity was measured, not eyeballed: rendered against the original through
+ * this exact shader at a fixed camera and frozen uTime, the deviation is
+ * 1.1/255 mean over lit pixels with an identical silhouette (4506 vs 4506 lit
+ * pixels on a 256^2 grid). For scale, the site's JPEG derivatives measure
+ * 1.4-3.0 against their masters.
+ */
+export const BRANDMARK_MODEL_PATH = "/models/brandmark-244k.glb";
 
 const ORANGE = new THREE.Color("#ff7900");
 const BLUE = new THREE.Color("#0055ff");
@@ -76,16 +90,21 @@ function getBurstMinDist(meshes: THREE.Mesh[], hub: THREE.Vector3) {
  * Do not "optimise" NORMAL out of the asset.
  *
  * The model is entirely flat-shaded — every stored vertex normal matches its
- * triangle's geometric face normal to within 0.00001°, with no sign flips
- * (measured over all 2,443,660 triangles). That makes the attribute look
- * redundant, since cross(dFdx(viewPos), dFdy(viewPos)) reconstructs the same
- * vector and would halve the file (73MB -> 40MB).
+ * triangle's geometric face normal, with no sign flips. That makes the
+ * attribute look redundant, since cross(dFdx(viewPos), dFdy(viewPos))
+ * reconstructs the same vector and would roughly halve the file.
  *
- * It does not work here. The brandmark renders ~2.4M triangles across roughly
- * 800x800px, so most triangles are sub-pixel and the 2x2 derivative quads
- * straddle several of them. A same-camera, same-uTime render diff measured a
- * mean channel delta of 35/255 with 98% of lit pixels off by more than 8/255:
- * the glass loses its specular sheen and goes visibly flat.
+ * It does not work here. A same-camera, same-uTime render diff measured a mean
+ * channel delta of 35/255 with 98% of lit pixels off by more than 8/255: the
+ * glass loses its specular sheen and goes visibly flat. That was measured at
+ * the original 2.4M triangles, where most were sub-pixel and the 2x2
+ * derivative quads straddled several of them; at the current 244k it is less
+ * extreme but the same failure mode.
+ *
+ * The flat shading is also why decimation needs care: welding on POSITION+
+ * NORMAL finds nothing to merge, and welding on POSITION alone then averaging
+ * normals turns the model smooth-shaded. scripts/decimate-model.mjs restores
+ * per-face normals afterwards for exactly this reason.
  */
 const BRANDMARK_VERTEX_SHADER = /* glsl */ `
 varying vec3 vLocalPos;
