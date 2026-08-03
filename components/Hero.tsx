@@ -35,8 +35,19 @@ function lineFillPercent(progress: number, index: number, total: number) {
 export default function Hero() {
   const reduceMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  /*
+   * The 3D canvas reads scroll and pointer through refs rather than props.
+   * Lenis emits a scroll event every frame, so feeding those values in as
+   * React state re-rendered the whole <Canvas> subtree (Environment, six
+   * lights, the 2.4M-triangle primitive) 60x a second purely to hand
+   * useFrame a number it could have read itself. Refs are stable, so the
+   * memoised HeroModel3D below never re-renders while scrolling.
+   */
+  const scrollRef = useRef(0);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number | null>(null);
 
   const updateScrollProgress = useCallback(() => {
     const hero = heroRef.current;
@@ -44,7 +55,17 @@ export default function Hero() {
     const rect = hero.getBoundingClientRect();
     const scrollable = Math.max(hero.offsetHeight - window.innerHeight, 1);
     const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
-    setScrollProgress(progress);
+
+    scrollRef.current = progress;
+
+    /* Coalesce to one React update per frame, and only for the DOM copy. */
+    if (rafRef.current !== null) return;
+    rafRef.current = window.requestAnimationFrame(() => {
+      rafRef.current = null;
+      setScrollProgress((prev) =>
+        Math.abs(prev - scrollRef.current) < 0.0005 ? prev : scrollRef.current
+      );
+    });
   }, []);
 
   useEffect(() => {
@@ -54,6 +75,7 @@ export default function Hero() {
     return () => {
       window.removeEventListener("scroll", updateScrollProgress);
       window.removeEventListener("resize", updateScrollProgress);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, [updateScrollProgress]);
 
@@ -61,16 +83,17 @@ export default function Hero() {
     (event: ReactPointerEvent<HTMLElement>) => {
       if (reduceMotion) return;
       const rect = event.currentTarget.getBoundingClientRect();
-      setPointer({
-        x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
-        y: ((event.clientY - rect.top) / rect.height) * 2 - 1,
-      });
+      pointerRef.current.x =
+        ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointerRef.current.y =
+        ((event.clientY - rect.top) / rect.height) * 2 - 1;
     },
     [reduceMotion]
   );
 
   const handlePointerLeave = useCallback(() => {
-    setPointer({ x: 0, y: 0 });
+    pointerRef.current.x = 0;
+    pointerRef.current.y = 0;
   }, []);
 
   const phases = getHeroScrollPhases(
@@ -100,11 +123,7 @@ export default function Hero() {
     ) as HTMLElement | null;
     if (!section) return;
     section.style.setProperty("--hero-scroll", String(phases.eased));
-    section.style.setProperty(
-      "--hero-seam",
-      String(Math.max(phases.whiteOut, phases.heroConclude))
-    );
-  }, [phases.eased, phases.whiteOut, phases.heroConclude]);
+  }, [phases.eased]);
 
   return (
     <header
@@ -137,8 +156,8 @@ export default function Hero() {
       >
         <div className="hero-model-inner">
           <HeroModel3D
-            pointer={pointer}
-            scrollProgress={scrollProgress}
+            pointerRef={pointerRef}
+            scrollRef={scrollRef}
             reduceMotion={reduceMotion}
           />
         </div>

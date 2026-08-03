@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  memo,
+  Suspense,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type RefObject,
+} from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Billboard, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -15,10 +22,12 @@ import {
   createGlowMaterial,
   GLOW_STRENGTH,
 } from "@/lib/brandmark-glow";
+import { useInViewport } from "@/lib/use-in-viewport";
 
 type HeroModel3DProps = {
-  pointer: { x: number; y: number };
-  scrollProgress: number;
+  /** Read per-frame in useFrame so scrolling never re-renders this subtree. */
+  pointerRef: RefObject<{ x: number; y: number }>;
+  scrollRef: RefObject<number>;
   reduceMotion: boolean | null;
 };
 
@@ -64,29 +73,32 @@ function lerpAnchor(
 
 function LogoBackgroundGlow({
   reduceMotion,
-  intensity = 1,
+  scrollRef,
 }: {
   reduceMotion: boolean | null;
-  intensity?: number;
+  scrollRef: RefObject<number>;
 }) {
   const groupRef = useRef<THREE.Group>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   const glowMat = useMemo(() => createGlowMaterial(1.65 * GLOW_STRENGTH), []);
 
   useFrame(({ clock }) => {
+    const zoom = getHeroScrollPhases(
+      Math.min(1, scrollRef.current ?? 0)
+    ).modelZoom;
+    const intensity = 1 + easePhase(zoom) * 2.8;
     glowMat.uniforms.uTime.value = reduceMotion ? 0 : clock.elapsedTime;
     glowMat.uniforms.uIntensity.value = 1.65 * GLOW_STRENGTH * intensity;
     const group = groupRef.current;
     if (group) group.position.set(0, 0, -0.72);
+    /* Was a render-time prop; now driven here so scroll costs no re-render. */
+    meshRef.current?.scale.setScalar(0.85 + intensity * 0.4);
   });
 
   return (
     <group ref={groupRef}>
       <Billboard follow lockX={false} lockY={false} lockZ={false}>
-        <mesh
-          renderOrder={-20}
-          material={glowMat}
-          scale={0.85 + intensity * 0.4}
-        >
+        <mesh ref={meshRef} renderOrder={-20} material={glowMat}>
           <planeGeometry args={[9.5, 9.5]} />
         </mesh>
       </Billboard>
@@ -94,7 +106,7 @@ function LogoBackgroundGlow({
   );
 }
 
-function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
+function HeroModel({ pointerRef, scrollRef, reduceMotion }: ModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const tiltRef = useRef<THREE.Group>(null);
   const spinRef = useRef<THREE.Group>(null);
@@ -105,9 +117,6 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
   const localCenter = useRef(new THREE.Vector3());
   const { scene } = useGLTF(BRANDMARK_MODEL_PATH);
   const model = useMemo(() => scene.clone(true), [scene]);
-  const modelScroll = Math.min(1, scrollProgress);
-  const phases = getHeroScrollPhases(modelScroll);
-
   useLayoutEffect(() => {
     glassMeshesRef.current = setupBrandmarkColors(model);
   }, [model]);
@@ -133,6 +142,9 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
 
     const elapsed = state.clock.elapsedTime;
     tickBrandmarkTime(glassMeshesRef.current, elapsed);
+
+    /* Read scroll straight from the ref — no React render involved. */
+    const phases = getHeroScrollPhases(Math.min(1, scrollRef.current ?? 0));
 
     /*
      * Sequence (strict order):
@@ -180,12 +192,12 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
 
     smoothPointer.current.x = THREE.MathUtils.lerp(
       smoothPointer.current.x,
-      pointer.x,
+      pointerRef.current?.x ?? 0,
       0.09
     );
     smoothPointer.current.y = THREE.MathUtils.lerp(
       smoothPointer.current.y,
-      pointer.y,
+      pointerRef.current?.y ?? 0,
       0.09
     );
 
@@ -218,15 +230,13 @@ function HeroModel({ pointer, scrollProgress, reduceMotion }: ModelProps) {
     }
   });
 
-  const glowIntensity = 1 + easePhase(phases.modelZoom) * 2.8;
-
   return (
     <group ref={groupRef}>
       <group ref={spinRef}>
         <group ref={tiltRef} rotation={[BASE_TILT.x, BASE_TILT.y, 0]}>
           <LogoBackgroundGlow
             reduceMotion={reduceMotion}
-            intensity={glowIntensity}
+            scrollRef={scrollRef}
           />
           <primitive object={model} />
         </group>
@@ -278,37 +288,46 @@ function Scene(props: ModelProps) {
 
 useGLTF.preload(BRANDMARK_MODEL_PATH);
 
-export default function HeroModel3D({
-  pointer,
-  scrollProgress,
+function HeroModel3D({
+  pointerRef,
+  scrollRef,
   reduceMotion,
 }: HeroModel3DProps) {
+  /* Stop drawing 2.4M triangles once the hero has scrolled away. */
+  const { ref, inView } = useInViewport<HTMLDivElement>();
+
   return (
-    <Canvas
-      className="hero-model-canvas"
-      camera={{ position: [-0.12, 0.12, 5.4], fov: 40 }}
-      dpr={[1, 1.75]}
-      gl={{
-        alpha: true,
-        antialias: true,
-        powerPreference: "high-performance",
-        premultipliedAlpha: false,
-        logarithmicDepthBuffer: true,
-      }}
-      onCreated={({ gl, scene }) => {
-        gl.setClearColor(0x000000, 0);
-        gl.toneMapping = THREE.ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.28;
-        scene.background = null;
-      }}
-    >
-      <Suspense fallback={null}>
-        <Scene
-          pointer={pointer}
-          scrollProgress={scrollProgress}
-          reduceMotion={reduceMotion}
-        />
-      </Suspense>
-    </Canvas>
+    <div ref={ref} className="hero-model-viewport">
+      <Canvas
+        className="hero-model-canvas"
+        frameloop={inView ? "always" : "never"}
+        camera={{ position: [-0.12, 0.12, 5.4], fov: 40 }}
+        dpr={[1, 1.75]}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+          premultipliedAlpha: false,
+          logarithmicDepthBuffer: true,
+        }}
+        onCreated={({ gl, scene }) => {
+          gl.setClearColor(0x000000, 0);
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.toneMappingExposure = 1.28;
+          scene.background = null;
+        }}
+      >
+        <Suspense fallback={null}>
+          <Scene
+            pointerRef={pointerRef}
+            scrollRef={scrollRef}
+            reduceMotion={reduceMotion}
+          />
+        </Suspense>
+      </Canvas>
+    </div>
   );
 }
+
+/* Props are refs + a boolean, so this never re-renders while scrolling. */
+export default memo(HeroModel3D);

@@ -22,6 +22,7 @@ import {
   createGlowMaterial,
   GLOW_STRENGTH,
 } from "@/lib/brandmark-glow";
+import { useInViewport } from "@/lib/use-in-viewport";
 
 /** Cancel the ~45° Y rotation baked into the GLTF hierarchy */
 const FRONT_YAW = -Math.PI / 4;
@@ -203,6 +204,7 @@ function ClosingScene({
 export default function ClosingModel() {
   const reduceMotion = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
+  const { ref: viewRef, inView } = useInViewport<HTMLDivElement>();
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -242,8 +244,12 @@ export default function ClosingModel() {
 
   return (
     <div ref={wrapRef} className="closing-model" aria-hidden="true">
+      <div ref={viewRef} className="closing-model-viewport">
       <Canvas
         className="closing-model-canvas"
+        /* Idle until scrolled near — this sits at the page bottom and was
+           rendering the full brandmark the whole time you read the hero. */
+        frameloop={inView ? "always" : "never"}
         camera={{ position: [0, 0.05, 10.6], fov: 34 }}
         dpr={[1, 1.6]}
         gl={{
@@ -265,6 +271,7 @@ export default function ClosingModel() {
           <ClosingScene pointer={pointer} reduceMotion={reduceMotion} />
         </Suspense>
       </Canvas>
+      </div>
     </div>
   );
 }

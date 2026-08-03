@@ -70,15 +70,20 @@ export default function RootLayout({
       className={`${orbitron.variable} ${michroma.variable}`}
       data-display-font="orbitron"
     >
-      <head>
-        <link
-          rel="preload"
-          href="/videos/destination.mp4"
-          as="video"
-          type="video/mp4"
-        />
-      </head>
-      <body className={fkDisplay.variable}>
+      {/*
+        No <link rel="preload"> for the recap clip: "video" is not a valid
+        preload destination (the spec allows audio/document/embed/fetch/font/
+        image/object/script/style/track/worker), so Chrome rejected the hint
+        and warned. The <video> in Aftermovie already declares
+        autoPlay + preload="metadata", which is the right loading policy here.
+      */}
+      {/*
+        Browser extensions (password managers, ColorZilla, Grammarly…) stamp
+        attributes like cz-shortcut-listen onto <body> before React hydrates,
+        which React reports as a hydration mismatch. Suppressing here covers
+        that one element only — it does not hide mismatches in our own markup.
+      */}
+      <body className={fkDisplay.variable} suppressHydrationWarning>
         {children}
         <Aftermovie />
       </body>

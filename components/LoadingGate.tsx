@@ -51,7 +51,12 @@ export default function LoadingGate({ children }: LoadingGateProps) {
         const { GLTFLoader } = await import(
           "three/examples/jsm/loaders/GLTFLoader.js"
         );
+        const { MeshoptDecoder } = await import(
+          "three/examples/jsm/libs/meshopt_decoder.module.js"
+        );
         const loader = new GLTFLoader();
+        /* Model ships meshopt-compressed; drei's useGLTF wires this up itself. */
+        loader.setMeshoptDecoder(MeshoptDecoder);
         await new Promise<void>((resolve, reject) => {
           loader.load(MODEL_PATH, () => resolve(), undefined, reject);
         });

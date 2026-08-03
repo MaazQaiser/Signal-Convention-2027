@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 /** Full-resolution brandmark used by hero + closing canvases */
-export const BRANDMARK_MODEL_PATH = "/models/modal.gltf";
+export const BRANDMARK_MODEL_PATH = "/models/modal-opt.glb";
 
 const ORANGE = new THREE.Color("#ff7900");
 const BLUE = new THREE.Color("#0055ff");
@@ -72,6 +72,21 @@ function getBurstMinDist(meshes: THREE.Mesh[], hub: THREE.Vector3) {
   return Number.isFinite(minDist) ? minDist : 0;
 }
 
+/**
+ * Do not "optimise" NORMAL out of the asset.
+ *
+ * The model is entirely flat-shaded — every stored vertex normal matches its
+ * triangle's geometric face normal to within 0.00001°, with no sign flips
+ * (measured over all 2,443,660 triangles). That makes the attribute look
+ * redundant, since cross(dFdx(viewPos), dFdy(viewPos)) reconstructs the same
+ * vector and would halve the file (73MB -> 40MB).
+ *
+ * It does not work here. The brandmark renders ~2.4M triangles across roughly
+ * 800x800px, so most triangles are sub-pixel and the 2x2 derivative quads
+ * straddle several of them. A same-camera, same-uTime render diff measured a
+ * mean channel delta of 35/255 with 98% of lit pixels off by more than 8/255:
+ * the glass loses its specular sheen and goes visibly flat.
+ */
 const BRANDMARK_VERTEX_SHADER = /* glsl */ `
 varying vec3 vLocalPos;
 varying vec3 vNormal;

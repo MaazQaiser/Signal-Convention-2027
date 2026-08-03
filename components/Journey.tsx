@@ -111,9 +111,6 @@ export default function Journey() {
     >
       <Hero />
 
-      {/* Scroll buffer so hero zoom/whiteout can finish before Journey */}
-      <div className="hero-journey-seam" aria-hidden="true" />
-
       <div className="journey-pin">
         <div className="journey-fade">
           <header className="journey-intro">

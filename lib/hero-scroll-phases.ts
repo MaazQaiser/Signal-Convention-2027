@@ -12,10 +12,18 @@ export const HERO_PHASE = {
   /** Zoom into bright core */
   modelZoomStart: 0.82,
   modelZoomEnd: 0.9,
-  /** Full white — must complete before Journey is reached */
+  /**
+   * Full white — must complete before Journey is reached.
+   *
+   * These are in *eased* space, so 0.96 lands at raw progress ~0.88: the hero
+   * then burned its last 12% of scroll (~114px) sitting on a finished, static
+   * white frame. Ending at 0.99 keeps the flash to white but cuts that dead
+   * tail to ~40px. The whiteout layer's bottom edge coincides with the hero's,
+   * so coverage stays exact and Journey still never peeks.
+   */
   whiteOutStart: 0.9,
-  whiteOutEnd: 0.96,
-  heroConcludeStart: 0.96,
+  whiteOutEnd: 0.99,
+  heroConcludeStart: 0.99,
 } as const;
 
 export function easeScrollProgress(t: number) {
@@ -71,8 +79,15 @@ export function getHeroScrollPhases(scrollProgress: number) {
   const handoffFill = handoffFillRaw;
   const handoffExit = easeScrollProgress(handoffExitRaw);
 
-  const whiteOut = easeScrollProgress(
-    phaseProgress(eased, HERO_PHASE.whiteOutStart, HERO_PHASE.whiteOutEnd)
+  /*
+   * Linear over an already-eased input. Smoothstepping this a second time made
+   * the tail asymptotic — it hit 0.99 about 10% of hero scroll early and then
+   * crawled, so the hero sat on a finished white frame for ~100px.
+   */
+  const whiteOut = phaseProgress(
+    eased,
+    HERO_PHASE.whiteOutStart,
+    HERO_PHASE.whiteOutEnd
   );
   const heroConclude = phaseProgress(
     eased,
