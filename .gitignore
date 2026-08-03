@@ -21,7 +21,11 @@ token.json
 
 # source masters — keep these out of git; they live in asset storage.
 # Only the web-optimized derivatives under public/ belong here.
-Images/
+#
+# Leading slash is REQUIRED. Unanchored `Images/` matches a directory of that
+# name at any depth, and git runs with core.ignorecase=true on macOS, so it
+# also swallowed all of `public/images/` — silently ignoring every web image.
+/Images/
 public/models/*.gltf
 *.psd
 *.ai

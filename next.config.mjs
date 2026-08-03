@@ -14,6 +14,14 @@ const nextConfig = {
   /* Hide the Next.js dev tools badge (dev-only overlay; no effect on builds) */
   devIndicators: false,
   transpilePackages: ["three", "@react-three/fiber", "@react-three/drei"],
+  images: {
+    /*
+     * Next's default is webp-only. Offering AVIF first lets the optimizer
+     * spend the same byte budget on more resolution, which is what the
+     * full-bleed `sizes="100vw"` heroes need on 2x displays.
+     */
+    formats: ["image/avif", "image/webp"],
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

@@ -120,7 +120,10 @@ export default function TravelHero() {
         >
           <div className="travel-page-hero-media">
             <Image
-              src="/images/resort-desert-ridge.jpg"
+              /* Same photo as the .jpg at 3840x2160 instead of 2400x1350, and
+                 220KB smaller. At sizes="100vw" on a 2x display this hero needs
+                 ~3040px, so the .jpg was being stretched ~1.3x. */
+              src="/images/resort-desert-ridge.avif"
               alt="JW Marriott Desert Ridge Resort & Spa"
               fill
               sizes="100vw"

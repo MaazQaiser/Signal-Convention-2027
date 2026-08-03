@@ -38,7 +38,10 @@ export default function FaqsHero() {
         >
           <div className="faqs-page-hero-media">
             <Image
-              src="/images/convention-2026-0977.jpg"
+              /* 3840x2561 regenerated from the 8192px master. The .jpg is
+                 2000px wide, which this sizes="100vw" hero stretched ~1.5x on
+                 a 2x display. Same file weight, 1.9x the linear resolution. */
+              src="/images/convention-2026-0977.avif"
               alt="Here We Grow attendees connecting at convention"
               fill
               sizes="100vw"

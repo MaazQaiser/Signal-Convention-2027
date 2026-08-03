@@ -56,7 +56,9 @@ export default function SponsorsHero() {
         >
           <div className="sponsors-page-hero-media">
             <Image
-              src="/images/convention-2026-1125.jpg"
+              /* 3840x2561 regenerated from the 8192px master — see
+                 FaqsHero for why the 2000px .jpg was too small here. */
+              src="/images/convention-2026-1125.avif"
               alt="Here We Grow convention partners and attendees"
               fill
               sizes="100vw"
