@@ -52,18 +52,6 @@ const panels: Panel[] = [
 
 const FADE = { once: false as const, amount: 0.2 };
 
-/**
- * The intro sits directly under the hero's white-out, so it has to start
- * revealing while the last of that white is still scrolling past — otherwise
- * the handover reads as a blank gap. Leading rootMargin + a near-zero
- * threshold start it early; the cards keep the standard FADE.
- */
-const INTRO_FADE = {
-  once: false as const,
-  amount: 0.01,
-  margin: "0px 0px 14% 0px",
-};
-
 function ColumnCopy({ panel, id }: { panel: Panel; id: string }) {
   return (
     <div className="journey-column-copy">
@@ -126,13 +114,13 @@ export default function Journey() {
       <div className="journey-pin">
         <div className="journey-fade">
           <header className="journey-intro">
-            <Reveal delay={REVEAL_CASCADE.title} {...INTRO_FADE}>
+            <Reveal delay={REVEAL_CASCADE.title} {...FADE}>
               <h2 className="journey-heading">
                 <span className="journey-intro-line">What&apos;s New</span>
                 <span className="journey-intro-line">This Year</span>
               </h2>
             </Reveal>
-            <Reveal delay={REVEAL_CASCADE.body} {...INTRO_FADE}>
+            <Reveal delay={REVEAL_CASCADE.body} {...FADE}>
               <div className="journey-lede">
                 <span className="journey-intro-line">
                   Discover what&apos;s new at Here We Grow 2027, from fresh
