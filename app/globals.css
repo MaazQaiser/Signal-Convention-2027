@@ -2877,7 +2877,13 @@ img {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 1.45s var(--ease-soft) 0.08s;
+  /*
+   * Must finish BEFORE .cover-loader's 1.25s fade-out, otherwise the cover is
+   * already gone while the page is still translucent and you see black through
+   * it. 0.85s leaves ~400ms of margin. This class is applied when the cover
+   * starts exiting (see LoadingGate), so the two overlap as a crossfade.
+   */
+  transition: opacity 0.85s var(--ease-soft);
 }
 .loading-gate__content--visible .hero {
   animation: heroReveal 1.65s var(--ease-soft) 0.12s both;

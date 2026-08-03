@@ -197,6 +197,20 @@ export default function LoadingGate({ children }: LoadingGateProps) {
   const labelProgress = Math.round(barProgress);
   /* Keep content in the layout (visibility visible) so WebGL can warm under the cover */
   const contentWarming = phase !== "done";
+  /*
+   * Reveal the content when the cover STARTS leaving, not when it finishes.
+   *
+   * The cover fades over 1.25s (.cover-loader) but "done" only arrives after
+   * REVEAL_DURATION_MS (1.45s), and the content faded up from opacity 0 only
+   * from that point. So the cover went fully transparent ~280ms before
+   * anything replaced it, and then the page faded up *from black* — several
+   * seconds of darkness after the loader hit 100%.
+   *
+   * Marking the content visible during "exiting" turns that hand-off into a
+   * crossfade: the content is already lit underneath while the cover fades
+   * away over it.
+   */
+  const contentVisible = phase === "exiting" || phase === "done";
 
   return (
     <>
@@ -238,7 +252,7 @@ export default function LoadingGate({ children }: LoadingGateProps) {
 
       <div
         className={`loading-gate__content${
-          phase === "done" ? " loading-gate__content--visible" : ""
+          contentVisible ? " loading-gate__content--visible" : ""
         }${contentWarming ? " loading-gate__content--warming" : ""}`}
       >
         {children}
