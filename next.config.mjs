@@ -32,6 +32,37 @@ const nextConfig = {
           },
         ],
       },
+      /*
+       * Files served straight out of /public get Vercel's default
+       * `public, max-age=0, must-revalidate`, which meant the 38MB (brotli)
+       * brandmark GLB and the two films — ~102MB of media — were revalidated
+       * on essentially every visit instead of being reused.
+       *
+       * These filenames are NOT content-hashed the way /_next/static assets
+       * are, so this is a deliberate 30-day bet rather than `immutable`:
+       * replacing a model or film means viewers keep the cached copy until
+       * max-age lapses. To publish a replacement immediately, rename the file
+       * and update its reference (BRANDMARK_MODEL_PATH in lib/brandmark-model.ts
+       * for the GLB).
+       */
+      {
+        source: "/models/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        source: "/videos/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
     ];
   },
 };

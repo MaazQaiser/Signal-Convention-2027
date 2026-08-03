@@ -12,6 +12,9 @@ const CONVENTION_DAY = 17;
 const CONVENTION_HOUR = 8;
 const CONVENTION_MINUTE = 30;
 
+/** 20MB reveal film — attached only once the section nears the viewport. */
+const REVEAL_VIDEO_SRC = "/videos/cnv-27-reveal.mp4";
+
 const COUNTDOWN_UNITS = [
   { key: "days", label: "Days" },
   { key: "hours", label: "Hours" },
@@ -101,6 +104,7 @@ function remaining() {
 
 export default function Agenda() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
   const [t, setT] = useState({
     days: "0",
     hours: "00",
@@ -113,6 +117,35 @@ export default function Agenda() {
     const id = setInterval(() => setT(remaining()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  /*
+   * Playback was already gated on intersection below, but `preload="auto"`
+   * meant the browser fetched all 20MB while the visitor was still on the
+   * hero. Withhold `src` until the section is close, so the download no
+   * longer competes with first paint. The poster carries the frame until
+   * then, so nothing changes visually.
+   */
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || videoSrc) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setVideoSrc(REVEAL_VIDEO_SRC);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setVideoSrc(REVEAL_VIDEO_SRC);
+        observer.disconnect();
+      },
+      /* Lead the viewport so it is buffered by the time it is on screen. */
+      { rootMargin: "600px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [videoSrc]);
 
   useEffect(() => {
     const el = videoRef.current;
@@ -218,7 +251,7 @@ export default function Agenda() {
           <video
             ref={videoRef}
             className="agenda-video-el"
-            src="/videos/cnv-27-reveal.mp4"
+            src={videoSrc ?? undefined}
             poster="/images/resort-desert-ridge.jpg"
             muted
             loop
