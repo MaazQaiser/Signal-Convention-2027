@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { isNavLinkActive, resolveNavHref } from "@/lib/nav-links";
+import { REGISTER_URL } from "@/lib/register-link";
 
 const TABS = [
   {
@@ -70,10 +71,6 @@ export default function MobileBottomNav() {
     setVisible(latest > 200);
   });
 
-  const registerHref = resolveNavHref(
-    { label: "Register", href: "register" },
-    pathname
-  );
 
   return (
     <motion.nav
@@ -110,7 +107,7 @@ export default function MobileBottomNav() {
           );
         })}
       </div>
-      <a className="mob-nav-cta" href={registerHref}>
+      <a className="mob-nav-cta" href={REGISTER_URL}>
         Register
       </a>
     </motion.nav>

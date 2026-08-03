@@ -13,6 +13,7 @@ import { getHeroScrollPhases } from "@/lib/hero-scroll-phases";
 /* Eager — LoadingGate also imports this so the model warms under the cover */
 import HeroModel3D from "@/components/HeroModel3D";
 import BtnArrow from "@/components/BtnArrow";
+import { REGISTER_URL } from "@/lib/register-link";
 
 /** Title fills L→R; body paragraphs fade in after. */
 const HANDOFF_TITLE_LINES = ["Grow Through", "Consistency"] as const;
@@ -193,7 +194,7 @@ export default function Hero() {
             <br />
             new ways to strengthen your business.
           </p>
-          <a className="btn btn-orange hero-cta" href="#register">
+          <a className="btn btn-orange hero-cta" href={REGISTER_URL}>
             Register
             <BtnArrow />
           </a>

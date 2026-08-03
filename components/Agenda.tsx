@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Reveal, { REVEAL_CASCADE } from "./Reveal";
 import BtnArrow from "./BtnArrow";
+import { REGISTER_URL } from "@/lib/register-link";
 
 /** Convention opens Jan 17, 2027 — Phoenix does not observe DST (MST, UTC−7). */
 const PHOENIX_TZ = "America/Phoenix";
@@ -216,7 +217,7 @@ export default function Agenda() {
             </Reveal>
 
             <Reveal delay={REVEAL_CASCADE.cta}>
-              <a className="btn btn-orange agenda-cta" href="#register">
+              <a className="btn btn-orange agenda-cta" href={REGISTER_URL}>
                 Register Today
                 <BtnArrow />
               </a>

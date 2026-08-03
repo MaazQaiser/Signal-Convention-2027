@@ -7,6 +7,7 @@ import {
   getRegisterExploreLinks,
   resolveNavHref,
 } from "@/lib/nav-links";
+import { REGISTER_URL } from "@/lib/register-link";
 
 export default function Register() {
   const pathname = usePathname();
@@ -42,7 +43,7 @@ export default function Register() {
             </p>
           </Reveal>
           <Reveal className="closing-cta-action" delay={REVEAL_CASCADE.cta}>
-            <a className="nav-reserve closing-cta-btn" href="#">
+            <a className="nav-reserve closing-cta-btn" href={REGISTER_URL}>
               Register Today
               <BtnArrow />
             </a>

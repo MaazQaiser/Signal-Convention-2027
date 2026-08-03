@@ -1,8 +1,14 @@
+import { REGISTER_URL } from "./register-link";
+
 export type NavLink = {
   label: string;
   /** Hash fragment without leading #, or absolute path like /agenda */
   href: string;
-  /** When true, href is a page path (not a homepage section hash). */
+  /**
+   * When true, href is used verbatim rather than treated as a homepage section
+   * hash — a page path like /agenda, or an absolute URL such as the Cvent
+   * registration link.
+   */
   external?: boolean;
 };
 
@@ -20,7 +26,7 @@ const REGISTER_EXPLORE: NavLink[] = [
   { label: "Hotel & Travel", href: "/travel", external: true },
   { label: "Sponsors", href: "/sponsors", external: true },
   { label: "FAQs", href: "/faqs", external: true },
-  { label: "Register", href: "register" },
+  { label: "Register", href: REGISTER_URL, external: true },
 ];
 
 /** Resolve nav href for the current page. On subpages, home hashes become /#… */

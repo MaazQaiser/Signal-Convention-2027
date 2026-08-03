@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { REGISTER_URL } from "./register-link";
 
 export type FaqEntry = {
   q: string;
@@ -26,7 +27,7 @@ export const CONVENTION_FAQS: FaqEntry[] = [
           early.
         </p>
         <p>
-          <a href="/#register">Click here to register and to reserve your hotel room.</a>
+          <a href={REGISTER_URL}>Click here to register and to reserve your hotel room.</a>
         </p>
       </>
     ),
@@ -70,7 +71,7 @@ export const CONVENTION_FAQS: FaqEntry[] = [
       <>
         Yes! Anyone who plans to participate in any Convention event must
         register.{" "}
-        <a href="/#register">Click here to get started.</a>
+        <a href={REGISTER_URL}>Click here to get started.</a>
       </>
     ),
   },

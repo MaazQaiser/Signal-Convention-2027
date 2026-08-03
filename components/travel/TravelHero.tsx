@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Reveal, { REVEAL_CASCADE } from "@/components/Reveal";
 import BtnArrow from "@/components/BtnArrow";
+import { REGISTER_URL } from "@/lib/register-link";
 
 const FADE = { once: false as const, amount: 0.25 };
 
@@ -105,7 +106,7 @@ export default function TravelHero() {
             </ul>
             <a
               className="btn btn-orange travel-page-hero-cta"
-              href="/#register"
+              href={REGISTER_URL}
             >
               Reserve Your Hotel
               <BtnArrow />

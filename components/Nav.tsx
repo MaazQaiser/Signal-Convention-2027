@@ -9,6 +9,7 @@ import {
   isNavLinkActive,
   resolveNavHref,
 } from "@/lib/nav-links";
+import { REGISTER_URL } from "@/lib/register-link";
 
 const LIGHT_SURFACE_SELECTOR = [
   "[data-nav-theme='light']",
@@ -86,10 +87,6 @@ export default function Nav() {
   }, [pathname, syncTheme]);
 
   const homeHref = resolveNavHref({ label: "Overview", href: "top" }, pathname);
-  const registerHref = resolveNavHref(
-    { label: "Register", href: "register" },
-    pathname
-  );
 
   return (
     <motion.nav
@@ -128,7 +125,7 @@ export default function Nav() {
             </a>
           );
         })}
-        <a className="nav-reserve" href={registerHref}>
+        <a className="nav-reserve" href={REGISTER_URL}>
           Register
         </a>
       </div>
