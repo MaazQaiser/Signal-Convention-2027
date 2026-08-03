@@ -24,8 +24,6 @@ type RevealProps = {
   /** When false, fades out again as the block leaves the viewport. */
   once?: boolean;
   amount?: number | "some" | "all";
-  /** Viewport root margin. Positive bottom values trigger the reveal earlier. */
-  margin?: string;
 };
 
 export default function Reveal({
@@ -36,7 +34,6 @@ export default function Reveal({
   duration = 0.9,
   once = true,
   amount = 0.2,
-  margin = "0px 0px -8% 0px",
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
@@ -45,7 +42,7 @@ export default function Reveal({
       className={className}
       initial={reduceMotion ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, amount, margin }}
+      viewport={{ once, amount, margin: "0px 0px -8% 0px" }}
       transition={{ duration, ease: EASE_SOFT, delay }}
     >
       {children}
